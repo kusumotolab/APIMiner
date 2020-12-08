@@ -1,4 +1,9 @@
 package apidiff.internal.util;
+
+import apidiff.enums.Classifier;
+import apidiff.internal.visitor.APIVersion;
+import org.eclipse.jdt.core.dom.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,19 +13,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-
-import apidiff.enums.Classifier;
-import apidiff.internal.visitor.APIVersion;
 
 public class UtilTools {
 	
@@ -150,8 +142,7 @@ public class UtilTools {
 	public static  String getPath(final AbstractTypeDeclaration node){
 		return ((node == null) || (node.resolveBinding() == null) || (node.resolveBinding().getQualifiedName() == null))? "" : node.resolveBinding().getQualifiedName();
 	}
-	
-	
+
 	public static Boolean isAPIByClassifier(String pathLibrary, Classifier classifierAPI) throws IOException{
 		Boolean isAPI = false;
 		switch (classifierAPI){
