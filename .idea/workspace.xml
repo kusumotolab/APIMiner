@@ -28,22 +28,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0aff9d8-7c9a-45fc-b88a-ffaad9f78353" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/enums/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/enums/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/DiffProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/DiffProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/DiffProcessorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/DiffProcessorImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/TypeDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/TypeDiff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/comparator/ComparatorMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/comparator/ComparatorMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/FieldDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/FieldDescription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TypeDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TypeDescription.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/refactor/RefactorProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/refactor/RefactorProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/refactor/RefactoringProcessorImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/service/git/GitServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/service/git/GitServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/util/UtilTools.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/util/UtilTools.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/visitor/APIVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/visitor/APIVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/TestClass.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +161,7 @@
       <screen x="0" y="23" width="1440" height="804" />
     </state>
     <state x="100" y="123" width="1216" height="572" key="DiffContextDialog/0.23.1440.804@0.23.1440.804" timestamp="1604557635957" />
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom" timestamp="1606978732585">
+    <state width="1398" height="211" key="GridCell.Tab.0.bottom" timestamp="1607401504030">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.bottom/0.23.1440.795@0.23.1440.795" timestamp="1605570416116" />
@@ -182,9 +169,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.bottom/0.23.1440.801@0.23.1440.801" timestamp="1605714537816" />
     <state width="1374" height="232" key="GridCell.Tab.0.bottom/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
     <state width="1374" height="111" key="GridCell.Tab.0.bottom/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.25.1440.791@0.25.1440.791" timestamp="1606978732585" />
+    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
     <state width="1398" height="144" key="GridCell.Tab.0.bottom/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center" timestamp="1606978732585">
+    <state width="1398" height="211" key="GridCell.Tab.0.center" timestamp="1607401504030">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.center/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
@@ -192,9 +179,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.center/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
     <state width="1374" height="232" key="GridCell.Tab.0.center/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
     <state width="1374" height="111" key="GridCell.Tab.0.center/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center/0.25.1440.791@0.25.1440.791" timestamp="1606978732585" />
+    <state width="1398" height="211" key="GridCell.Tab.0.center/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
     <state width="1398" height="144" key="GridCell.Tab.0.center/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left" timestamp="1606978732584">
+    <state width="1398" height="211" key="GridCell.Tab.0.left" timestamp="1607401504029">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.left/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
@@ -202,9 +189,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.left/0.23.1440.801@0.23.1440.801" timestamp="1605714537814" />
     <state width="1374" height="232" key="GridCell.Tab.0.left/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
     <state width="1374" height="111" key="GridCell.Tab.0.left/0.23.1440.806@0.23.1440.806" timestamp="1604917253089" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left/0.25.1440.791@0.25.1440.791" timestamp="1606978732584" />
+    <state width="1398" height="211" key="GridCell.Tab.0.left/0.25.1440.791@0.25.1440.791" timestamp="1607401504029" />
     <state width="1398" height="144" key="GridCell.Tab.0.left/0.25.1440.794@0.25.1440.794" timestamp="1606199787622" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right" timestamp="1606978732585">
+    <state width="1398" height="211" key="GridCell.Tab.0.right" timestamp="1607401504030">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.right/0.23.1440.795@0.23.1440.795" timestamp="1605570416115" />
@@ -212,7 +199,7 @@
     <state width="1398" height="116" key="GridCell.Tab.0.right/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
     <state width="1374" height="232" key="GridCell.Tab.0.right/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
     <state width="1374" height="111" key="GridCell.Tab.0.right/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right/0.25.1440.791@0.25.1440.791" timestamp="1606978732585" />
+    <state width="1398" height="211" key="GridCell.Tab.0.right/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
     <state width="1398" height="144" key="GridCell.Tab.0.right/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
     <state width="1398" height="246" key="GridCell.Tab.1.bottom" timestamp="1606206031182">
       <screen x="0" y="25" width="1440" height="791" />
@@ -258,11 +245,11 @@
       <screen x="0" y="23" width="1440" height="801" />
     </state>
     <state x="269" y="71" key="Maven.ArtifactSearchDialog/0.23.1440.801@0.23.1440.801" timestamp="1603935363096" />
-    <state x="206" y="25" key="SettingsEditor" timestamp="1607391581641">
+    <state x="206" y="25" key="SettingsEditor" timestamp="1607400315184">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state x="206" y="23" key="SettingsEditor/0.23.1440.798@0.23.1440.798" timestamp="1603947687182" />
-    <state x="206" y="25" key="SettingsEditor/0.25.1440.791@0.25.1440.791" timestamp="1607391581641" />
+    <state x="206" y="25" key="SettingsEditor/0.25.1440.791@0.25.1440.791" timestamp="1607400315184" />
     <state x="219" y="152" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1604558118949">
       <screen x="0" y="23" width="1440" height="801" />
     </state>
@@ -293,11 +280,6 @@
           <url>jar://$MAVEN_REPOSITORY$/com/github/tsantalis/refactoring-miner/2.0/refactoring-miner-2.0-sources.jar!/gr/uom/java/xmi/diff/AddClassAnnotationRefactoring.java</url>
           <line>42</line>
           <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Test.java</url>
-          <line>124</line>
-          <option name="timeStamp" value="171" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <condition expression="method.methodName.toString().equals(&quot;wrap&quot;)" language="JAVA" />
