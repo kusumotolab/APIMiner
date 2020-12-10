@@ -341,7 +341,8 @@ public class MethodDiff {
                 if (fullNameMethodAndPathAfter.equals(fullNameMethodAndPath)) {
                     UMLOperation operationBefore = UtilToolsForRef.getOperationBefore(ref);
                     String nameMethodBefore = UtilToolsForRef.getSimpleNameMethod(operationBefore);
-                    String description = this.description.extract(nameMethodBefore,nameMethodAfter, classPathAfter);
+                    String classPathBefore = UtilToolsForRef.getClassPathOfMethod(operationBefore);
+                    String description = this.description.extract(nameMethodBefore,classPathBefore,nameMethodAfter, classPathAfter);
                     this.addChange(type, method, Category.METHOD_EXTRACT, false, description);
                     isExist=true;
                 }

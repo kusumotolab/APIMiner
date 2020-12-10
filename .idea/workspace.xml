@@ -28,9 +28,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0aff9d8-7c9a-45fc-b88a-ffaad9f78353" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Test.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/TestClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +124,14 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/Users/m-iriyam/github/PhilJay/MPAndroidChart" />
+      <path value="$PROJECT_DIR$/Users/m-iriyam/github/bumptech/glide" />
+      <path value="$PROJECT_DIR$/t/Users/m-iriyam/github/bumptech/glide" />
+      <path value="$PROJECT_DIR$/tmp/refactoring-toy-example" />
+    </ignored-roots>
+  </component>
   <component name="WindowStateProjectService">
     <state x="376" y="94" key="#Inspections" timestamp="1603954353990">
       <screen x="0" y="23" width="1440" height="798" />
@@ -157,11 +166,15 @@
       <screen x="0" y="23" width="1440" height="801" />
     </state>
     <state x="471" y="119" key="#xdebugger.evaluate/0.23.1440.801@0.23.1440.801" timestamp="1604554540054" />
+    <state x="401" y="246" key="#通知" timestamp="1607406283500">
+      <screen x="0" y="25" width="1440" height="794" />
+    </state>
+    <state x="401" y="246" key="#通知/0.25.1440.794@0.25.1440.794" timestamp="1607406283500" />
     <state x="100" y="123" width="1216" height="572" key="DiffContextDialog" timestamp="1604557635957">
       <screen x="0" y="23" width="1440" height="804" />
     </state>
     <state x="100" y="123" width="1216" height="572" key="DiffContextDialog/0.23.1440.804@0.23.1440.804" timestamp="1604557635957" />
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom" timestamp="1607401504030">
+    <state width="1398" height="148" key="GridCell.Tab.0.bottom" timestamp="1607578394400">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.bottom/0.23.1440.795@0.23.1440.795" timestamp="1605570416116" />
@@ -169,9 +182,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.bottom/0.23.1440.801@0.23.1440.801" timestamp="1605714537816" />
     <state width="1374" height="232" key="GridCell.Tab.0.bottom/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
     <state width="1374" height="111" key="GridCell.Tab.0.bottom/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
+    <state width="1398" height="148" key="GridCell.Tab.0.bottom/0.25.1440.791@0.25.1440.791" timestamp="1607578394400" />
     <state width="1398" height="144" key="GridCell.Tab.0.bottom/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center" timestamp="1607401504030">
+    <state width="1398" height="148" key="GridCell.Tab.0.center" timestamp="1607578394399">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.center/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
@@ -179,9 +192,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.center/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
     <state width="1374" height="232" key="GridCell.Tab.0.center/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
     <state width="1374" height="111" key="GridCell.Tab.0.center/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.center/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
+    <state width="1398" height="148" key="GridCell.Tab.0.center/0.25.1440.791@0.25.1440.791" timestamp="1607578394399" />
     <state width="1398" height="144" key="GridCell.Tab.0.center/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left" timestamp="1607401504029">
+    <state width="1398" height="148" key="GridCell.Tab.0.left" timestamp="1607578394398">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.left/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
@@ -189,9 +202,9 @@
     <state width="1398" height="116" key="GridCell.Tab.0.left/0.23.1440.801@0.23.1440.801" timestamp="1605714537814" />
     <state width="1374" height="232" key="GridCell.Tab.0.left/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
     <state width="1374" height="111" key="GridCell.Tab.0.left/0.23.1440.806@0.23.1440.806" timestamp="1604917253089" />
-    <state width="1398" height="211" key="GridCell.Tab.0.left/0.25.1440.791@0.25.1440.791" timestamp="1607401504029" />
+    <state width="1398" height="148" key="GridCell.Tab.0.left/0.25.1440.791@0.25.1440.791" timestamp="1607578394398" />
     <state width="1398" height="144" key="GridCell.Tab.0.left/0.25.1440.794@0.25.1440.794" timestamp="1606199787622" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right" timestamp="1607401504030">
+    <state width="1398" height="148" key="GridCell.Tab.0.right" timestamp="1607578394400">
       <screen x="0" y="25" width="1440" height="791" />
     </state>
     <state width="1398" height="297" key="GridCell.Tab.0.right/0.23.1440.795@0.23.1440.795" timestamp="1605570416115" />
@@ -199,7 +212,7 @@
     <state width="1398" height="116" key="GridCell.Tab.0.right/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
     <state width="1374" height="232" key="GridCell.Tab.0.right/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
     <state width="1374" height="111" key="GridCell.Tab.0.right/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="211" key="GridCell.Tab.0.right/0.25.1440.791@0.25.1440.791" timestamp="1607401504030" />
+    <state width="1398" height="148" key="GridCell.Tab.0.right/0.25.1440.791@0.25.1440.791" timestamp="1607578394400" />
     <state width="1398" height="144" key="GridCell.Tab.0.right/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
     <state width="1398" height="246" key="GridCell.Tab.1.bottom" timestamp="1606206031182">
       <screen x="0" y="25" width="1440" height="791" />
@@ -245,11 +258,12 @@
       <screen x="0" y="23" width="1440" height="801" />
     </state>
     <state x="269" y="71" key="Maven.ArtifactSearchDialog/0.23.1440.801@0.23.1440.801" timestamp="1603935363096" />
-    <state x="206" y="25" key="SettingsEditor" timestamp="1607400315184">
-      <screen x="0" y="25" width="1440" height="791" />
+    <state x="206" y="25" key="SettingsEditor" timestamp="1607406305745">
+      <screen x="0" y="25" width="1440" height="794" />
     </state>
     <state x="206" y="23" key="SettingsEditor/0.23.1440.798@0.23.1440.798" timestamp="1603947687182" />
     <state x="206" y="25" key="SettingsEditor/0.25.1440.791@0.25.1440.791" timestamp="1607400315184" />
+    <state x="206" y="25" key="SettingsEditor/0.25.1440.794@0.25.1440.794" timestamp="1607406305745" />
     <state x="219" y="152" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1604558118949">
       <screen x="0" y="23" width="1440" height="801" />
     </state>
@@ -307,7 +321,7 @@
         <line-breakpoint enabled="true" type="java-line">
           <condition expression="fullNameAndPathMethodVersion2.equals(&quot;nl.xservices.plugins.Toast#void onResume(boolean)&quot;)" language="JAVA" />
           <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java</url>
-          <line>559</line>
+          <line>560</line>
           <option name="timeStamp" value="241" />
         </line-breakpoint>
       </breakpoints>

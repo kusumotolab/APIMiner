@@ -106,11 +106,12 @@ public class MethodDescription extends TemplateDescription {
         return message;
     }
 
-    public String extract(final String nameMethodBefore, final String nameMethodAfter, final String nameClass){
+    public String extract(final String nameMethodBefore, final String nameClassBefore, final String nameMethodAfter, final String nameClassAfter){
         String message = "";
         message += "<br>Method <code>" + nameMethodAfter +"</code>";
+        message += "<br>in <code>" + nameClassBefore +"</code>";
         message += "<br>extracted from <code>" + nameMethodBefore +"</code>";
-        message += "<br>in <code>" + nameClass +"</code>";
+        message += "<br>in <code>" + nameClassAfter +"</code>";
         message += "<br>";
         return message;
     }

@@ -2,9 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Users/m-iriyam/github/PhilJay/MPAndroidChart" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Users/m-iriyam/github/bumptech/glide" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/t/Users/m-iriyam/github/bumptech/glide" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/tmp/refactoring-toy-example" vcs="Git" />
   </component>
 </project>
