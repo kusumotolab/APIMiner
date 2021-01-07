@@ -151,12 +151,13 @@ public class FieldDiff {
                 String[] attributeBefore = UtilToolsForRef.getAttributeBefore(ref);
                 String fullNameFiledAndPathBefore = UtilToolsForRef.getFullNameFieldAndPath(attributeBefore);
                 if(fullNameFiledAndPathBefore.equals(fullNameFieldAndPath)){
+                    String nameFieldBefore = UtilToolsForRef.getSimpleNameFieldAndType(fullNameFiledAndPathBefore);
                     String[] attributeAfter = UtilToolsForRef.getAttributeAfter(ref);
-                    String nameField = UtilToolsForRef.getSimpleNameField(attributeAfter);
-                    String nameClass = UtilToolsForRef.getClassPathOfField(attributeAfter);
-                    String description = this.description.returnType(nameField,nameClass);
-                    this.addChange(type, field, Category.FIELD_CHANGE_TYPE, true, description);
                     String fullNameFieldAndPathAfter = UtilToolsForRef.getFullNameFieldAndPath(attributeAfter);
+                    String nameFieldAfter = UtilToolsForRef.getSimpleNameFieldAndType(fullNameFieldAndPathAfter);
+                    String nameClass = UtilToolsForRef.getClassPathOfField(attributeAfter);
+                    String description = this.description.changeType(nameFieldBefore,nameFieldAfter,nameClass);
+                    this.addChange(type, field, Category.FIELD_CHANGE_TYPE, true, description);
                     this.fieldWithPathChanged.add(fullNameFieldAndPathAfter);
                     return true;
                 }

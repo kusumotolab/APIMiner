@@ -12,6 +12,7 @@ scripts/node/input
 *test.csv
 *Main.java
 *Examples.java
+*.DS_Store
 
 #Projects Files
 *.class

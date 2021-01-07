@@ -96,10 +96,6 @@ public class UtilToolsForRef {
                     ChangeReturnTypeRefactoring changeReturnType = (ChangeReturnTypeRefactoring) refactoring;
                     operationBefore = changeReturnType.getOperationBefore();
                     break;
-                default:
-                    System.err.println("failed in getOperationBefore() in APIDIFF");
-                    System.exit(1);
-                    break;
             }
         }
         return operationBefore;
@@ -160,10 +156,6 @@ public class UtilToolsForRef {
             case CHANGE_RETURN_TYPE:
                 ChangeReturnTypeRefactoring changeReturnType = (ChangeReturnTypeRefactoring) refactoring;
                 operationAfter = changeReturnType.getOperationAfter();
-                break;
-            default:
-                System.err.println("failed in getOperationBefore() in APIDIFF");
-                System.exit(1);
                 break;
         }
         return operationAfter;
@@ -333,5 +325,19 @@ public class UtilToolsForRef {
             simpleName = modifierAndName[modifierAndName.length - 1];
         }
         return simpleName;
+    }
+
+    public static String getSimpleNameFieldAndType(String fullNameAndPath){
+        String simpleNameFieldAndType = "";
+        if(fullNameAndPath!=null){
+            String[] arrayFullNameAndPath = fullNameAndPath.split("#");
+            if(arrayFullNameAndPath.length==2){
+                String[] arraySimpleNameAndType = arrayFullNameAndPath[1].split(" ");
+                if(arraySimpleNameAndType.length==2){
+                    simpleNameFieldAndType = arraySimpleNameAndType[1] + " : " + arraySimpleNameAndType[0];
+                }
+            }
+        }
+        return simpleNameFieldAndType;
     }
 }

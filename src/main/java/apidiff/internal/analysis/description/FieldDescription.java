@@ -79,23 +79,28 @@ public class FieldDescription extends TemplateDescription {
 
     public String changeDefaultValue(final String nameField, final String nameClass) {
         String message = "";
-        message += "field <code>" + nameField + "<code>";
+        message += "<br>field <code>" + nameField + "</code>";
         message += "<br>changed default value";
         message += "<br>in <code>" + nameClass + "</code>";
         message += "<br>";
         return message;
     }
 
-    public String returnType(final String nameField, final String nameClass) {
-        return super.messageReturnTypeTemplate("field", nameField, "type", nameClass);
+    public String changeType(final String nameFieldBefore, final String nameFieldAfter, final String nameClass) {
+        String message = "";
+        message += "<br>field <code>" + nameFieldBefore + "</code>";
+        message += "<br>changed field type to <code>" + nameFieldAfter + "</code>";
+        message += "<br>in <code>"+ nameClass + "</code>";
+        message += "<br>";
+        return message;
     }
 
     public String visibility(final String nameField, final String nameClass, final String visibility1, final String visibility2) {
-        return super.messageVisibilityTemplate("field", nameField, "type", nameClass, visibility1, visibility2);
+        return super.messageVisibilityTemplate("field", nameField, nameClass, visibility1, visibility2);
     }
 
     public String modifierFinal(final String nameField, final String nameClass, final Boolean isGain) {
-        return this.messageFinalTemplate("field", nameField, "type", nameClass, isGain);
+        return this.messageFinalTemplate("field", nameField, nameClass, isGain);
     }
 
     public String pullUp(final String nameField, final String nameClassBefore, final String nameClassAfter) {

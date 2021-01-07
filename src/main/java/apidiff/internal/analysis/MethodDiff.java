@@ -268,7 +268,8 @@ public class MethodDiff {
                     UMLOperation operationAfter = UtilToolsForRef.getOperationAfter(ref);
                     String fullNameMethodAndPathAfter = UtilToolsForRef.getFullNameMethodAndPath(operationAfter);
                     String nameMethodAfter = UtilToolsForRef.getSimpleNameMethod(operationAfter);
-                    String description = this.description.parameter(nameMethodAfter, nameMethodBefore, classPathBefore);
+                    String classPathAfter = UtilToolsForRef.getClassPathOfMethod(operationAfter);
+                    String description = this.description.parameter(nameMethodAfter, nameMethodBefore, classPathBefore,classPathAfter);
                     this.addChange(type, method, Category.METHOD_CHANGE_PARAMETER_LIST, true, description);
                     this.methodsWithPathChanged.add(fullNameMethodAndPathAfter);
                     return true;

@@ -28,13 +28,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0aff9d8-7c9a-45fc-b88a-ffaad9f78353" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/apidiff.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/apidiff.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_commands_3_9_700.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_commands_3_9_800.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_jobs_3_10_800.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_jobs_3_10_1000.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_resources_3_13_800.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_core_resources_3_13_900.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_common_3_13_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_common_3_14_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_preferences_3_8_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_preferences_3_8_100.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_registry_3_9_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_equinox_registry_3_10_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_osgi_3_16_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_osgi_3_16_100.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_text_3_10_300.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_eclipse_platform_org_eclipse_text_3_10_400.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/FieldDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/FieldDescription.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/MethodDescription.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TemplateDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TemplateDescription.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TypeDescription.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/description/TypeDescription.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/apidiff/internal/util/UtilToolsForRef.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/apidiff/internal/util/UtilToolsForRef.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -44,6 +65,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="APIMiner" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubPullRequestsUISettings">
@@ -54,12 +80,8 @@
       </set>
     </option>
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
-      </MavenGeneralSettings>
-    </option>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="1jS1OH1UDY8BrNKgbBZhmIiFoBk" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -69,11 +91,13 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager" selected="アプリケーション.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -130,161 +154,6 @@
       <path value="$PROJECT_DIR$/tmp/refactoring-toy-example" />
     </ignored-roots>
   </component>
-  <component name="WindowStateProjectService">
-    <state x="376" y="94" key="#Inspections" timestamp="1603954353990">
-      <screen x="0" y="23" width="1440" height="798" />
-    </state>
-    <state x="376" y="94" key="#Inspections/0.23.1440.798@0.23.1440.798" timestamp="1603954353990" />
-    <state x="182" y="71" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603948713868">
-      <screen x="0" y="23" width="1440" height="798" />
-    </state>
-    <state x="182" y="71" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.798@0.23.1440.798" timestamp="1603948713868" />
-    <state x="182" y="71" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.801@0.23.1440.801" timestamp="1603947514962" />
-    <state x="456" y="219" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1603947682114">
-      <screen x="0" y="23" width="1440" height="798" />
-    </state>
-    <state x="456" y="219" key="#com.intellij.ide.util.TreeClassChooserDialog/0.23.1440.798@0.23.1440.798" timestamp="1603947682114" />
-    <state x="71" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1605688534968">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="71" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1440.801@0.23.1440.801" timestamp="1605688534968" />
-    <state x="469" y="163" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1603935182289">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="469" y="163" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.801@0.23.1440.801" timestamp="1603935182289" />
-    <state x="469" y="163" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1603784686613">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="469" y="163" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.23.1440.801@0.23.1440.801" timestamp="1603784686613" />
-    <state x="628" y="169" key="#xdebugger.XInspectDialog" timestamp="1604642294654">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="628" y="169" key="#xdebugger.XInspectDialog/0.23.1440.801@0.23.1440.801" timestamp="1604642294654" />
-    <state x="471" y="119" key="#xdebugger.evaluate" timestamp="1604554540054">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="471" y="119" key="#xdebugger.evaluate/0.23.1440.801@0.23.1440.801" timestamp="1604554540054" />
-    <state x="401" y="246" key="#通知" timestamp="1607406283500">
-      <screen x="0" y="25" width="1440" height="794" />
-    </state>
-    <state x="401" y="246" key="#通知/0.25.1440.794@0.25.1440.794" timestamp="1607406283500" />
-    <state x="100" y="123" width="1216" height="572" key="DiffContextDialog" timestamp="1604557635957">
-      <screen x="0" y="23" width="1440" height="804" />
-    </state>
-    <state x="100" y="123" width="1216" height="572" key="DiffContextDialog/0.23.1440.804@0.23.1440.804" timestamp="1604557635957" />
-    <state width="1398" height="150" key="GridCell.Tab.0.bottom" timestamp="1607581145487">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="297" key="GridCell.Tab.0.bottom/0.23.1440.795@0.23.1440.795" timestamp="1605570416116" />
-    <state width="1398" height="116" key="GridCell.Tab.0.bottom/0.23.1440.798@0.23.1440.798" timestamp="1605746010125" />
-    <state width="1398" height="116" key="GridCell.Tab.0.bottom/0.23.1440.801@0.23.1440.801" timestamp="1605714537816" />
-    <state width="1374" height="232" key="GridCell.Tab.0.bottom/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
-    <state width="1374" height="111" key="GridCell.Tab.0.bottom/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="150" key="GridCell.Tab.0.bottom/0.25.1440.791@0.25.1440.791" timestamp="1607581145487" />
-    <state width="1398" height="144" key="GridCell.Tab.0.bottom/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="150" key="GridCell.Tab.0.center" timestamp="1607581145486">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="297" key="GridCell.Tab.0.center/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
-    <state width="1398" height="116" key="GridCell.Tab.0.center/0.23.1440.798@0.23.1440.798" timestamp="1605746010125" />
-    <state width="1398" height="116" key="GridCell.Tab.0.center/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
-    <state width="1374" height="232" key="GridCell.Tab.0.center/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
-    <state width="1374" height="111" key="GridCell.Tab.0.center/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="150" key="GridCell.Tab.0.center/0.25.1440.791@0.25.1440.791" timestamp="1607581145486" />
-    <state width="1398" height="144" key="GridCell.Tab.0.center/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="150" key="GridCell.Tab.0.left" timestamp="1607581145486">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="297" key="GridCell.Tab.0.left/0.23.1440.795@0.23.1440.795" timestamp="1605570416114" />
-    <state width="1398" height="116" key="GridCell.Tab.0.left/0.23.1440.798@0.23.1440.798" timestamp="1605746010125" />
-    <state width="1398" height="116" key="GridCell.Tab.0.left/0.23.1440.801@0.23.1440.801" timestamp="1605714537814" />
-    <state width="1374" height="232" key="GridCell.Tab.0.left/0.23.1440.804@0.23.1440.804" timestamp="1604922745035" />
-    <state width="1374" height="111" key="GridCell.Tab.0.left/0.23.1440.806@0.23.1440.806" timestamp="1604917253089" />
-    <state width="1398" height="150" key="GridCell.Tab.0.left/0.25.1440.791@0.25.1440.791" timestamp="1607581145486" />
-    <state width="1398" height="144" key="GridCell.Tab.0.left/0.25.1440.794@0.25.1440.794" timestamp="1606199787622" />
-    <state width="1398" height="150" key="GridCell.Tab.0.right" timestamp="1607581145487">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="297" key="GridCell.Tab.0.right/0.23.1440.795@0.23.1440.795" timestamp="1605570416115" />
-    <state width="1398" height="116" key="GridCell.Tab.0.right/0.23.1440.798@0.23.1440.798" timestamp="1605746010125" />
-    <state width="1398" height="116" key="GridCell.Tab.0.right/0.23.1440.801@0.23.1440.801" timestamp="1605714537815" />
-    <state width="1374" height="232" key="GridCell.Tab.0.right/0.23.1440.804@0.23.1440.804" timestamp="1604922745036" />
-    <state width="1374" height="111" key="GridCell.Tab.0.right/0.23.1440.806@0.23.1440.806" timestamp="1604917253090" />
-    <state width="1398" height="150" key="GridCell.Tab.0.right/0.25.1440.791@0.25.1440.791" timestamp="1607581145487" />
-    <state width="1398" height="144" key="GridCell.Tab.0.right/0.25.1440.794@0.25.1440.794" timestamp="1606199787623" />
-    <state width="1398" height="246" key="GridCell.Tab.1.bottom" timestamp="1606206031182">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="222" key="GridCell.Tab.1.bottom/0.23.1440.795@0.23.1440.795" timestamp="1605520117856" />
-    <state width="1398" height="497" key="GridCell.Tab.1.bottom/0.23.1440.798@0.23.1440.798" timestamp="1605691502884" />
-    <state width="1398" height="228" key="GridCell.Tab.1.bottom/0.23.1440.801@0.23.1440.801" timestamp="1605695377957" />
-    <state width="1374" height="181" key="GridCell.Tab.1.bottom/0.23.1440.804@0.23.1440.804" timestamp="1604908692727" />
-    <state width="1374" height="249" key="GridCell.Tab.1.bottom/0.23.1440.806@0.23.1440.806" timestamp="1604916266873" />
-    <state width="1398" height="246" key="GridCell.Tab.1.bottom/0.25.1440.791@0.25.1440.791" timestamp="1606206031182" />
-    <state width="1398" height="252" key="GridCell.Tab.1.bottom/0.25.1440.794@0.25.1440.794" timestamp="1605853967681" />
-    <state width="1398" height="246" key="GridCell.Tab.1.center" timestamp="1606206031181">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="222" key="GridCell.Tab.1.center/0.23.1440.795@0.23.1440.795" timestamp="1605520117856" />
-    <state width="1398" height="497" key="GridCell.Tab.1.center/0.23.1440.798@0.23.1440.798" timestamp="1605691502883" />
-    <state width="1398" height="228" key="GridCell.Tab.1.center/0.23.1440.801@0.23.1440.801" timestamp="1605695377956" />
-    <state width="1374" height="181" key="GridCell.Tab.1.center/0.23.1440.804@0.23.1440.804" timestamp="1604908692727" />
-    <state width="1374" height="249" key="GridCell.Tab.1.center/0.23.1440.806@0.23.1440.806" timestamp="1604916266873" />
-    <state width="1398" height="246" key="GridCell.Tab.1.center/0.25.1440.791@0.25.1440.791" timestamp="1606206031181" />
-    <state width="1398" height="252" key="GridCell.Tab.1.center/0.25.1440.794@0.25.1440.794" timestamp="1605853967681" />
-    <state width="1398" height="246" key="GridCell.Tab.1.left" timestamp="1606206031181">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="222" key="GridCell.Tab.1.left/0.23.1440.795@0.23.1440.795" timestamp="1605520117856" />
-    <state width="1398" height="497" key="GridCell.Tab.1.left/0.23.1440.798@0.23.1440.798" timestamp="1605691502883" />
-    <state width="1398" height="228" key="GridCell.Tab.1.left/0.23.1440.801@0.23.1440.801" timestamp="1605695377956" />
-    <state width="1374" height="181" key="GridCell.Tab.1.left/0.23.1440.804@0.23.1440.804" timestamp="1604908692727" />
-    <state width="1374" height="249" key="GridCell.Tab.1.left/0.23.1440.806@0.23.1440.806" timestamp="1604916266872" />
-    <state width="1398" height="246" key="GridCell.Tab.1.left/0.25.1440.791@0.25.1440.791" timestamp="1606206031181" />
-    <state width="1398" height="252" key="GridCell.Tab.1.left/0.25.1440.794@0.25.1440.794" timestamp="1605853967680" />
-    <state width="1398" height="246" key="GridCell.Tab.1.right" timestamp="1606206031182">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state width="1398" height="222" key="GridCell.Tab.1.right/0.23.1440.795@0.23.1440.795" timestamp="1605520117856" />
-    <state width="1398" height="497" key="GridCell.Tab.1.right/0.23.1440.798@0.23.1440.798" timestamp="1605691502883" />
-    <state width="1398" height="228" key="GridCell.Tab.1.right/0.23.1440.801@0.23.1440.801" timestamp="1605695377956" />
-    <state width="1374" height="181" key="GridCell.Tab.1.right/0.23.1440.804@0.23.1440.804" timestamp="1604908692727" />
-    <state width="1374" height="249" key="GridCell.Tab.1.right/0.23.1440.806@0.23.1440.806" timestamp="1604916266873" />
-    <state width="1398" height="246" key="GridCell.Tab.1.right/0.25.1440.791@0.25.1440.791" timestamp="1606206031182" />
-    <state width="1398" height="252" key="GridCell.Tab.1.right/0.25.1440.794@0.25.1440.794" timestamp="1605853967681" />
-    <state x="269" y="71" key="Maven.ArtifactSearchDialog" timestamp="1603935363096">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="269" y="71" key="Maven.ArtifactSearchDialog/0.23.1440.801@0.23.1440.801" timestamp="1603935363096" />
-    <state x="206" y="25" key="SettingsEditor" timestamp="1607406305745">
-      <screen x="0" y="25" width="1440" height="794" />
-    </state>
-    <state x="206" y="23" key="SettingsEditor/0.23.1440.798@0.23.1440.798" timestamp="1603947687182" />
-    <state x="206" y="25" key="SettingsEditor/0.25.1440.791@0.25.1440.791" timestamp="1607400315184" />
-    <state x="206" y="25" key="SettingsEditor/0.25.1440.794@0.25.1440.794" timestamp="1607406305745" />
-    <state x="219" y="152" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1604558118949">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="219" y="152" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1440.801@0.23.1440.801" timestamp="1604558118949" />
-    <state width="600" height="428" key="javadoc.popup" timestamp="1603784663094">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state width="600" height="428" key="javadoc.popup/0.23.1440.801@0.23.1440.801" timestamp="1603784663094" />
-    <state x="407" y="182" key="refactoring.ChangeSignatureDialog" timestamp="1604497350987">
-      <screen x="0" y="23" width="1440" height="801" />
-    </state>
-    <state x="407" y="182" key="refactoring.ChangeSignatureDialog/0.23.1440.801@0.23.1440.801" timestamp="1604497350987" />
-    <state x="385" y="149" width="670" height="669" key="search.everywhere.popup" timestamp="1606182224499">
-      <screen x="0" y="25" width="1440" height="791" />
-    </state>
-    <state x="385" y="147" width="670" height="671" key="search.everywhere.popup/0.23.1440.795@0.23.1440.795" timestamp="1605486416508" />
-    <state x="385" y="148" width="670" height="674" key="search.everywhere.popup/0.23.1440.798@0.23.1440.798" timestamp="1605573339552" />
-    <state x="385" y="148" width="670" height="676" key="search.everywhere.popup/0.23.1440.801@0.23.1440.801" timestamp="1605578450394" />
-    <state x="385" y="148" width="670" height="679" key="search.everywhere.popup/0.23.1440.804@0.23.1440.804" timestamp="1604902401434" />
-    <state x="385" y="149" width="670" height="681" key="search.everywhere.popup/0.23.1440.806@0.23.1440.806" timestamp="1604914951377" />
-    <state x="385" y="149" width="670" height="669" key="search.everywhere.popup/0.25.1440.791@0.25.1440.791" timestamp="1606182224499" />
-    <state x="385" y="149" width="670" height="671" key="search.everywhere.popup/0.25.1440.794@0.25.1440.794" timestamp="1605838861475" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -294,33 +163,15 @@
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="method.methodName.toString().equals(&quot;wrap&quot;)" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java</url>
-          <line>227</line>
-          <option name="timeStamp" value="233" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <condition expression="fullNameFieldAndPath.contains(&quot;graphStorage&quot;)" language="JAVA" />
           <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java</url>
-          <line>201</line>
+          <line>202</line>
           <option name="timeStamp" value="236" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <condition expression="fieldInVersion1.toString().contains(&quot;SOURCE_OTHER&quot;)" language="JAVA" />
           <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/FieldDiff.java</url>
-          <line>419</line>
-          <option name="timeStamp" value="239" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/visitor/APIVersion.java</url>
-          <line>267</line>
-          <option name="timeStamp" value="240" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <condition expression="fullNameAndPathMethodVersion2.equals(&quot;nl.xservices.plugins.Toast#void onResume(boolean)&quot;)" language="JAVA" />
-          <url>file://$PROJECT_DIR$/src/main/java/apidiff/internal/analysis/MethodDiff.java</url>
-          <line>560</line>
-          <option name="timeStamp" value="241" />
+          <line>159</line>
+          <option name="timeStamp" value="262" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -330,5 +181,8 @@
         <PinnedItemInfo parentTag="org.eclipse.jdt.core.dom.MethodDeclaration" memberName="methodName" />
       </pinned-members>
     </pin-to-top-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/apidiff$Main.ic" NAME="Main Coverage Results" MODIFIED="1609762934020" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
