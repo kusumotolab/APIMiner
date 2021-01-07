@@ -21,7 +21,10 @@ scripts/node/input
 .settings/
 target/
 bin/
+
+#IntelliJ
 .idea/
+apidiff.iml
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
