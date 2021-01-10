@@ -13,6 +13,7 @@ scripts/node/input
 *Main.java
 *Examples.java
 *.DS_Store
+/src/main/java/experiment/
 
 #Projects Files
 *.class
