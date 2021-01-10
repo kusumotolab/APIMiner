@@ -7,18 +7,18 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.aserg-ufmg</groupId>
-	<artifactId>apidiff</artifactId>
+	<groupId>com.github.m-iriyam</groupId>
+	<artifactId>apiminer</artifactId>
 	<version>2.0.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>APIDiff</name>
+	<name>APIMiner</name>
 	<description>A tool to identify API breaking and non-breaking changes between two versions of a Java library</description>
-	<url>https://github.com/aserg-ufmg/apidiff</url>
+	<url>https://github.com/m-iriyam/APIMiner</url>
 
 	<scm>
-		<connection>scm:git:https://github.com/aserg-ufmg/apidiff.git</connection>
-		<developerConnection>scm:git:https://github.com/aserg-ufmg/apidiff.git</developerConnection>
-		<url>https://github.com/aserg-ufmg/apidiff.git</url>
+		<connection>scm:git:https://github.com/m-iriyam/APIMiner.git</connection>
+		<developerConnection>scm:git:https://github.com/m-iriyam/APIMiner.git</developerConnection>
+		<url>https:https://github.com/m-iriyam/APIMiner.git</url>
 		<tag>2.0.0</tag>
   	</scm>
 
@@ -104,22 +104,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
-				<configuration>
-					<finalName>apidiff</finalName>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
-				<configuration>
-					<pushChanges>false</pushChanges>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.7</version>
 				<configuration>
@@ -139,7 +123,7 @@
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryName>testMaven</repositoryName>      <!-- github repo name -->
+					<repositoryName>APIMiner</repositoryName>      <!-- github repo name -->
 					<repositoryOwner>m-iriyam</repositoryOwner>    <!-- github username -->
 				</configuration>
 				<executions>
