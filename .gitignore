@@ -12,6 +12,7 @@ scripts/node/input
 *test.csv
 *Main.java
 *Examples.java
+*.DS_Store
 
 #Projects Files
 *.class
@@ -20,6 +21,10 @@ scripts/node/input
 .settings/
 target/
 bin/
+
+#IntelliJ
+.idea/
+apidiff.iml
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

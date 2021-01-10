@@ -8,12 +8,13 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import apidiff.Result;
 import apidiff.internal.visitor.APIVersion;
-import refdiff.core.api.RefactoringType;
-import refdiff.core.rm2.model.refactoring.SDRefactoring;
+import org.refactoringminer.api.Refactoring;
+import org.refactoringminer.api.RefactoringType;
+
 
 public interface DiffProcessor {
 	
-	public Map<RefactoringType, List<SDRefactoring>> detectRefactoring(final Repository repository, final String commit);
+	public Map<RefactoringType, List<Refactoring>> detectRefactoring(final Repository repository, final String commit);
 	
 	public Result detectChange(final APIVersion version1, final APIVersion version2, final Repository repository, final RevCommit revCommit);
 

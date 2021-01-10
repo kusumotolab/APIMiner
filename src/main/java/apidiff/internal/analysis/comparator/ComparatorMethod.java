@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
 /**
@@ -19,9 +20,16 @@ public class ComparatorMethod {
 			return true;
 		}
 		else{
-			
+			List<SingleVariableDeclaration> parameterListVersion1 = methodVersion1.parameters();
+			List<SingleVariableDeclaration> parameterListVersion2 = methodVersion2.parameters();
 			for(int i = 0; i < methodVersion1.parameters().size(); i++){
-				
+				SingleVariableDeclaration parameterVersion1 = parameterListVersion1.get(i);
+				SingleVariableDeclaration parameterVersion2 = parameterListVersion2.get(i);
+
+				String type1 = parameterVersion1.getType().toString();
+				String type2 = parameterVersion2.getType().toString();
+
+				/*
 				String parameterVersion1 = methodVersion1.parameters().get(i).toString();
 				String parameterVersion2 = methodVersion2.parameters().get(i).toString();
 				
@@ -30,6 +38,7 @@ public class ComparatorMethod {
 				
 				String type1 = listParameterVersion1.get(listParameterVersion1.size()-2);
 				String type2 = listParameterVersion2.get(listParameterVersion2.size()-2);
+				 */
 				if(!type1.equals(type2)){
 					return true;
 				}
