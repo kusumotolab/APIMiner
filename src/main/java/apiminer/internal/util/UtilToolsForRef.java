@@ -333,9 +333,12 @@ public class UtilToolsForRef {
             String[] arrayFullNameAndPath = fullNameAndPath.split("#");
             if(arrayFullNameAndPath.length==2){
                 String[] arraySimpleNameAndType = arrayFullNameAndPath[1].split(" ");
-                if(arraySimpleNameAndType.length==2){
-                    simpleNameFieldAndType = arraySimpleNameAndType[1] + " : " + arraySimpleNameAndType[0];
+                List<String> typeList = new ArrayList<String>();
+                for(int i=0;i<arraySimpleNameAndType.length-1;i++){
+                    typeList.add(arraySimpleNameAndType[i]);
                 }
+                String type = String.join(" ",typeList);
+                simpleNameFieldAndType = arraySimpleNameAndType[arraySimpleNameAndType.length-1] + " : " + type;
             }
         }
         return simpleNameFieldAndType;
