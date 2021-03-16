@@ -5,6 +5,7 @@ import apiminer.internal.visitor.APIVersion;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -227,6 +228,14 @@ public class UtilTools {
 		String pathComplete = isNullOrEmpty(path) ? "./" : path + "/";
 		pathComplete += isNullOrEmpty(nameProject) ? "" : nameProject;
 		return pathComplete;
+	}
+	public static String getFileAbsolutePath(File file){
+		String absoulutePath = file.getAbsolutePath();
+		if(File.separator.toString().equals("\\")){
+			String regex = "\\\\";
+			absoulutePath = absoulutePath.replaceAll(regex,"/");
+		}
+		return absoulutePath;
 	}
 	
 	public static Boolean isNullOrEmpty(final String text){
