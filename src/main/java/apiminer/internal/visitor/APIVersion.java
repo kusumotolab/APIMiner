@@ -48,8 +48,9 @@ public class APIVersion {
             this.classifierAPI = classifierAPI;
             this.mapModifications = mapModifications;
             this.path = path;
-            this.nameProject = file.getAbsolutePath().replaceAll(this.path + "/", "");
-            String prefix = file.getAbsolutePath() + "/";
+            String fileAbsolutePath = UtilTools.getFileAbsolutePath(file);
+            this.nameProject = fileAbsolutePath.replaceAll(this.path + "/", "");
+            String prefix = fileAbsolutePath + "/";
             for (ChangeType changeType : this.mapModifications.keySet()) {
                 for (GitFile gitFile : mapModifications.get(changeType)) {
                     if (gitFile.getPathOld() != null) {
@@ -80,7 +81,10 @@ public class APIVersion {
 
     public void parseFilesInDir(File file, final Boolean ignoreTreeDiff) throws IOException {
         if (file.isFile()) {
-            String simpleNameFile = UtilTools.getSimpleNameFileWithouPackageWithNameLibrary(this.path, file.getAbsolutePath(), this.nameProject);
+            String simpleNameFile = UtilTools.getSimpleNameFileWithouPackageWithNameLibrary(this.path, UtilTools.getFileAbsolutePath(file), this.nameProject);
+            Boolean b0 = UtilTools.isJavaFile(file.getName());
+            Boolean b1 = this.isFileModification(file, ignoreTreeDiff);
+            Boolean b2 = UtilTools.isAPIByClassifier(simpleNameFile, this.classifierAPI);
             if (UtilTools.isJavaFile(file.getName()) && this.isFileModification(file, ignoreTreeDiff) && UtilTools.isAPIByClassifier(simpleNameFile, this.classifierAPI)) {
                 this.parse(UtilTools.readFileToString(file.getAbsolutePath()), file, ignoreTreeDiff);
             }
@@ -145,7 +149,7 @@ public class APIVersion {
     }
 
     private Boolean isFileModification(final File source, final Boolean ignoreTreeDiff) {
-        return (ignoreTreeDiff || this.listFilesMofify.contains(source.getAbsolutePath())) ? true : false;
+        return (ignoreTreeDiff || this.listFilesMofify.contains(UtilTools.getFileAbsolutePath(source))) ? true : false;
     }
 
     public ArrayList<EnumDeclaration> getApiAccessibleEnums() {
