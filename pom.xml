@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.m-iriyam</groupId>
 	<artifactId>apiminer</artifactId>
-	<version>1.0</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>APIMiner</name>
 	<description>A tool to identify API breaking and non-breaking changes between two versions of a Java library</description>

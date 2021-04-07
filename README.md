@@ -111,7 +111,7 @@ In order to use APIMiner as a maven dependency in your project, add the followin
     <dependency>
         <groupId>com.github.m-iriyam</groupId>
         <artifactId>apiminer</artifactId>
-        <version>1.0</version>
+        <version>1.0.0</version>
     </dependency>
 </dependencies>
 ```
