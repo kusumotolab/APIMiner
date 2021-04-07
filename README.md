@@ -1,6 +1,6 @@
-# APIDiff
+# APIMiner
 
-A tool to identify API breaking and non-breaking changes between two versions of a Java library. APIDiff analyses libraries hosted on the distributed version control system _git_.
+APIMiner is a fork for [APIDiff](https://github.com/aserg-ufmg/apidiff). A tool to identify API breaking and non-breaking changes between two versions of a Java library. APIMiner analyses libraries hosted on the distributed version control system _git_. While APIDiff uses RefDiff to detect refactorings between two versions of a Java library,  APIMiner uses [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
 
 ## Catalog
 
@@ -8,9 +8,9 @@ _Breaking Changes_ are modifications performed in API elements such as types, me
 
 | Element  | Breaking Changes (BC) |
 | ------------- | ------------- |
-| Type  | rename, move, move and rename, remove, lost visibility, add final modifier,  remove static modifier, change in supertype, remove supertype |
-| Method  | move, rename, remove, push down, inline, change in parameter list, change in exception list, change in return type, lost visibility, add final modifier, remove static modifier  | 
-| Field  |  remove, move, push down field, change in default value, change in type field,  lost visibility, add final modifier | 
+| Type  | rename, move, move and rename, remove, lost visibility, add final modifier,  remove static modifier, change in supertype, remove supertype, extract type, extract subtype |
+| Method  | move, rename, remove, push down, inline, change in parameter list, change in exception list, change in return type, lost visibility, add final modifier, remove static modifier, move and rename  | 
+| Field  |  remove, move, push down field, change in default value, change in type field,  lost visibility, add final modifier, rename, move and rename | 
 
 _Non-breaking Changes_ are modifications that do not break clients:
 
@@ -18,10 +18,10 @@ _Non-breaking Changes_ are modifications that do not break clients:
 | ------------- | ------------- |
 | Type  | add, extract supertype, gain visibility, remove final modifier, add static modifier, add supertype, deprecated type|
 | Method  | pull up, gain visibility, remove final modifier, add static modifier, deprecated method, add, extract| 
-| Field  | pull up, add, deprecated field, gain visibility, remove final modifier|
+| Field  | pull up, add, deprecated field, gain visibility, remove final modifier, extract field |
 
 
-The refactorings catalog is reused from [RefDiff](https://github.com/aserg-ufmg/RefDiff).
+The refactorings catalog is reused from [APIDiff](https://github.com/aserg-ufmg/apidiff). The refactorings only APIMiner can detect is reused form [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
 
 ## Examples
 
@@ -39,7 +39,7 @@ for(Change changeMethod : result.getChangeMethod()){
 * Detecting changes in specific commit:
 
 ```java
-APIDiff diff = new APIDiff("mockito/mockito", "https://github.com/mockito/mockito.git");
+APIMiner diff = new APIMiner("mockito/mockito", "https://github.com/mockito/mockito.git");
 diff.setPath("/home/projects/github");
 
 Result result = diff.detectChangeAtCommit("4ad5fdc14ca4b979155d10dcea0182c82380aefa", Classifier.API);
@@ -50,7 +50,7 @@ for(Change changeMethod : result.getChangeMethod()){
 * Fetching new commits:
 
 ```java
-APIDiff diff = new APIDiff("bumptech/glide", "https://github.com/bumptech/glide.git");
+APMiner diff = new APIMiner("bumptech/glide", "https://github.com/bumptech/glide.git");
 diff.setPath("/home/projects/github");
     
 Result result = diff.fetchAndDetectChange(Classifier.API);
@@ -62,7 +62,7 @@ for(Change changeMethod : result.getChangeMethod()){
 * Writing a CSV file:
 
 ```java
-APIDiff diff = new APIDiff("mockito/mockito", "https://github.com/mockito/mockito.git");
+APIMiner diff = new APIMiner("mockito/mockito", "https://github.com/mockito/mockito.git");
 diff.setPath("/home/projects/github");
 Result result = diff.detectChangeAtCommit("4ad5fdc14ca4b979155d10dcea0182c82380aefa", Classifier.API);
 		
@@ -102,8 +102,3 @@ APIDiff is available in the [Maven Central Repository](https://mvnrepository.com
     <version>2.0.0</version>
 </dependency>
 ```
-## Publications
-
-Aline Brito, Laerte Xavier, Andre Hora, Marco Tulio Valente. [APIDiff: Detecting API Breaking Changes](http://homepages.dcc.ufmg.br/~mtov/pub/2018-saner-apidiff.pdf). In 25th International Conference on Software Analysis, Evolution and Reengineering (SANER), Tool Track, pages 1-5, 2018.
-
-Learn more about our research group at http://aserg.labsoft.dcc.ufmg.br/
