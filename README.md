@@ -1,6 +1,6 @@
 # APIMiner
 
-APIMiner is a fork for [APIDiff](https://github.com/aserg-ufmg/apidiff). A tool to identify API breaking and non-breaking changes between two versions of a Java library. APIMiner analyses libraries hosted on the distributed version control system _git_. While APIDiff uses RefDiff to detect refactorings between two versions of a Java library,  APIMiner uses [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
+APIMiner is a fork for [APIDiff](https://github.com/aserg-ufmg/apidiff). APIMiner is a tool to identify API breaking and non-breaking changes between two versions of a Java library. APIMiner analyses libraries hosted on the distributed version control system _git_. While APIDiff uses [RefDiff](https://github.com/aserg-ufmg/RefDiff) to detect refactorings between two versions of a Java library,  APIMiner uses [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
 
 ## Catalog
 
@@ -93,7 +93,7 @@ Classifier.API: Elements that are not non-APIs.
 
 ## Usage
 
-APIDiff is available in the [Maven Central Repository](https://mvnrepository.com/artifact/com.github.aserg-ufmg/apidiff/2.0.0):
+In order to use APIMiner as a maven dependency in your project, add the following snippet to your project's build configuration file:
 
 ```xml
 <repositories>
@@ -108,7 +108,7 @@ APIDiff is available in the [Maven Central Repository](https://mvnrepository.com
 </repositories>
 
 <dependencies>
-    dependency>
+    <dependency>
         <groupId>com.github.m-iriyam</groupId>
         <artifactId>apiminer</artifactId>
         <version>2.0.1.1-SNAPSHOT</version>
