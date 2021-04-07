@@ -96,9 +96,22 @@ Classifier.API: Elements that are not non-APIs.
 APIDiff is available in the [Maven Central Repository](https://mvnrepository.com/artifact/com.github.aserg-ufmg/apidiff/2.0.0):
 
 ```xml
-<dependency>
-    <groupId>com.github.aserg-ufmg</groupId>
-    <artifactId>apidiff</artifactId>
-    <version>2.0.0</version>
-</dependency>
+<repositories>
+   <repository>
+        <id>apiminer</id>
+        <url>https://github.com/m-iriyam/apiminer/mvn-repo/</url>
+        <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
+</repositories>
+
+<dependencies>
+    dependency>
+        <groupId>com.github.m-iriyam</groupId>
+        <artifactId>apiminer</artifactId>
+        <version>2.0.1.1-SNAPSHOT</version>
+    </dependency>
+</dependencies>
 ```
