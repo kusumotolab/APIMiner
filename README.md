@@ -28,7 +28,7 @@ The refactorings catalog is reused from [APIDiff](https://github.com/aserg-ufmg/
 * Detecting changes in version histories:
 
 ```java
-APIDiff diff = new APIDiff("bumptech/glide", "https://github.com/bumptech/glide.git");
+APIMiner diff = new APIMiner("bumptech/glide", "https://github.com/bumptech/glide.git");
 diff.setPath("/home/projects/github");
 
 Result result = diff.detectChangeAllHistory("master", Classifier.API);
