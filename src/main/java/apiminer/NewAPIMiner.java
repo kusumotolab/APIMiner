@@ -3,8 +3,8 @@ package apiminer;
 import java.io.File;
 import java.util.*;
 
+import apiminer.internal.analysis.NewDiffProcessor;
 import apiminer.internal.analysis.description.DiffMiner;
-import extension.Miner;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -135,17 +135,8 @@ public class NewAPIMiner implements DiffDetector{
         File projectFolder = new File(UtilTools.getPathProject(this.path, nameProject));
         if(currentCommit.getParentCount() != 0){//there is at least one parent
             try {
-                DiffMiner miner = new DiffMiner();
-                List<Refactoring> refactoringList = new ArrayList<>();
-                miner.detectAtCommit(repository,currentCommit.getName(),new RefactoringHandler() {
-                    public void handle(String commitId, List<Refactoring> refactorings) {
-                        refactoringList.addAll(refactorings);
-                    }
-                });
-                APIVersion version1 = this.getAPIVersionByCommit(currentCommit.getParent(0).getName(), projectFolder, repository, currentCommit, classifierAPI);//old version
-                APIVersion version2 = this.getAPIVersionByCommit(currentCommit.getId().getName(), projectFolder, repository, currentCommit, classifierAPI); //new version
-                DiffProcessor diff = new DiffProcessorImpl();
-                return diff.detectChange(version1, version2, repository, currentCommit);
+                NewDiffProcessor newDiffProcessor = new NewDiffProcessor();
+                return newDiffProcessor.detectChange(repository,currentCommit,classifierAPI);
             } catch (Exception e) {
                 this.logger.error("Error during checkout [commit=" + currentCommit + "]");
             }

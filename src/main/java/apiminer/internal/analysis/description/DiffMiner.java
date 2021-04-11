@@ -5,43 +5,12 @@
 
 package apiminer.internal.analysis.description;
 
+import apiminer.enums.Classifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gr.uom.java.xmi.UMLClass;
+import extension.ModelDiff;
 import gr.uom.java.xmi.UMLModel;
 import gr.uom.java.xmi.UMLModelASTReader;
-import gr.uom.java.xmi.diff.UMLClassBaseDiff;
 import gr.uom.java.xmi.diff.UMLModelDiff;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -53,52 +22,81 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.kohsuke.github.GHCommit;
-import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHPullRequestCommitDetail;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositoryWrapper;
-import org.kohsuke.github.GHTree;
-import org.kohsuke.github.GHTreeEntry;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.PagedIterable;
-import org.kohsuke.github.PagedIterator;
-import org.refactoringminer.api.Churn;
-import org.refactoringminer.api.GitHistoryRefactoringMiner;
-import org.refactoringminer.api.GitService;
-import org.refactoringminer.api.Refactoring;
-import org.refactoringminer.api.RefactoringHandler;
-import org.refactoringminer.api.RefactoringMinerTimedOutException;
-import org.refactoringminer.api.RefactoringType;
+import org.refactoringminer.api.*;
 import org.refactoringminer.rm1.GitHistoryRefactoringMinerImpl;
 import org.refactoringminer.util.GitServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DiffMiner{
-    Logger logger = LoggerFactory.getLogger(GitHistoryRefactoringMinerImpl.class);
-    private Set<RefactoringType> refactoringTypesToConsider = null;
-    private GitHub gitHub;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+public class DiffMiner {
     private static final String systemFileSeparator;
     private static final String GITHUB_URL = "https://github.com/";
     private static final String BITBUCKET_URL = "https://bitbucket.org/";
 
-    public DiffMiner() {
-        this.setRefactoringTypesToConsider(RefactoringType.ALL);
+    static {
+        systemFileSeparator = Matcher.quoteReplacement(File.separator);
     }
 
-    public void setRefactoringTypesToConsider(RefactoringType... types) {
-        this.refactoringTypesToConsider = new HashSet();
-        RefactoringType[] var2 = types;
-        int var3 = types.length;
+    Logger logger = LoggerFactory.getLogger(GitHistoryRefactoringMinerImpl.class);
+    private Classifier classifierAPI;
+    private ModelDiff newModelDiff;
 
-        for(int var4 = 0; var4 < var3; ++var4) {
-            RefactoringType type = var2[var4];
-            this.refactoringTypesToConsider.add(type);
+    private GitHub gitHub;
+
+    private static String extractRepositoryName(String cloneURL) {
+        int hostLength = 0;
+        if (cloneURL.startsWith("https://github.com/")) {
+            hostLength = "https://github.com/".length();
+        } else if (cloneURL.startsWith("https://bitbucket.org/")) {
+            hostLength = "https://bitbucket.org/".length();
         }
 
+        int indexOfDotGit = cloneURL.length();
+        if (cloneURL.endsWith(".git")) {
+            indexOfDotGit = cloneURL.indexOf(".git");
+        } else if (cloneURL.endsWith("/")) {
+            indexOfDotGit = cloneURL.length() - 1;
+        }
+
+        String repoName = cloneURL.substring(hostLength, indexOfDotGit);
+        return repoName;
     }
 
+    private static String extractDownloadLink(String cloneURL, String commitId) {
+        int indexOfDotGit = cloneURL.length();
+        if (cloneURL.endsWith(".git")) {
+            indexOfDotGit = cloneURL.indexOf(".git");
+        } else if (cloneURL.endsWith("/")) {
+            indexOfDotGit = cloneURL.length() - 1;
+        }
 
+        String downloadResource = "/";
+        if (cloneURL.startsWith("https://github.com/")) {
+            downloadResource = "/archive/";
+        } else if (cloneURL.startsWith("https://bitbucket.org/")) {
+            downloadResource = "/get/";
+        }
+
+        String downloadLink = cloneURL.substring(0, indexOfDotGit) + downloadResource + commitId + ".zip";
+        return downloadLink;
+    }
+
+    public ModelDiff createModelDiff(Repository repository, String commitId, Classifier classifierAPI) {
+        this.classifierAPI = classifierAPI;
+        detectAtCommit(repository, commitId, new RefactoringHandler() {
+        });
+        return newModelDiff;
+    }
 
     protected List<Refactoring> detectRefactorings(GitService gitService, Repository repository, RefactoringHandler handler, File projectFolder, RevCommit currentCommit) throws Exception {
         String commitId = currentCommit.getId().getName();
@@ -117,13 +115,12 @@ public class DiffMiner{
             if (!filePathsBefore.isEmpty() && !filePathsCurrent.isEmpty() && currentCommit.getParentCount() > 0) {
                 RevCommit parentCommit = currentCommit.getParent(0);
                 this.populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore, repositoryDirectoriesBefore);
-                UMLModel parentUMLModel = this.createModel((Map)fileContentsBefore, (Set)repositoryDirectoriesBefore);
+                UMLModel parentUMLModel = this.createModel((Map) fileContentsBefore, (Set) repositoryDirectoriesBefore);
                 this.populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent, repositoryDirectoriesCurrent);
-                UMLModel currentUMLModel = this.createModel((Map)fileContentsCurrent, (Set)repositoryDirectoriesCurrent);
+                UMLModel currentUMLModel = this.createModel((Map) fileContentsCurrent, (Set) repositoryDirectoriesCurrent);
                 UMLModelDiff modelDiff = parentUMLModel.diff(currentUMLModel, renamedFilesHint);
                 refactoringsAtRevision = modelDiff.getRefactorings();
-                refactoringsAtRevision = this.filter(refactoringsAtRevision);
-                UMLModelDiffExtend umlModelDiffExtend = new UMLModelDiffExtend(parentUMLModel,currentUMLModel,renamedFilesHint);
+                newModelDiff = new ModelDiff(parentUMLModel, currentUMLModel, modelDiff,classifierAPI);
             } else {
                 refactoringsAtRevision = Collections.emptyList();
             }
@@ -154,7 +151,7 @@ public class DiffMiner{
             treeWalk.setRecursive(true);
 
             label46:
-            while(true) {
+            while (true) {
                 String pathString;
                 do {
                     do {
@@ -170,14 +167,14 @@ public class DiffMiner{
                             IOUtils.copy(loader.openStream(), writer);
                             fileContents.put(pathString, writer.toString());
                         }
-                    } while(!pathString.endsWith(".java"));
-                } while(!pathString.contains("/"));
+                    } while (!pathString.endsWith(".java"));
+                } while (!pathString.contains("/"));
 
                 String directory = pathString.substring(0, pathString.lastIndexOf("/"));
                 repositoryDirectories.add(directory);
                 String subDirectory = new String(directory);
 
-                while(subDirectory.contains("/")) {
+                while (subDirectory.contains("/")) {
                     subDirectory = subDirectory.substring(0, subDirectory.lastIndexOf("/"));
                     repositoryDirectories.add(subDirectory);
                 }
@@ -223,8 +220,7 @@ public class DiffMiner{
                 UMLModel parentUMLModel = this.createModel(parentFolder, filesBefore);
                 UMLModelDiff modelDiff = parentUMLModel.diff(currentUMLModel, renamedFilesHint);
                 refactoringsAtRevision = modelDiff.getRefactorings();
-                refactoringsAtRevision = this.filter(refactoringsAtRevision);
-                UMLModelDiffExtend umlModelDiffExtend = new UMLModelDiffExtend(parentUMLModel,currentUMLModel,renamedFilesHint);
+                newModelDiff = new ModelDiff(parentUMLModel, currentUMLModel, modelDiff,classifierAPI);
             } else {
                 this.logger.warn(String.format("Folder %s not found", currentFolder.getPath()));
             }
@@ -250,8 +246,8 @@ public class DiffMiner{
         try {
             Enumeration entries = zipFile.entries();
 
-            while(entries.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry)entries.nextElement();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
                 File entryDestination = new File(projectFolder.getParentFile(), entry.getName());
                 if (entry.isDirectory()) {
                     entryDestination.mkdirs();
@@ -277,20 +273,20 @@ public class DiffMiner{
         File jsonFile = new File(projectFolder.getParent(), jsonFilePath);
         if (jsonFile.exists()) {
             ObjectMapper mapper = new ObjectMapper();
-            GitHistoryRefactoringMinerImpl.ChangedFileInfo changedFileInfo = (GitHistoryRefactoringMinerImpl.ChangedFileInfo)mapper.readValue(jsonFile, GitHistoryRefactoringMinerImpl.ChangedFileInfo.class);
+            GitHistoryRefactoringMinerImpl.ChangedFileInfo changedFileInfo = (GitHistoryRefactoringMinerImpl.ChangedFileInfo) mapper.readValue(jsonFile, GitHistoryRefactoringMinerImpl.ChangedFileInfo.class);
             return changedFileInfo;
         } else {
             GHRepository repository = this.getGitHubRepository(cloneURL);
             List<org.kohsuke.github.GHCommit.File> commitFiles = new ArrayList();
             GHCommit commit = (new GHRepositoryWrapper(repository)).getCommit(currentCommitId, commitFiles);
-            String parentCommitId = ((GHCommit)commit.getParents().get(0)).getSHA1();
+            String parentCommitId = ((GHCommit) commit.getParents().get(0)).getSHA1();
             List<String> filesBefore = new ArrayList();
             List<String> filesCurrent = new ArrayList();
             Map<String, String> renamedFilesHint = new HashMap();
             Iterator var13 = commitFiles.iterator();
 
-            while(var13.hasNext()) {
-                org.kohsuke.github.GHCommit.File commitFile = (org.kohsuke.github.GHCommit.File)var13.next();
+            while (var13.hasNext()) {
+                org.kohsuke.github.GHCommit.File commitFile = (org.kohsuke.github.GHCommit.File) var13.next();
                 if (commitFile.getFileName().endsWith(".java")) {
                     if (commitFile.getStatus().equals("modified")) {
                         filesBefore.add(commitFile.getFileName());
@@ -339,25 +335,6 @@ public class DiffMiner{
         return this.gitHub;
     }
 
-    protected List<Refactoring> filter(List<Refactoring> refactoringsAtRevision) {
-        if (this.refactoringTypesToConsider == null) {
-            return refactoringsAtRevision;
-        } else {
-            List<Refactoring> filteredList = new ArrayList();
-            Iterator var3 = refactoringsAtRevision.iterator();
-
-            while(var3.hasNext()) {
-                Refactoring ref = (Refactoring)var3.next();
-                if (this.refactoringTypesToConsider.contains(ref.getRefactoringType())) {
-                    filteredList.add(ref);
-                }
-            }
-
-            return filteredList;
-        }
-    }
-
-
     protected UMLModel createModel(Map<String, String> fileContents, Set<String> repositoryDirectories) throws Exception {
         return (new UMLModelASTReader(fileContents, repositoryDirectories)).getUmlModel();
     }
@@ -367,14 +344,14 @@ public class DiffMiner{
         Set<String> repositoryDirectories = new LinkedHashSet();
         Iterator var5 = filePaths.iterator();
 
-        while(var5.hasNext()) {
-            String path = (String)var5.next();
+        while (var5.hasNext()) {
+            String path = (String) var5.next();
             String fullPath = projectFolder + File.separator + path.replaceAll("/", systemFileSeparator);
             String contents = FileUtils.readFileToString(new File(fullPath));
             fileContents.put(path, contents);
             String directory = new String(path);
 
-            while(directory.contains("/")) {
+            while (directory.contains("/")) {
                 directory = directory.substring(0, directory.lastIndexOf("/"));
                 repositoryDirectories.add(directory);
             }
@@ -416,48 +393,6 @@ public class DiffMiner{
         GitHub gitHub = this.connectToGitHub();
         String repoName = extractRepositoryName(cloneURL);
         return gitHub.getRepository(repoName);
-    }
-
-    private static String extractRepositoryName(String cloneURL) {
-        int hostLength = 0;
-        if (cloneURL.startsWith("https://github.com/")) {
-            hostLength = "https://github.com/".length();
-        } else if (cloneURL.startsWith("https://bitbucket.org/")) {
-            hostLength = "https://bitbucket.org/".length();
-        }
-
-        int indexOfDotGit = cloneURL.length();
-        if (cloneURL.endsWith(".git")) {
-            indexOfDotGit = cloneURL.indexOf(".git");
-        } else if (cloneURL.endsWith("/")) {
-            indexOfDotGit = cloneURL.length() - 1;
-        }
-
-        String repoName = cloneURL.substring(hostLength, indexOfDotGit);
-        return repoName;
-    }
-
-    private static String extractDownloadLink(String cloneURL, String commitId) {
-        int indexOfDotGit = cloneURL.length();
-        if (cloneURL.endsWith(".git")) {
-            indexOfDotGit = cloneURL.indexOf(".git");
-        } else if (cloneURL.endsWith("/")) {
-            indexOfDotGit = cloneURL.length() - 1;
-        }
-
-        String downloadResource = "/";
-        if (cloneURL.startsWith("https://github.com/")) {
-            downloadResource = "/archive/";
-        } else if (cloneURL.startsWith("https://bitbucket.org/")) {
-            downloadResource = "/get/";
-        }
-
-        String downloadLink = cloneURL.substring(0, indexOfDotGit) + downloadResource + commitId + ".zip";
-        return downloadLink;
-    }
-
-    static {
-        systemFileSeparator = Matcher.quoteReplacement(File.separator);
     }
 
 }
