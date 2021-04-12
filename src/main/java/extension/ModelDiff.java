@@ -27,9 +27,9 @@ public class ModelDiff {
     private List<Refactoring> refactoringMethodList = new ArrayList<>();
     private List<Refactoring> refactoringFieldList = new ArrayList<>();
 
-    private List<UMLClass> addedClassList = new ArrayList<UMLClass>();
-    private List<UMLClass> removedClassList = new ArrayList<UMLClass>();
-    private Map<UMLClass, UMLClass> commonClassMap = new HashMap<UMLClass, UMLClass>();
+    private List<ClassDiff> addedClassList = new ArrayList<ClassDiff>();
+    private List<ClassDiff> removedClassList = new ArrayList<ClassDiff>();
+    private List<ClassDiff> commonClassList = new ArrayList<ClassDiff>();
 
     private Map<UMLClass,List<UMLOperation>> addedOperationList = new HashMap<UMLClass, List<UMLOperation>>();
     private Map<UMLClass,List<UMLOperation>> removedOperationList = new HashMap<UMLClass, List<UMLOperation>>();
@@ -123,16 +123,18 @@ public class ModelDiff {
     }
 
     private void detectClassChanges() {
-        Map<String, UMLClass> mapClassParent = new HashMap<String, UMLClass>();
+        Map<String, ClassDiff> mapClassParent = new HashMap<String, ClassDiff>();
         //Todo fix map
         Map<Map<String,UMLClass>, Map<String,UMLOperation>> mapOperationParent = new HashMap<Map<String,UMLClass>, Map<String,UMLOperation>>();
         for (UMLClass parentClass : parentUMLModel.getClassList()) {
-            mapClassParent.put(parentClass.toString(), parentClass);
-            Map<String,UMLOperation> mapOnlyOperationParent = new HashMap<String, UMLOperation>();
+            ClassDiff classDiff = new ClassDiff(parentClass,null);
             for(UMLOperation parentOperation:parentClass.getOperations()){
-                mapOnlyOperationParent.put(parentOperation.toString(),parentOperation);
+                classDiff.getParentOperation().put(getSignatureOperation(parentOperation),parentOperation);
             }
-
+            for(UMLAttribute parentAttribute:parentClass.getAttributes()){
+                classDiff.getParentAttribute().put(parentAttribute.toString(),parentAttribute);
+            }
+            mapClassParent.put(parentClass.toString(), classDiff);
         }
         for (UMLClass currentClass : currentUMLModel.getClassList()) {
             UMLClass parentClass = mapClassParent.remove(currentClass.toString());
