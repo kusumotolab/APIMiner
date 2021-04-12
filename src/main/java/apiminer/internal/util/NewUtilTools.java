@@ -1,6 +1,8 @@
 package apiminer.internal.util;
 
 import apiminer.enums.Classifier;
+import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.UMLOperation;
 import org.aspectj.lang.annotation.DeclareWarning;
 
 import java.io.IOException;
@@ -8,6 +10,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NewUtilTools {
+    public static String getSignatureMethod(UMLOperation umlOperation){
+        String signature = "";
+
+        return signature;
+    }
+
+
     //Todo fix
     public static Boolean isAPIByClassifier(String packageName, Classifier classifierAPI) throws IOException {
         Boolean isAPI = false;
