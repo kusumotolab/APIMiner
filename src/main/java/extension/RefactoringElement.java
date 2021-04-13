@@ -46,6 +46,30 @@ public class RefactoringElement {
         setRefactoredAttribute();
     }
 
+    public UMLClass getOriginalClass() {
+        return originalClass;
+    }
+
+    public UMLClass getNextClass() {
+        return nextClass;
+    }
+
+    public UMLOperation getOriginalOperation() {
+        return originalOperation;
+    }
+
+    public UMLOperation getNextOperation() {
+        return nextOperation;
+    }
+
+    public UMLAttribute getOriginalAttribute() {
+        return originalAttribute;
+    }
+
+    public UMLAttribute getNextAttribute() {
+        return nextAttribute;
+    }
+
     public boolean isAPI() {
         return isAPI;
     }

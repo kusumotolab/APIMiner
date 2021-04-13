@@ -3,22 +3,24 @@ package extension;
 import gr.uom.java.xmi.UMLClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Diff {
-    private List<APIClass> removedClassList = new ArrayList<APIClass>();
-    private List<APIClass> commonClassList = new ArrayList<APIClass>();
-    private List<APIClass> addedClassList = new ArrayList<APIClass>();
+    private Map<String,UMLClass> removedClassList = new HashMap<String,UMLClass>();
+    private Map<String,CommonClass> commonClassList = new HashMap<String, CommonClass>();
+    private Map<String,UMLClass> addedClassList = new HashMap<String,UMLClass>();
 
-    public List<APIClass> getRemovedClassList() {
+    public Map<String, UMLClass> getRemovedClassList() {
         return removedClassList;
     }
 
-    public List<APIClass> getCommonClassList() {
+    public Map<String, CommonClass> getCommonClassList() {
         return commonClassList;
     }
 
-    public List<APIClass> getAddedClassList() {
+    public Map<String, UMLClass> getAddedClassList() {
         return addedClassList;
     }
 }
