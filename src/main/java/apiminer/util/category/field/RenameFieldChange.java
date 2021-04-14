@@ -1,7 +1,6 @@
 package apiminer.util.category.field;
 
 import apiminer.enums.Category;
-import apiminer.internal.util.UtilTools;
 import apiminer.util.category.FieldChange;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLAttribute;
@@ -32,11 +31,11 @@ public class RenameFieldChange extends FieldChange {
         this.setRevCommit(revCommit);
     }
 
-    private String isDescription(){
+    private String isDescription() {
         String message = "";
-        message += "<br>field <code>" + originalAttribute.getName() +"</code>";
-        message += "<br>renamed to <code>" + renamedAttribute.getName() +"</code>";
-        message += "<br>in <code>" + nextClass.getName() +"</code>";
+        message += "<br>field <code>" + originalAttribute.getName() + "</code>";
+        message += "<br>renamed to <code>" + renamedAttribute.getName() + "</code>";
+        message += "<br>in <code>" + nextClass.getName() + "</code>";
         message += "<br>";
         return message;
     }
