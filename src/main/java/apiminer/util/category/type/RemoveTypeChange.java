@@ -1,11 +1,12 @@
-package extension.Change;
+package apiminer.util.category.type;
 
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
+import apiminer.util.category.ClassChange;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class RemoveTypeChange extends ClassChange{
+public class RemoveTypeChange extends ClassChange {
     private UMLClass removedClass;
     public RemoveTypeChange(UMLClass removedClass,RevCommit revCommit){
         super(revCommit);
@@ -16,10 +17,10 @@ public class RemoveTypeChange extends ClassChange{
         this.setNextElement("");
         this.setCategory(Category.TYPE_REMOVE);
         this.setBreakingChange(true);
-        this.setDescription(isDescription(removedClass));
-        //this.setJavadoc();
-        //this.setDeprecated();
-        //this.setRevCommit(rev);
+        this.setDescription(isDescription());
+        this.setJavadoc(isJavaDoc(removedClass));
+        this.setDeprecated(isDeprecated(removedClass));
+        this.setRevCommit(revCommit);
         if(removedClass.isInterface()){
             this.setElementType(ElementType.INTERFACE);
         }else if(removedClass.isEnum()){
@@ -29,12 +30,11 @@ public class RemoveTypeChange extends ClassChange{
         }
     }
 
-    private String isDescription(UMLClass umlClass){
+    private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + umlClass.getName() + "</code> ";
+        message += "<br>type <code>" + removedClass.getName() + "</code>";
         message += "<br>was removed";
         message += "<br>";
         return message;
     }
-
 }

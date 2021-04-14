@@ -1,27 +1,24 @@
 package apiminer;
 
-import java.io.File;
-import java.util.*;
-
-import apiminer.internal.analysis.NewDiffProcessor;
-import apiminer.internal.analysis.description.DiffMiner;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.refactoringminer.api.Refactoring;
-import org.refactoringminer.api.RefactoringHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import apiminer.enums.Classifier;
-import apiminer.internal.analysis.DiffProcessor;
-import apiminer.internal.analysis.DiffProcessorImpl;
+import apiminer.internal.analysis.NewDiffProcessor;
 import apiminer.internal.service.git.GitFile;
 import apiminer.internal.service.git.GitService;
 import apiminer.internal.service.git.GitServiceImpl;
 import apiminer.internal.util.UtilTools;
 import apiminer.internal.visitor.APIVersion;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class NewAPIMiner implements DiffDetector{
 
@@ -31,7 +28,7 @@ public class NewAPIMiner implements DiffDetector{
 
     private String url;
 
-    private Logger logger = LoggerFactory.getLogger(APIMiner.class);
+    private Logger logger = LoggerFactory.getLogger(NewAPIMiner.class);
 
     public NewAPIMiner(final String nameProject, final String url) {
         this.url = url;
@@ -58,7 +55,7 @@ public class NewAPIMiner implements DiffDetector{
             result.getChangeMethod().addAll(resultByClassifier.getChangeMethod());
             result.getChangeField().addAll(resultByClassifier.getChangeField());
         } catch (Exception e) {
-            this.logger.error("Error in calculating commitn diff ", e);
+            this.logger.error("Error in calculating commit in diff ", e);
         }
         this.logger.info("Finished processing.");
         return result;
@@ -143,16 +140,4 @@ public class NewAPIMiner implements DiffDetector{
         }
         return new Result();
     }
-
-    private APIVersion getAPIVersionByCommit(String commit, File projectFolder, Repository repository, RevCommit currentCommit, Classifier classifierAPI) throws Exception{
-
-        GitService service = new GitServiceImpl();
-
-        //Finding changed files between current commit and parent commit.
-        Map<ChangeType, List<GitFile>> mapModifications = service.fileTreeDiff(repository, currentCommit);
-
-        service.checkout(repository, commit);
-        return new APIVersion(this.path, projectFolder, mapModifications, classifierAPI);
-    }
-
 }

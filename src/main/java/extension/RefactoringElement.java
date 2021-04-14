@@ -46,6 +46,10 @@ public class RefactoringElement {
         setRefactoredAttribute();
     }
 
+    public Refactoring getRefactoring() {
+        return refactoring;
+    }
+
     public UMLClass getOriginalClass() {
         return originalClass;
     }

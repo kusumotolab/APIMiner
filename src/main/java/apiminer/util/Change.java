@@ -1,4 +1,4 @@
-package extension.Change;
+package apiminer.util;
 
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
