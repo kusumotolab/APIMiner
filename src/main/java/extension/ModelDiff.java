@@ -3,6 +3,7 @@ package extension;
 import apiminer.Change;
 import apiminer.enums.Classifier;
 import apiminer.internal.util.NewUtilTools;
+import extension.Model.*;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLModel;
@@ -11,10 +12,7 @@ import gr.uom.java.xmi.diff.*;
 import org.refactoringminer.api.Refactoring;
 import org.refactoringminer.api.RefactoringMinerTimedOutException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModelDiff {
     private UMLModel parentUMLModel;
@@ -61,7 +59,12 @@ public class ModelDiff {
     }
 
     public void detectChanges() {
-        detectClassChanges();
+        initDiff();
+        apiRefactoring = new APIRefactoring(refactorings, parentUMLModel, currentUMLModel);
+        removeRefactoredClass();
+        removeRefactoredOperation();
+        removeRefactoredAttribute();
+        System.out.println();
     }
 
     /*
@@ -110,22 +113,13 @@ public class ModelDiff {
 
      */
 
-    private void detectClassChanges() {
-        initDiff();
-        apiRefactoring = new APIRefactoring(refactorings, parentUMLModel, currentUMLModel);
-        removeRefactoredClass();
-        removeRefactoredOperation();
-        removeRefactoredAttribute();
-        System.out.println();
-    }
-
     private void initDiff(){
         Map<String, ModelClass> mapClassParent = new HashMap<String, ModelClass>();
         for (UMLClass parentClass : parentUMLModel.getClassList()) {
-            mapClassParent.put(parentClass.toString(), new ModelClass(parentClass));
+            mapClassParent.put(NewUtilTools.getClassName(parentClass), new ModelClass(parentClass));
         }
         for (UMLClass currentClass : currentUMLModel.getClassList()) {
-            ModelClass parentClassModel = mapClassParent.remove(currentClass.toString());
+            ModelClass parentClassModel = mapClassParent.remove(NewUtilTools.getClassName(currentClass));
             if (parentClassModel != null) {
                 UMLClass parentClass = parentClassModel.getUmlClass();
                 if (isAPIClass(parentClass) || isAPIClass(currentClass)) {
@@ -134,47 +128,50 @@ public class ModelDiff {
                         UMLOperation parentOperation = parentClassModel.getOperationMap().remove(NewUtilTools.getSignatureMethod(currentOperation));
                         if (parentOperation != null) {
                             if ((isAPIClass(parentClass) && isAPIOperation(parentOperation)) || (isAPIClass(currentClass) && isAPIOperation(currentOperation))) {
-                                Map<UMLOperation, UMLOperation> map = new HashMap<UMLOperation, UMLOperation>();
-                                map.put(parentOperation, currentOperation);
-                                commonClass.getCommonOperation().put(NewUtilTools.getSignatureMethod(parentOperation), map);
+                                CommonOperation commonOperation = new CommonOperation(parentOperation,currentOperation);
+                                commonClass.getCommonOperationMap().put(NewUtilTools.getSignatureMethod(parentOperation), commonOperation);
                             }
                         } else {
                             if (isAPIClass(currentClass) && isAPIOperation(currentOperation)) {
-                                commonClass.getAddedOperation().put(NewUtilTools.getSignatureMethod(currentOperation), currentOperation);
+                                OperationModel addedOperation = new OperationModel(currentOperation);
+                                commonClass.getAddedOperationMap().put(NewUtilTools.getSignatureMethod(currentOperation), addedOperation);
                             }
                         }
                     }
                     for (Map.Entry<String, UMLOperation> umlOperationEntry : parentClassModel.getOperationMap().entrySet()) {
-                        UMLOperation removedOperation = umlOperationEntry.getValue();
-                        if (isAPIClass(parentClass) && isAPIOperation(removedOperation)) {
-                            commonClass.getRemovedOperation().put(NewUtilTools.getSignatureMethod(removedOperation), removedOperation);
+                        UMLOperation parentOperation = umlOperationEntry.getValue();
+                        if (isAPIClass(parentClass) && isAPIOperation(parentOperation)) {
+                            OperationModel removedOperation = new OperationModel(parentOperation);
+                            commonClass.getRemovedOperationMap().put(NewUtilTools.getSignatureMethod(parentOperation), removedOperation);
                         }
                     }
                     for (UMLAttribute currentAttribute : currentClass.getAttributes()) {
                         UMLAttribute parentAttribute = parentClassModel.getAttributeMap().remove(currentAttribute.toString());
                         if (parentAttribute != null) {
                             if ((isAPIClass(parentClass) && isAPIAttribute(parentAttribute)) || (isAPIClass(currentClass) && isAPIAttribute(currentAttribute))) {
-                                Map<UMLAttribute, UMLAttribute> map = new HashMap<UMLAttribute, UMLAttribute>();
-                                map.put(parentAttribute, currentAttribute);
-                                commonClass.getCommonAttribute().put(parentAttribute.toString(), map);
+                                CommonAttribute commonAttribute = new CommonAttribute(parentAttribute,currentAttribute);
+                                commonClass.getCommonAttributeMap().put(parentAttribute.toString(), commonAttribute);
                             }
                         } else {
                             if (isAPIClass(currentClass) && isAPIAttribute(currentAttribute)) {
-                                commonClass.getAddedAttribute().put(currentAttribute.toString(), currentAttribute);
+                                AttributeModel addedAttribute = new AttributeModel(currentAttribute);
+                                commonClass.getAddedAttributeMap().put(currentAttribute.toString(), addedAttribute);
                             }
                         }
                     }
                     for (Map.Entry<String, UMLAttribute> umlAttributeEntry : parentClassModel.getAttributeMap().entrySet()) {
-                        UMLAttribute removedAttribute = umlAttributeEntry.getValue();
-                        if (isAPIClass(parentClass) && isAPIAttribute(removedAttribute)) {
-                            commonClass.getRemovedAttribute().put(removedAttribute.toString(), removedAttribute);
+                        UMLAttribute parentAttribute = umlAttributeEntry.getValue();
+                        if (isAPIClass(parentClass) && isAPIAttribute(parentAttribute)) {
+                            AttributeModel removedAttribute = new AttributeModel(parentAttribute);
+                            commonClass.getRemovedAttributeMap().put(parentAttribute.toString(), removedAttribute);
                         }
                     }
-                    diff.getCommonClassList().put(parentClass.toString(), commonClass);
+                    diff.getCommonClassMap().put(parentClass.toString(), commonClass);
                 }
             } else {
                 if (isAPIClass(currentClass)) {
-                    diff.getAddedClassList().put(currentClass.toString(), currentClass);
+                    ClassModel addedClass = new ClassModel(currentClass);
+                    diff.getAddedClassMap().put(currentClass.toString(), addedClass);
                 }
 
             }
@@ -182,7 +179,8 @@ public class ModelDiff {
         for (Map.Entry<String, ModelClass> removedClassEntry : mapClassParent.entrySet()) {
             UMLClass parentClass = removedClassEntry.getValue().getUmlClass();
             if (isAPIClass(parentClass)) {
-                diff.getRemovedClassList().put(parentClass.toString(), parentClass);
+                ClassModel removedClass = new ClassModel(parentClass);
+                diff.getRemovedClassMap().put(parentClass.toString(), removedClass);
             }
         }
     }
@@ -191,15 +189,23 @@ public class ModelDiff {
         for (RefactoringElement refactoringClass : apiRefactoring.getApiClassRefactorings()) {
             UMLClass originalClass = refactoringClass.getOriginalClass();
             UMLClass nextClass = refactoringClass.getNextClass();
+            ClassModel originalClassModel = null;
+            ClassModel nextClassModel = null;
             if (originalClass != null) {
-                diff.getRemovedClassList().remove(originalClass.toString());
+                originalClassModel = diff.getRemovedClassMap().get(NewUtilTools.getClassName(originalClass));
+                originalClassModel.setRefactored(true);
             }
             if (nextClass != null) {
-                diff.getAddedClassList().remove(nextClass.toString());
+                nextClassModel = diff.getAddedClassMap().get(NewUtilTools.getClassName(nextClass));
+                nextClassModel.setRefactored(true);
+            }
+            if(originalClassModel!=null||nextClassModel!=null){
+                //add change
             }
             //if be able to remove,add refactoring as a change
         }
     }
+
 
     private void removeRefactoredOperation() {
         for (RefactoringElement refactoringOperation : apiRefactoring.getApiOperationRefactorings()) {
@@ -207,16 +213,19 @@ public class ModelDiff {
             UMLClass nextClass = refactoringOperation.getNextClass();
             UMLOperation originalOperation = refactoringOperation.getOriginalOperation();
             UMLOperation nextOperation = refactoringOperation.getNextOperation();
+            OperationModel originalOperationModel = null;
+            OperationModel nextOperationModel = null;
             if (originalClass != null && originalOperation != null) {
-                CommonClass commonClass = diff.getCommonClassList().get(originalClass.toString());
+                CommonClass commonClass = diff.getCommonClassMap().get(originalClass.toString());
                 if (commonClass != null) {
-                    commonClass.getRemovedOperation().remove(NewUtilTools.getSignatureMethod(originalOperation));
+                    commonClass.getRemovedOperationMap().get()
+                    commonClass.getRemovedOperationMap().remove(NewUtilTools.getSignatureMethod(originalOperation));
                 }
             }
             if (nextClass != null && nextOperation != null) {
                 CommonClass commonClass = diff.getCommonClassList().get(nextClass.toString());
                 if (commonClass != null) {
-                    commonClass.getRemovedOperation().remove(NewUtilTools.getSignatureMethod(nextOperation));
+                    commonClass.getRemovedOperationMap().remove(NewUtilTools.getSignatureMethod(nextOperation));
                 }
             }
         }
@@ -232,13 +241,13 @@ public class ModelDiff {
             if (originalClass != null && originalAttribute != null) {
                 CommonClass commonClass = diff.getCommonClassList().get(originalClass.toString());
                 if (commonClass != null) {
-                    commonClass.getRemovedAttribute().remove(originalAttribute.toString());
+                    commonClass.getRemovedAttributeMap().remove(originalAttribute.toString());
                 }
             }
             if (nextClass != null && nextAttribute != null) {
                 CommonClass commonClass = diff.getCommonClassList().get(nextClass.toString());
                 if (commonClass != null) {
-                    commonClass.getRemovedOperation().remove(nextAttribute.toString());
+                    commonClass.getRemovedOperationMap().remove(nextAttribute.toString());
                 }
             }
         }
