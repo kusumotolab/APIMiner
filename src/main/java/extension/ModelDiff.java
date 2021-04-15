@@ -4,8 +4,14 @@ import apiminer.enums.Category;
 import apiminer.enums.Classifier;
 import apiminer.internal.util.NewUtilTools;
 import apiminer.util.Change;
+import apiminer.util.category.FieldChange;
+import extension.Diff.AttributeDiff;
 import extension.Diff.ClassDiff;
+import extension.Diff.OperationDiff;
 import extension.Model.*;
+import extension.category.AttributeRefactored;
+import extension.category.ClassRefactored;
+import extension.category.OperationRefactored;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLModel;
@@ -25,9 +31,9 @@ public class ModelDiff {
     private List<Refactoring> refactorings = new ArrayList<Refactoring>();
     private RevCommit revCommit;
 
-    private List<APIRefactoring> refactoringClassList = new ArrayList<>();
-    private List<APIRefactoring> refactoringMethodList = new ArrayList<>();
-    private List<APIRefactoring> refactoringFieldList = new ArrayList<>();
+    private List<ClassRefactored> refactoringClassList = new ArrayList<>();
+    private List<OperationRefactored> refactoringMethodList = new ArrayList<>();
+    private List<AttributeRefactored> refactoringFieldList = new ArrayList<>();
 
     private Diff diff = new Diff();
     private APIRefactoring apiRefactoring;
@@ -35,6 +41,10 @@ public class ModelDiff {
     private List<Change> changeTypeList = new ArrayList<>();
     private List<Change> changeMethodList = new ArrayList<>();
     private List<Change> changeFieldList = new ArrayList<>();
+
+    private List<ClassDiff> classDiffList = new ArrayList<ClassDiff>();
+    private List<OperationDiff> operationDiffList = new ArrayList<OperationDiff>();
+    private List<AttributeDiff> attributeDiffList = new ArrayList<AttributeDiff>();
 
 
     public ModelDiff(UMLModel parentUMLModel, UMLModel currentUMLModel, UMLModelDiff modelDiff, Classifier classifierAPI,RevCommit revCommit) {
@@ -167,7 +177,6 @@ public class ModelDiff {
             if(originalClassModel!=null||nextClassModel!=null){
                 changeTypeList.addAll(new ClassDiff(refactoringClass,revCommit).getClassChangeList());
             }
-            //if be able to remove,add refactoring as a change
         }
     }
 
@@ -232,7 +241,7 @@ public class ModelDiff {
                 }
             }
             if(originalAttributeModel!=null||nextAttributeModel!=null){
-                //add change
+                changeFieldList.addAll(new AttributeDiff(refactoringAttribute,revCommit).getFieldChangeList());
             }
         }
     }
@@ -250,6 +259,24 @@ public class ModelDiff {
         }
         for(CommonClass commonClass:diff.getCommonClassMap().values()){
             changeTypeList.addAll(new ClassDiff(commonClass,revCommit).getClassChangeList());
+        }
+    }
+
+    private void detectOtherAttributeChange(){
+        for(CommonClass commonClass:diff.getCommonClassMap().values()){
+            for(AttributeModel removedAttributeModel:commonClass.getRemovedAttributeMap().values()){
+                if(!removedAttributeModel.isRefactored()){
+                    changeFieldList.addAll(new AttributeDiff(Category.FIELD_REMOVE,commonClass.getOriginalClass(),removedAttributeModel.getUmlAttribute(),revCommit).getFieldChangeList());
+                }
+            }
+            for(AttributeModel addedAttributeModel:commonClass.getAddedAttributeMap().values()){
+                if(!addedAttributeModel.isRefactored()){
+                    changeFieldList.addAll(new AttributeDiff(Category.FIELD_ADD,commonClass.getNextClass(),addedAttributeModel.getUmlAttribute(),revCommit).getFieldChangeList());
+                }
+            }
+            for(CommonAttribute commonAttribute:commonClass.getCommonAttributeMap().values()){
+                changeFieldList.addAll(new AttributeDiff(commonClass,commonAttribute,revCommit).getFieldChangeList());
+            }
         }
     }
 

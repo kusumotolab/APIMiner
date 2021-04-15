@@ -1,6 +1,7 @@
 package extension.Diff;
 
 import apiminer.util.category.ClassChange;
+import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -15,9 +16,7 @@ public class OperationDiff {
     private UMLOperation nextOperation;
     private List<ClassChange> classChangeList = new ArrayList<ClassChange>();
     private RevCommit revCommit;
-
-
-
+    private List<RefactoringElement> refactoringElementList = new ArrayList<RefactoringElement>();
 
     public static boolean isLostVisibility(UMLOperation originalOperation, UMLOperation nextOperation){
         return false;

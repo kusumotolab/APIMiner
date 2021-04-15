@@ -1,63 +1,88 @@
 package extension.Diff;
 
 import apiminer.enums.Category;
-import apiminer.util.category.ClassChange;
 import apiminer.util.category.FieldChange;
-import apiminer.util.category.field.AddFieldChange;
-import apiminer.util.category.field.RemoveFieldChange;
-import apiminer.util.category.type.AddTypeChange;
-import apiminer.util.category.type.RemoveTypeChange;
+import apiminer.util.category.field.*;
+import extension.Model.CommonAttribute;
 import extension.Model.CommonClass;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AttributeDiff {
     private UMLClass originalClass;
     private UMLAttribute originalAttribute;
     private UMLClass nextClass;
     private UMLAttribute nextAttribute;
-    private List<FieldChange> fieldChangeList = new ArrayList<FieldChange>();
-    private RevCommit revCommit;
+    private final List<FieldChange> fieldChangeList = new ArrayList<FieldChange>();
+    private final RevCommit revCommit;
 
-    public AttributeDiff(Category category, UMLClass umlClass, UMLAttribute umlAttribute, RevCommit revCommit){
+    public AttributeDiff(Category category, UMLClass umlClass, UMLAttribute umlAttribute, RevCommit revCommit) {
         this.revCommit = revCommit;
-        if(category.equals(Category.FIELD_REMOVE)){
+        if (category.equals(Category.FIELD_REMOVE)) {
             this.originalClass = umlClass;
             this.originalAttribute = umlAttribute;
             this.nextClass = null;
             this.nextAttribute = null;
-            fieldChangeList.add(new RemoveFieldChange(originalClass,originalAttribute,revCommit));
-        }else if(category.equals(Category.FIELD_ADD)) {
+            fieldChangeList.add(new RemoveFieldChange(originalClass, originalAttribute, revCommit));
+        } else if (category.equals(Category.FIELD_ADD)) {
             this.originalClass = null;
             this.originalAttribute = null;
             this.nextClass = umlClass;
             this.nextAttribute = umlAttribute;
-            fieldChangeList.add(new AddFieldChange(nextClass, nextAttribute,revCommit));
+            fieldChangeList.add(new AddFieldChange(nextClass, nextAttribute, revCommit));
         }
     }
-    public AttributeDiff(RefactoringElement refactoringElement,RevCommit revCommit) {
+
+    public AttributeDiff(RefactoringElement refactoringElement, RevCommit revCommit) {
         this.revCommit = revCommit;
         switch (refactoringElement.getRefactoring().getRefactoringType()) {
-
+            case EXTRACT_ATTRIBUTE:
+                fieldChangeList.add(new ExtractFieldChange(refactoringElement, revCommit));
+                break;
+            case MOVE_ATTRIBUTE:
+                fieldChangeList.add(new MoveFieldChange(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
+            case PULL_UP_ATTRIBUTE:
+                fieldChangeList.add(new PullUpFieldChange(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
+            case PUSH_DOWN_ATTRIBUTE:
+                fieldChangeList.add(new PushDownFieldChange(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
+            case MOVE_RENAME_ATTRIBUTE:
+                fieldChangeList.add(new MoveAndRenameFieldChange(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
+            case RENAME_ATTRIBUTE:
+                fieldChangeList.add(new RenameFieldChange(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
+            case CHANGE_ATTRIBUTE_TYPE:
+                fieldChangeList.add(new ChangeInTypeField(refactoringElement, revCommit));
+                fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
+                break;
         }
-        fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getOriginalAttribute(),refactoringElement.getNextClass(), refactoringElement.getNextAttribute()));
     }
 
-    public AttributeDiff(CommonClass commonClass, Map.Entry<UMLAttribute,UMLAttribute> entry,RevCommit revCommit){
+    public AttributeDiff(CommonClass commonClass, CommonAttribute commonAttribute, RevCommit revCommit) {
         this.revCommit = revCommit;
-        fieldChangeList.addAll(detectOtherChange(commonClass.getOriginalClass(),entry.getKey(),commonClass.getNextClass(), entry.getValue()));
+        fieldChangeList.addAll(detectOtherChange(commonClass.getOriginalClass(), commonAttribute.getOriginalAttribute(), commonClass.getNextClass(), commonAttribute.getNextAttribute()));
     }
 
-    private List<FieldChange> detectOtherChange(UMLClass originalClass, UMLAttribute originalAttribute,UMLClass nextClass, UMLAttribute nextAttribute){
+    private List<FieldChange> detectOtherChange(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute) {
         List<FieldChange> fieldChangeList = new ArrayList<FieldChange>();
 
+        return fieldChangeList;
+    }
+
+    public List<FieldChange> getFieldChangeList() {
         return fieldChangeList;
     }
 }

@@ -1,5 +1,11 @@
 package extension;
 
+import extension.Diff.AttributeDiff;
+import extension.Diff.ClassDiff;
+import extension.Diff.OperationDiff;
+import extension.category.AttributeRefactored;
+import extension.category.ClassRefactored;
+import extension.category.OperationRefactored;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLModel;
 import org.refactoringminer.api.Refactoring;
@@ -10,26 +16,26 @@ import java.util.List;
 import java.util.Map;
 
 public class APIRefactoring {
-    private List<RefactoringElement> apiClassRefactorings = new ArrayList<RefactoringElement>();
-    private List<RefactoringElement> apiOperationRefactorings = new ArrayList<RefactoringElement>();
-    private List<RefactoringElement> apiAttributeRefactorings = new ArrayList<RefactoringElement>();
-
     private List<Refactoring> refactorings = new ArrayList<Refactoring>();
     private UMLModel parentModel;
     private UMLModel currentModel;
     private Map<String, UMLClass> mapParentClass = new HashMap<String,UMLClass>();
     private Map<String,UMLClass> mapCurrentClass = new HashMap<String,UMLClass>();
 
-    public List<RefactoringElement> getApiClassRefactorings() {
-        return apiClassRefactorings;
+    private List<ClassRefactored> refactoringClassList = new ArrayList<>();
+    private List<OperationRefactored> refactoringMethodList = new ArrayList<>();
+    private List<AttributeRefactored> refactoringFieldList = new ArrayList<>();
+
+    public List<ClassRefactored> getRefactoringClassList() {
+        return refactoringClassList;
     }
 
-    public List<RefactoringElement> getApiOperationRefactorings() {
-        return apiOperationRefactorings;
+    public List<OperationRefactored> getRefactoringMethodList() {
+        return refactoringMethodList;
     }
 
-    public List<RefactoringElement> getApiAttributeRefactorings() {
-        return apiAttributeRefactorings;
+    public List<AttributeRefactored> getRefactoringFieldList() {
+        return refactoringFieldList;
     }
 
     public APIRefactoring(List<Refactoring> refactorings, UMLModel parentModel, UMLModel currentModel){
@@ -52,13 +58,14 @@ public class APIRefactoring {
             if(refactoringElement.isAPI()){
                 switch (refactoringElement.getRefType()){
                     case CLASS:
-                        apiClassRefactorings.add(refactoringElement);
+
+                        //apiClassRefactorings.add(refactoringElement);
                         break;
                     case METHOD:
-                        apiOperationRefactorings.add(refactoringElement);
+                        //apiOperationRefactorings.add(refactoringElement);
                         break;
                     case ATTRIBUTE:
-                        apiAttributeRefactorings.add(refactoringElement);
+                        //apiAttributeRefactorings.add(refactoringElement);
                         break;
                 }
             }
