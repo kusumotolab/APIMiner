@@ -5,33 +5,36 @@ import apiminer.enums.ElementType;
 import apiminer.util.category.ClassChange;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.diff.ExtractSuperclassRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.refactoringminer.api.Refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExtractSuperTypeChange extends ClassChange {
-    private UMLClass extractedClass;
-    private List<UMLClass> originalClassList = new ArrayList<>();
-    private UMLClass originalClass;
+    private ExtractSuperclassRefactoring extractSuperclass;
+    private String originalClassPath;
 
-    public ExtractSuperTypeChange(RefactoringElement refactoringElement, RevCommit revCommit){
+    public ExtractSuperTypeChange(Refactoring refactoring, RevCommit revCommit){
         super(revCommit);
-        this.originalClass = refactoringElement.getOriginalClass();
-        this.extractedClass = refactoringElement.getNextClass();
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(extractedClass.getSourceFile());
-        this.setOriginalElement(originalClass.getName());
-        this.setNextElement(extractedClass.getName());
+        this.extractSuperclass = (ExtractSuperclassRefactoring) refactoring;
+        this.setNextClass(extractSuperclass.getExtractedClass());
+        String originalClassArray = extractSuperclass.getSubclassSet().toString();
+        this.originalClassPath= originalClassArray.substring(1,originalClassArray.length()-1);
+        this.setOriginalPath(originalClassPath);
+        this.setNextPath(this.getNextClass().toString());
+        this.setOriginalElement(originalClassPath);
+        this.setNextElement(this.getNextClass().toString());
         this.setCategory(Category.TYPE_EXTRACT_SUPERTYPE);
         this.setBreakingChange(true);
         this.setDescription(isDescription());
-        this.setJavadoc(isJavaDoc(extractedClass));
-        this.setDeprecated(isDeprecated(extractedClass));
+        this.setJavadoc(isJavaDoc(extractSuperclass.getExtractedClass()));
+        this.setDeprecated(isDeprecated(extractSuperclass.getExtractedClass()));
         this.setRevCommit(revCommit);
-        if(extractedClass.isInterface()){
+        if(this.getNextClass().isInterface()){
             this.setElementType(ElementType.INTERFACE);
-        }else if(extractedClass.isEnum()){
+        }else if(this.getNextClass().isEnum()){
             this.setElementType(ElementType.ENUM);
         }else{
             this.setElementType(ElementType.CLASS);
@@ -40,8 +43,8 @@ public class ExtractSuperTypeChange extends ClassChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>extract superType <code>" + extractedClass.getName() + "</code>";
-        message += "<br>from <code>" + originalClass.getName() + "</code>";
+        message += "<br>extract superType <code>" + this.getNextElement() + "</code>";
+        message += "<br>from <code>" + this.getOriginalElement() + "</code>";
         message += "<br>";
         return message;
     }

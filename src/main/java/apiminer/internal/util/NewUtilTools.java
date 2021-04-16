@@ -23,6 +23,14 @@ public class NewUtilTools {
         return umlAttribute.toString();
     }
 
+    public static boolean isAPIClass(UMLClass umlClass){
+        //todo fix pacage filter
+        if(umlClass.getVisibility().equals("public")||umlClass.getVisibility().equals("protected")){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     //Todo fix
     public static Boolean isAPIByClassifier(String packageName, Classifier classifierAPI) throws IOException {

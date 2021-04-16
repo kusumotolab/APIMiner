@@ -9,8 +9,26 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.List;
 
 public class ClassChange extends Change {
+    private UMLClass originalClass;
+    private UMLClass nextClass;
+
     public ClassChange(RevCommit revCommit){
         super(revCommit);
+    }
+
+    protected void setOriginalClass(UMLClass originalClass){
+        this.originalClass = originalClass;
+    }
+    protected void setNextClass(UMLClass nextClass){
+        this.nextClass = nextClass;
+    }
+
+    public UMLClass getOriginalClass(){
+        return originalClass;
+    }
+
+    public UMLClass getNextClass(){
+        return nextClass;
     }
 
 

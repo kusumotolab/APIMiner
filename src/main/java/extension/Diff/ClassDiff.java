@@ -41,14 +41,14 @@ public class ClassDiff {
         switch (refactoringElement.getRefactoring().getRefactoringType()){
             case EXTRACT_SUPERCLASS:
             case EXTRACT_INTERFACE:
-                classChangeList.add(new ExtractSuperTypeChange(refactoringElement,revCommit));
+                //classChangeList.add(new ExtractSuperTypeChange(refactoringElement,revCommit));
                 break;
             case MOVE_CLASS:
-                classChangeList.add(new MoveTypeChange(refactoringElement,revCommit));
+                //classChangeList.add(new MoveTypeChange(refactoringElement,revCommit));
                 classChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getNextClass()));
                 break;
             case RENAME_CLASS:
-                classChangeList.add(new RenameTypeChange(refactoringElement,revCommit));
+                //classChangeList.add(new RenameTypeChange(refactoringElement,revCommit));
                 classChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getNextClass()));
                 break;
             case MOVE_RENAME_CLASS:

@@ -5,28 +5,31 @@ import apiminer.enums.ElementType;
 import apiminer.util.category.ClassChange;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.diff.RenameClassRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.refactoringminer.api.Refactoring;
 
 public class RenameTypeChange extends ClassChange {
-    private UMLClass originalClass;
-    private UMLClass renamedClass;
-    public RenameTypeChange(RefactoringElement refactoringElement, RevCommit revCommit){
+    private RenameClassRefactoring renameClass;
+
+    public RenameTypeChange(Refactoring refactoring, RevCommit revCommit){
         super(revCommit);
-        this.originalClass = refactoringElement.getOriginalClass();
-        this.renamedClass = refactoringElement.getNextClass();
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(renamedClass.getSourceFile());
-        this.setOriginalElement(originalClass.getName());
-        this.setNextElement(renamedClass.getName());
+        this.renameClass = (RenameClassRefactoring)refactoring;
+        this.setOriginalClass(renameClass.getOriginalClass());
+        this.setNextClass(renameClass.getRenamedClass());
+        this.setOriginalPath(this.getOriginalClass().toString());
+        this.setNextPath(this.getNextClass().toString());
+        this.setOriginalElement(this.getOriginalClass().toString());
+        this.setNextElement(this.getNextClass().toString());
         this.setCategory(Category.TYPE_RENAME);
         this.setBreakingChange(true);
         this.setDescription(isDescription());
-        this.setJavadoc(isJavaDoc(renamedClass));
-        this.setDeprecated(isDeprecated(renamedClass));
+        this.setJavadoc(isJavaDoc(this.getNextClass()));
+        this.setDeprecated(isDeprecated(this.getNextClass()));
         this.setRevCommit(revCommit);
-        if(renamedClass.isInterface()){
+        if(this.getNextClass().isInterface()){
             this.setElementType(ElementType.INTERFACE);
-        }else if(renamedClass.isEnum()){
+        }else if(this.getNextClass().isEnum()){
             this.setElementType(ElementType.ENUM);
         }else{
             this.setElementType(ElementType.CLASS);
@@ -35,9 +38,9 @@ public class RenameTypeChange extends ClassChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + originalClass.getName() + "</code>";
+        message += "<br>type <code>" + this.getOriginalElement() + "</code>";
         message += "<br>renamed to";
-        message += "<br><code>" + renamedClass.getName() + "</code>";
+        message += "<br><code>" + this.getNextElement() + "</code>";
         message += "<br>";
         return message;
     }
