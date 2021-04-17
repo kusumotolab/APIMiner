@@ -20,6 +20,7 @@ public class ChangeInParameterListChange extends MethodChange {
         switch (refactoring.getRefactoringType()) {
             case PARAMETERIZE_VARIABLE:
                 RenameVariableRefactoring renameVariable = (RenameVariableRefactoring) refactoring;
+                originalOperation = renameVariable.getOperationBefore();
                 nextOperation = renameVariable.getOperationAfter();
                 break;
             case MERGE_PARAMETER:

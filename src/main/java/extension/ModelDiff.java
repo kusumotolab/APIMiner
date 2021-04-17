@@ -3,6 +3,13 @@ package extension;
 import apiminer.enums.Classifier;
 import apiminer.internal.util.NewUtilTools;
 import apiminer.util.Change;
+import apiminer.util.category.ClassChange;
+import apiminer.util.category.field.AddFieldChange;
+import apiminer.util.category.field.RemoveFieldChange;
+import apiminer.util.category.method.AddMethodChange;
+import apiminer.util.category.method.RemoveMethodChange;
+import apiminer.util.category.type.AddTypeChange;
+import apiminer.util.category.type.RemoveTypeChange;
 import extension.Diff.AttributeDiff;
 import extension.Diff.ClassDiff;
 import extension.Diff.OperationDiff;
@@ -42,11 +49,6 @@ public class ModelDiff {
     private List<Change> changeMethodList = new ArrayList<>();
     private List<Change> changeFieldList = new ArrayList<>();
 
-    private List<ClassDiff> classDiffList = new ArrayList<ClassDiff>();
-    private List<OperationDiff> operationDiffList = new ArrayList<OperationDiff>();
-    private List<AttributeDiff> attributeDiffList = new ArrayList<AttributeDiff>();
-
-
     public ModelDiff(UMLModel parentUMLModel, UMLModel currentUMLModel, UMLModelDiff modelDiff, Classifier classifierAPI, RevCommit revCommit) {
         this.parentUMLModel = parentUMLModel;
         this.currentUMLModel = currentUMLModel;
@@ -76,6 +78,9 @@ public class ModelDiff {
     public void detectChanges() {
         initDiff();
         detectAPIRefactoring();
+        changeTypeList.addAll(detectClassChange());
+        changeMethodList.addAll(detectMethodChange());
+        changeFieldList.addAll(detectFieldChange());
         //detectClassRefactoring();
         //detectOperationRefactoring();
         //detectAttributeRefactoring();
@@ -218,131 +223,124 @@ public class ModelDiff {
 
     }
 
-    /*
-        private void detectClassRefactoring() {
-            for ( :refactoringClassList){
-                UMLClass originalClass = refactoringClass.getOriginalClass();
-                UMLClass nextClass = refactoringClass.getNextClass();
-                ClassModel originalClassModel = null;
-                ClassModel nextClassModel = null;
-                if (originalClass != null) {
-                    originalClassModel = diff.getRemovedClassMap().get(NewUtilTools.getClassName(originalClass));
-                    if (originalClassModel != null) {
-                        originalClassModel.setRefactored(true);
+    private List<Change> detectClassChange(){
+        List<Change> changeList = new ArrayList<>();
+        for(Map.Entry<Refactored,List<Change>> entry:apiClassRefactoredMap.entrySet()){
+            Refactored refactored = entry.getKey();
+            if(refactored.getOriginalClass()!=null){
+                ClassModel classModel = diff.getRemovedClassMap().get(NewUtilTools.getClassName(refactored.getOriginalClass()));
+                if(classModel!=null){
+                    classModel.setRefactored(true);
+                }
+            }
+            if(refactored.getNextClass()!=null){
+                ClassModel classModel = diff.getAddedClassMap().get(NewUtilTools.getClassName(refactored.getNextClass()));
+                if(classModel!=null){
+                    classModel.setRefactored(true);
+                }
+            }
+            changeList.addAll(new ClassDiff(refactored.getOriginalClass(),refactored.getNextClass(),entry.getValue(),revCommit).getChangeList());
+        }
+        for(CommonClass commonClass:diff.getCommonClassMap().values()){
+            changeList.addAll(new ClassDiff(commonClass.getOriginalClass(),commonClass.getNextClass(),new ArrayList<>(),revCommit).getChangeList());
+        }
+        for(ClassModel removedClassModel:diff.getRemovedClassMap().values()){
+            if(!removedClassModel.isRefactored()){
+                changeList.add(new RemoveTypeChange(removedClassModel.getUmlClass(),revCommit));
+            }
+        }
+        for(ClassModel addedClassModel:diff.getAddedClassMap().values()){
+            if(!addedClassModel.isRefactored()){
+                changeList.add(new AddTypeChange(addedClassModel.getUmlClass(),revCommit));
+            }
+        }
+        return changeList;
+    }
+
+    private List<Change> detectMethodChange(){
+        List<Change> changeList = new ArrayList<>();
+        for(Map.Entry<Refactored,List<Change>> entry:apiOperationRefactoredMap.entrySet()){
+            Refactored refactored = entry.getKey();
+            if(refactored.getOriginalClass()!=null&&refactored.getOriginalOperation()!=null){
+                CommonClass commonClass = diff.getCommonClassMap().get(NewUtilTools.getClassName(refactored.getOriginalClass()));
+                if(commonClass!=null){
+                    OperationModel operationModel = commonClass.getRemovedOperationMap().get(refactored.getOriginalOperation());
+                    if(operationModel!=null){
+                        operationModel.setRefactored(true);
                     }
                 }
-                if (nextClass != null) {
-                    nextClassModel = diff.getAddedClassMap().get(NewUtilTools.getClassName(nextClass));
-                    if (nextClassModel != null) {
-                        nextClassModel.setRefactored(true);
+            }
+            if(refactored.getNextClass()!=null&&refactored.getNextOperation()!=null){
+                CommonClass commonClass = diff.getCommonClassMap().get(NewUtilTools.getClassName(refactored.getNextClass()));
+                if(commonClass!=null){
+                    OperationModel operationModel = commonClass.getAddedOperationMap().get(refactored.getNextOperation());
+                    if(operationModel!=null){
+                        operationModel.setRefactored(true);
                     }
                 }
-                if (originalClassModel != null || nextClassModel != null) {
-                    changeTypeList.addAll(new ClassDiff(refactoringClass, revCommit).getClassChangeList());
+            }
+            changeList.addAll(new OperationDiff(refactored.getOriginalClass(),refactored.getOriginalOperation(),refactored.getNextClass(),refactored.getNextOperation(),entry.getValue(),revCommit).getChangeList());
+        }
+        for(CommonClass commonClass:diff.getCommonClassMap().values()){
+            for(CommonOperation commonOperation:commonClass.getCommonOperationMap().values()){
+                changeList.addAll(new OperationDiff(commonClass.getOriginalClass(),commonOperation.getOriginalOperation(),commonClass.getNextClass(),commonOperation.getNextOperation(),new ArrayList<>(),revCommit).getChangeList());
+            }
+            for(OperationModel removedOperationModel:commonClass.getRemovedOperationMap().values()){
+                if(!removedOperationModel.isRefactored()){
+                    changeList.add(new RemoveMethodChange(commonClass.getOriginalClass(),removedOperationModel.getUmlOperation(),revCommit));
+                }
+            }
+            for(OperationModel addedOperationModel:commonClass.getAddedOperationMap().values()){
+                if(!addedOperationModel.isRefactored()){
+                    changeList.add(new AddMethodChange(commonClass.getNextClass(),addedOperationModel.getUmlOperation(),revCommit));
                 }
             }
         }
+        return changeList;
+    }
 
-
-        private void detectOperationRefactoring() {
-            for (RefactoringElement refactoringOperation : apiRefactoring.getApiOperationRefactorings()) {
-                UMLClass originalClass = refactoringOperation.getOriginalClass();
-                UMLClass nextClass = refactoringOperation.getNextClass();
-                UMLOperation originalOperation = refactoringOperation.getOriginalOperation();
-                UMLOperation nextOperation = refactoringOperation.getNextOperation();
-                OperationModel originalOperationModel = null;
-                OperationModel nextOperationModel = null;
-                if (originalClass != null && originalOperation != null) {
-                    CommonClass commonClass = diff.getCommonClassMap().get(originalClass.toString());
-                    if (commonClass != null) {
-                        originalOperationModel = commonClass.getRemovedOperationMap().get(NewUtilTools.getSignatureMethod(originalOperation));
-                        if (originalOperationModel != null) {
-                            originalOperationModel.setRefactored(true);
-                        }
+    private List<Change> detectFieldChange(){
+        List<Change> changeList = new ArrayList<>();
+        for(Map.Entry<Refactored,List<Change>> entry:apiAttributeRefactoredMap.entrySet()){
+            Refactored refactored = entry.getKey();
+            if(refactored.getOriginalClass()!=null&&refactored.getOriginalAttribute()!=null){
+                CommonClass commonClass = diff.getCommonClassMap().get(NewUtilTools.getAttributeName(refactored.getOriginalAttribute()));
+                if(commonClass!=null){
+                    AttributeModel attributeModel = commonClass.getRemovedAttributeMap().get(refactored.getOriginalAttribute());
+                    if(attributeModel!=null){
+                        attributeModel.setRefactored(true);
                     }
-                }
-                if (nextClass != null && nextOperation != null) {
-                    CommonClass commonClass = diff.getCommonClassMap().get(nextClass.toString());
-                    if (commonClass != null) {
-                        nextOperationModel = commonClass.getAddedOperationMap().get(NewUtilTools.getSignatureMethod(nextOperation));
-                        if (nextOperationModel != null) {
-                            nextOperationModel.setRefactored(true);
-                        }
-                    }
-                }
-                if (originalOperationModel != null || nextOperationModel != null) {
-                    //add change
                 }
             }
-
+            if(refactored.getNextClass()!=null&&refactored.getNextAttribute()!=null){
+                CommonClass commonClass = diff.getCommonClassMap().get(NewUtilTools.getAttributeName(refactored.getNextAttribute()));
+                if(commonClass!=null){
+                    AttributeModel attributeModel = commonClass.getAddedAttributeMap().get(refactored.getNextAttribute());
+                    if(attributeModel!=null){
+                        attributeModel.setRefactored(true);
+                    }
+                }
+            }
+            changeList.addAll(new AttributeDiff(refactored.getOriginalClass(),refactored.getOriginalAttribute(),refactored.getNextClass(),refactored.getNextAttribute(),entry.getValue(),revCommit).getChangeList());
         }
-
-        private void detectAttributeRefactoring() {
-            for (RefactoringElement refactoringAttribute : apiRefactoring.getApiAttributeRefactorings()) {
-                UMLClass originalClass = refactoringAttribute.getOriginalClass();
-                UMLClass nextClass = refactoringAttribute.getNextClass();
-                UMLAttribute originalAttribute = refactoringAttribute.getOriginalAttribute();
-                UMLAttribute nextAttribute = refactoringAttribute.getNextAttribute();
-                AttributeModel originalAttributeModel = null;
-                AttributeModel nextAttributeModel = null;
-                if (originalClass != null && originalAttribute != null) {
-                    CommonClass commonClass = diff.getCommonClassMap().get(originalClass.toString());
-                    if (commonClass != null) {
-                        originalAttributeModel = commonClass.getRemovedAttributeMap().get(NewUtilTools.getAttributeName(originalAttribute));
-                        if (originalAttributeModel != null) {
-                            originalAttributeModel.setRefactored(true);
-                        }
-                    }
+        for(CommonClass commonClass:diff.getCommonClassMap().values()){
+            for(CommonAttribute commonAttribute:commonClass.getCommonAttributeMap().values()){
+                changeList.addAll(new AttributeDiff(commonClass.getOriginalClass(),commonAttribute.getOriginalAttribute(),commonClass.getNextClass(),commonAttribute.getNextAttribute(),new ArrayList<>(),revCommit).getChangeList());
+            }
+            for(AttributeModel removedAttributeModel:commonClass.getRemovedAttributeMap().values()){
+                if(!removedAttributeModel.isRefactored()){
+                    changeList.add(new RemoveFieldChange(commonClass.getOriginalClass(),removedAttributeModel.getUmlAttribute(),revCommit));
                 }
-                if (nextClass != null && nextAttributeModel != null) {
-                    CommonClass commonClass = diff.getCommonClassMap().get(nextClass.toString());
-                    if (commonClass != null) {
-                        nextAttributeModel = commonClass.getAddedAttributeMap().get(NewUtilTools.getAttributeName(nextAttribute));
-                        if (nextAttributeModel != null) {
-                            nextAttributeModel.setRefactored(true);
-                        }
-                    }
-                }
-                if (originalAttributeModel != null || nextAttributeModel != null) {
-                    changeFieldList.addAll(new AttributeDiff(refactoringAttribute, revCommit).getFieldChangeList());
+            }
+            for(AttributeModel addedAttributeModel:commonClass.getAddedAttributeMap().values()){
+                if(!addedAttributeModel.isRefactored()){
+                    changeList.add(new AddFieldChange(commonClass.getNextClass(),addedAttributeModel.getUmlAttribute(),revCommit));
                 }
             }
         }
+        return changeList;
+    }
 
-        private void detectOtherClassChange() {
-            for (ClassModel removedClassModel : diff.getRemovedClassMap().values()) {
-                if (!removedClassModel.isRefactored()) {
-                    changeTypeList.addAll(new ClassDiff(Category.TYPE_REMOVE, removedClassModel.getUmlClass(), revCommit).getClassChangeList());
-                }
-            }
-            for (ClassModel addedClassModel : diff.getAddedClassMap().values()) {
-                if (!addedClassModel.isRefactored()) {
-                    changeTypeList.addAll(new ClassDiff(Category.TYPE_ADD, addedClassModel.getUmlClass(), revCommit).getClassChangeList());
-                }
-            }
-            for (CommonClass commonClass : diff.getCommonClassMap().values()) {
-                changeTypeList.addAll(new ClassDiff(commonClass, revCommit).getClassChangeList());
-            }
-        }
-
-        private void detectOtherAttributeChange() {
-            for (CommonClass commonClass : diff.getCommonClassMap().values()) {
-                for (AttributeModel removedAttributeModel : commonClass.getRemovedAttributeMap().values()) {
-                    if (!removedAttributeModel.isRefactored()) {
-                        changeFieldList.addAll(new AttributeDiff(Category.FIELD_REMOVE, commonClass.getOriginalClass(), removedAttributeModel.getUmlAttribute(), revCommit).getFieldChangeList());
-                    }
-                }
-                for (AttributeModel addedAttributeModel : commonClass.getAddedAttributeMap().values()) {
-                    if (!addedAttributeModel.isRefactored()) {
-                        changeFieldList.addAll(new AttributeDiff(Category.FIELD_ADD, commonClass.getNextClass(), addedAttributeModel.getUmlAttribute(), revCommit).getFieldChangeList());
-                    }
-                }
-                for (CommonAttribute commonAttribute : commonClass.getCommonAttributeMap().values()) {
-                    changeFieldList.addAll(new AttributeDiff(commonClass, commonAttribute, revCommit).getFieldChangeList());
-                }
-            }
-        }
-    */
     private boolean isAPIClass(UMLClass umlClass) {
         //Todo fix filter package
         if (true) {

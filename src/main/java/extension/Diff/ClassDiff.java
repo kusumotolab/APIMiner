@@ -1,104 +1,93 @@
 package extension.Diff;
 
 import apiminer.enums.Category;
-import apiminer.util.category.type.*;
-import apiminer.util.category.ClassChange;
-import extension.Model.CommonClass;
-import extension.RefactoringElement;
+import apiminer.util.Change;
+import apiminer.util.category.type.VisibilityTypeChange;
 import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.UMLOperation;
+import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassDiff {
-    private UMLClass originalClass;
-    private UMLClass nextClass;
-    private List<ClassChange> classChangeList = new ArrayList<ClassChange>();
-    private  RevCommit revCommit;
+    private final UMLClass originalClass;
+    private final UMLClass nextClass;
+    private final RevCommit revCommit;
+    private final List<Change> changeList = new ArrayList<>();
 
-    public ClassDiff(Category category, UMLClass umlClass, RevCommit revCommit){
+    public ClassDiff(UMLClass originalClass, UMLClass nextClass, List<Change> changeList, RevCommit revCommit) {
+        this.originalClass = originalClass;
+        this.nextClass = nextClass;
+        this.changeList.addAll(changeList);
         this.revCommit = revCommit;
-
-        if(category.equals(Category.TYPE_REMOVE)){
-            this.originalClass = umlClass;
-            this.nextClass = null;
-            classChangeList.add(new RemoveTypeChange(originalClass,revCommit));
-        }else if(category.equals(Category.TYPE_ADD)) {
-            this.originalClass = null;
-            this.nextClass = umlClass;
-            classChangeList.add(new AddTypeChange(nextClass, revCommit));
-        }
-    }
-    public ClassDiff(CommonClass commonClass,RevCommit revCommit){
-        this.revCommit = revCommit;
-        classChangeList.addAll(detectOtherChange(commonClass.getOriginalClass(),commonClass.getNextClass()));
+        detectOtherChange();
     }
 
-    public ClassDiff(RefactoringElement refactoringElement,RevCommit revCommit){
-        this.revCommit = revCommit;
-        switch (refactoringElement.getRefactoring().getRefactoringType()){
-            case EXTRACT_SUPERCLASS:
-            case EXTRACT_INTERFACE:
-                //classChangeList.add(new ExtractSuperTypeChange(refactoringElement,revCommit));
-                break;
-            case MOVE_CLASS:
-                //classChangeList.add(new MoveTypeChange(refactoringElement,revCommit));
-                classChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getNextClass()));
-                break;
-            case RENAME_CLASS:
-                //classChangeList.add(new RenameTypeChange(refactoringElement,revCommit));
-                classChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getNextClass()));
-                break;
-            case MOVE_RENAME_CLASS:
-                //classChangeList.add(new MoveAndRenameTypeChange(refactoringElement,revCommit));
-                classChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(),refactoringElement.getNextClass()));
-                break;
-            case EXTRACT_CLASS:
-                //classChangeList.add(new ExtractTypeChange(refactoringElement,revCommit));
-                break;
-            case EXTRACT_SUBCLASS:
-                //classChangeList.add(new ExtractSubTypeChange(refactoringElement,revCommit));
-                break;
-            default:
-        }
+    public List<Change> getChangeList() {
+        return changeList;
     }
-    private List<ClassChange> detectOtherChange(UMLClass originalClass,UMLClass nextClass){
-        List<ClassChange> classChangeList = new ArrayList<ClassChange>();
+
+    private void detectOtherChange() {
         boolean isBreakingChange = false;
+        if (originalClass != null && nextClass != null) {
+            detectVisibilityChange();
+            detectFinalModifierChange();
+            detectStaticModifierChange();
+            detectSuperTypeChange();
+            for (Change change : changeList) {
+                if (change.getBreakingChange()) {
+                    isBreakingChange = true;
+                    break;
+                }
+            }
+            for (Change change : changeList) {
+                change.setBreakingChange(isBreakingChange);
+            }
+        }
+    }
 
-        return classChangeList;
+    private void detectVisibilityChange() {
+        String originalAccessModifier = originalClass.getVisibility();
+        String nextAccessModifier = nextClass.getVisibility();
+        if (!originalAccessModifier.equals(nextAccessModifier)) {
+            switch (originalAccessModifier) {
+                case "private":
+                case "default":
+                    if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_GAIN_VISIBILITY, revCommit));
+                    }
+                    break;
+                case "protected":
+                    if (nextAccessModifier.equals("public")) {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_GAIN_VISIBILITY, revCommit));
+                    } else {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
+                    }
+                    break;
+                case "pubic":
+                    changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
+                    break;
+            }
+        }
     }
 
-    public List<ClassChange> getClassChangeList() {
-        return classChangeList;
+    private void detectFinalModifierChange() {
+
     }
-    public boolean isLostVisibility(UMLClass originalClass, UMLClass nextClass){
-        return false;
+
+    private void detectStaticModifierChange() {
+
     }
-    public boolean isGainVisibility(UMLOperation originalOperation, UMLOperation nextOperation){
-        return false;
-    }
-    public boolean isAddFinalModifier(UMLClass originalClass, UMLClass nextClass){
-        return false;
-    }
-    public boolean isRemoveFinalModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(originalOperation.isFinal()&&!nextOperation.isFinal()){
-            return true;
+
+    private void detectSuperTypeChange(){
+        List<UMLType> originalSuperTypeList = new ArrayList<>();
+        UMLType originalUMLType = originalClass.getSuperclass();
+        List<UMLType> a = originalClass.getImplementedInterfaces();
+        List<String> b = originalClass.getImportedTypes();
+        UMLType nextUMLType = nextClass.getSuperclass();
+        if(originalUMLType!=null||nextUMLType!=null){
+            System.out.print("");
         }
-        return false;
-    }
-    public boolean isRemoveStaticModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(originalOperation.isStatic()&&!nextOperation.isStatic()){
-            return true;
-        }
-        return false;
-    }
-    public boolean isAddStaticModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(!originalOperation.isStatic()&&nextOperation.isStatic()){
-            return true;
-        }
-        return false;
     }
 }

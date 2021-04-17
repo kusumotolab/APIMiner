@@ -1,6 +1,10 @@
 package extension.Diff;
 
+import apiminer.enums.Category;
+import apiminer.util.Change;
 import apiminer.util.category.ClassChange;
+import apiminer.util.category.method.FinalMethodChange;
+import apiminer.util.category.type.VisibilityTypeChange;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
@@ -10,42 +14,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperationDiff {
-    private UMLClass originalClass;
+    private final UMLClass originalClass;
     private UMLOperation originalOperation;
-    private UMLClass nextClass;
+    private final UMLClass nextClass;
     private UMLOperation nextOperation;
-    private List<ClassChange> classChangeList = new ArrayList<ClassChange>();
-    private RevCommit revCommit;
-    private List<RefactoringElement> refactoringElementList = new ArrayList<RefactoringElement>();
+    private final RevCommit revCommit;
+    private final List<Change> changeList = new ArrayList<>();
 
-    public static boolean isLostVisibility(UMLOperation originalOperation, UMLOperation nextOperation){
-        return false;
+    public OperationDiff(UMLClass originalClass,UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation,List<Change> changeList, RevCommit revCommit) {
+        this.originalClass = originalClass;
+        this.originalOperation = originalOperation;
+        this.nextClass = nextClass;
+        this.nextOperation = nextOperation;
+        this.changeList.addAll(changeList);
+        this.revCommit = revCommit;
+        detectOtherChange();
     }
-    public static boolean isGainVisibility(UMLOperation originalOperation, UMLOperation nextOperation){
-        return false;
+
+    public List<Change> getChangeList() {
+        return changeList;
     }
-    public static boolean isAddFinalModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(!originalOperation.isFinal()&&nextOperation.isFinal()){
-            return true;
+
+    private void detectOtherChange(){
+        boolean isBreakingChange = false;
+        if (originalClass != null && nextClass != null) {
+            detectVisibilityChange();
+            detectFinalModifierChange();
+            detectStaticModifierChange();
+            for (Change change : changeList) {
+                if (change.getBreakingChange()) {
+                    isBreakingChange = true;
+                    break;
+                }
+            }
+            for (Change change : changeList) {
+                change.setBreakingChange(isBreakingChange);
+            }
         }
-        return false;
     }
-    public static boolean isRemoveFinalModifier(UMLOperation originalOperation, UMLOperation nextOperation){
+    private void detectVisibilityChange() {
+        String originalAccessModifier = originalClass.getVisibility();
+        String nextAccessModifier = nextClass.getVisibility();
+        if (!originalAccessModifier.equals(nextAccessModifier)) {
+            switch (originalAccessModifier) {
+                case "private":
+                case "default":
+                    if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_GAIN_VISIBILITY, revCommit));
+                    }
+                    break;
+                case "protected":
+                    if (nextAccessModifier.equals("public")) {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_GAIN_VISIBILITY, revCommit));
+                    } else {
+                        changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
+                    }
+                    break;
+                case "pubic":
+                    changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
+                    break;
+            }
+        }
+    }
+
+    private void detectFinalModifierChange() {
         if(originalOperation.isFinal()&&!nextOperation.isFinal()){
-            return true;
+
+        }else if(!originalOperation.isFinal()&&nextOperation.isFinal()){
+
         }
-        return false;
     }
-    public static boolean isRemoveStaticModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(originalOperation.isStatic()&&!nextOperation.isStatic()){
-            return true;
-        }
-        return false;
-    }
-    public static boolean isAddStaticModifier(UMLOperation originalOperation, UMLOperation nextOperation){
-        if(!originalOperation.isStatic()&&nextOperation.isStatic()){
-            return true;
-        }
-        return false;
+
+    private void detectStaticModifierChange() {
+
     }
 }

@@ -1,12 +1,13 @@
 package apiminer.internal.util;
 
 import apiminer.enums.Classifier;
-import gr.uom.java.xmi.UMLAttribute;
-import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.UMLOperation;
+import gr.uom.java.xmi.*;
 import org.aspectj.lang.annotation.DeclareWarning;
+import org.eclipse.jgit.util.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,18 @@ public class NewUtilTools {
     }
     public static String getSignatureMethod(UMLOperation umlOperation){
         String signature = "";
-
+        String methodName = umlOperation.getName();
+        List<String> parameterTypeList = new ArrayList<>();
+        String parameters ="";
+        for(UMLParameter parameter:umlOperation.getParametersWithoutReturnType()){
+            parameterTypeList.add(parameter.getType().toString());
+        }
+        parameters = StringUtils.join(parameterTypeList,", ");
+        String returnType = "";
+        if(umlOperation.getReturnParameter()!=null){
+            returnType = " : "+ umlOperation.getReturnParameter().toString();
+        }
+        signature = methodName + "("+ parameters +")" + returnType;
         return signature;
     }
     public static String getAttributeName(UMLAttribute umlAttribute){
