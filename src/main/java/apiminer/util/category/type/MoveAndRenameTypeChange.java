@@ -5,28 +5,31 @@ import apiminer.enums.ElementType;
 import apiminer.util.category.ClassChange;
 import extension.RefactoringElement;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.diff.MoveAndRenameClassRefactoring;
+import gr.uom.java.xmi.diff.MoveClassRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.refactoringminer.api.Refactoring;
 
 public class MoveAndRenameTypeChange extends ClassChange {
-    private UMLClass originalClass;
-    private UMLClass moveAndRenamedClass;
-    public MoveAndRenameTypeChange(RefactoringElement refactoringElement, RevCommit revCommit){
+    private MoveAndRenameClassRefactoring moveAndRenameClass;
+    public MoveAndRenameTypeChange(Refactoring refactoring, RevCommit revCommit){
         super(revCommit);
-        this.originalClass = refactoringElement.getOriginalClass();
-        this.moveAndRenamedClass = refactoringElement.getNextClass();
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(moveAndRenamedClass.getSourceFile());
-        this.setOriginalElement(originalClass.getName());
-        this.setNextElement(moveAndRenamedClass.getName());
+        this.moveAndRenameClass = (MoveAndRenameClassRefactoring) refactoring;
+        this.setOriginalClass(moveAndRenameClass.getOriginalClass());
+        this.setNextClass(moveAndRenameClass.getRenamedClass());
+        this.setOriginalPath(this.getOriginalClass().toString());
+        this.setNextPath(this.getNextClass().toString());
+        this.setOriginalElement(this.getOriginalClass().toString());
+        this.setNextElement(this.getNextClass().toString());
         this.setCategory(Category.TYPE_MOVE_AND_RENAME);
         this.setBreakingChange(true);
         this.setDescription(isDescription());
-        this.setJavadoc(isJavaDoc(moveAndRenamedClass));
-        this.setDeprecated(isDeprecated(moveAndRenamedClass));
+        this.setJavadoc(isJavaDoc(this.getNextClass()));
+        this.setDeprecated(isDeprecated(this.getNextClass()));
         this.setRevCommit(revCommit);
-        if(moveAndRenamedClass.isInterface()){
+        if(this.getNextClass().isInterface()){
             this.setElementType(ElementType.INTERFACE);
-        }else if(moveAndRenamedClass.isEnum()){
+        }else if(this.getNextClass().isEnum()){
             this.setElementType(ElementType.ENUM);
         }else{
             this.setElementType(ElementType.CLASS);
@@ -35,9 +38,9 @@ public class MoveAndRenameTypeChange extends ClassChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + originalClass.getName() + "</code>";
+        message += "<br>type <code>" + this.getOriginalElement() + "</code>";
         message += "<br>moved and renamed to";
-        message += "<br><code>" + moveAndRenamedClass.getName() + "</code>";
+        message += "<br><code>" + this.getNextElement() + "</code>";
         message += "<br>";
         return message;
     }

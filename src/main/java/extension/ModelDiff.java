@@ -158,13 +158,21 @@ public class ModelDiff {
     }
 
     private void detectAPIRefactoring() {
+        Map<String,UMLClass> parentClassMap = new HashMap<String, UMLClass>();
+        for(UMLClass parentClass:parentUMLModel.getClassList()){
+            parentClassMap.put(NewUtilTools.getClassName(parentClass),parentClass);
+        }
+        Map<String,UMLClass> currentClassMap = new HashMap<String, UMLClass>();
+        for(UMLClass currentClass:currentUMLModel.getClassList()){
+            currentClassMap.put(NewUtilTools.getClassName(currentClass),currentClass);
+        }
         for (Refactoring refactoring : refactorings) {
-            Convert convert = new Convert(refactoring, revCommit);
+            Convert convert = new Convert(refactoring,parentClassMap,currentClassMap,revCommit);
             if (convert.isAPI()) {
                 Refactored refactored = convert.getRefactored();
+                boolean isExist = false;
                 switch (refactored.getRefType()){
                     case CLASS:
-                        boolean isExist = false;
                         for(Map.Entry<Refactored,List<Change>> entry:apiClassRefactoredMap.entrySet()){
                             if(entry.getKey().equalRefactored(refactored)){
                                 entry.getValue().add(convert.getChange());

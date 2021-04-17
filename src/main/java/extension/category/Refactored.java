@@ -104,6 +104,9 @@ public class Refactored {
                         }
                     }
                     return isEqualOriginalClass&&isEqualNextClass;
+                case METHOD:
+
+                case ATTRIBUTE:
             }
         }
         return false;

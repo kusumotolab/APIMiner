@@ -8,17 +8,21 @@ import apiminer.util.Change;
 import apiminer.util.category.ClassChange;
 import apiminer.util.category.type.*;
 import extension.category.Refactored;
+import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.refactoringminer.api.Refactoring;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Convert {
     private boolean isAPI;
     private Refactored refactored;
     private Change change;
-    public Convert(Refactoring refactoring, RevCommit revCommit){
+
+    public Convert(Refactoring refactoring,Map<String,UMLClass> parentClassMap, Map<String,UMLClass> currentClassMap,RevCommit revCommit){
         ClassChange classChange = null;
         switch (refactoring.getRefactoringType()){
             case EXTRACT_SUPERCLASS:
@@ -32,7 +36,7 @@ public class Convert {
                 break;
             case MOVE_CLASS:
                 classChange =new MoveTypeChange(refactoring,revCommit);
-                this.isAPI = NewUtilTools.isAPIClass(classChange.getNextClass());
+                this.isAPI = NewUtilTools.isAPIClass(classChange.getOriginalClass())||NewUtilTools.isAPIClass(classChange.getNextClass());
                 this.refactored = new Refactored();
                 refactored.setRefType(RefType.CLASS);
                 refactored.setOriginalClass(classChange.getOriginalClass());
@@ -40,18 +44,37 @@ public class Convert {
                 break;
             case RENAME_CLASS:
                 classChange =new RenameTypeChange(refactoring,revCommit);
-                this.isAPI = NewUtilTools.isAPIClass(classChange.getNextClass());
+                this.isAPI = NewUtilTools.isAPIClass(classChange.getOriginalClass())||NewUtilTools.isAPIClass(classChange.getNextClass());
                 this.refactored = new Refactored();
                 refactored.setRefType(RefType.CLASS);
                 refactored.setOriginalClass(classChange.getOriginalClass());
                 refactored.setNextClass(classChange.getNextClass());
                 break;
             case MOVE_RENAME_CLASS:
-                 break;
+                classChange =new MoveAndRenameTypeChange(refactoring,revCommit);
+                this.isAPI = NewUtilTools.isAPIClass(classChange.getOriginalClass())||NewUtilTools.isAPIClass(classChange.getNextClass());
+                this.refactored = new Refactored();
+                refactored.setRefType(RefType.CLASS);
+                refactored.setOriginalClass(classChange.getOriginalClass());
+                refactored.setNextClass(classChange.getNextClass());
+                break;
             case EXTRACT_CLASS:
+                classChange = new ExtractTypeChange(refactoring,revCommit);
+                this.isAPI = NewUtilTools.isAPIClass(classChange.getNextClass());
+                this.refactored = new Refactored();
+                refactored.setRefType(RefType.CLASS);
+                refactored.setNextClass(classChange.getNextClass());
+                this.change = classChange;
                 break;
             case EXTRACT_SUBCLASS:
-                 break;
+                classChange = new ExtractSubTypeChange(refactoring,revCommit);
+                this.isAPI = NewUtilTools.isAPIClass(classChange.getNextClass());
+                this.refactored = new Refactored();
+                refactored.setRefType(RefType.CLASS);
+                refactored.setNextClass(classChange.getNextClass());
+                this.change = classChange;
+                break;
+
             default:
         }
     }
