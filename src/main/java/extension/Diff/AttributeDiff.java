@@ -42,30 +42,30 @@ public class AttributeDiff {
         this.revCommit = revCommit;
         switch (refactoringElement.getRefactoring().getRefactoringType()) {
             case EXTRACT_ATTRIBUTE:
-                fieldChangeList.add(new ExtractFieldChange(refactoringElement, revCommit));
+                //fieldChangeList.add(new ExtractFieldChange(refactoringElement, revCommit));
                 break;
             case MOVE_ATTRIBUTE:
-                fieldChangeList.add(new MoveFieldChange(refactoringElement, revCommit));
+               // fieldChangeList.add(new MoveFieldChange(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
             case PULL_UP_ATTRIBUTE:
-                fieldChangeList.add(new PullUpFieldChange(refactoringElement, revCommit));
+                //fieldChangeList.add(new PullUpFieldChange(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
             case PUSH_DOWN_ATTRIBUTE:
-                fieldChangeList.add(new PushDownFieldChange(refactoringElement, revCommit));
+                //fieldChangeList.add(new PushDownFieldChange(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
             case MOVE_RENAME_ATTRIBUTE:
-                fieldChangeList.add(new MoveAndRenameFieldChange(refactoringElement, revCommit));
+                //fieldChangeList.add(new MoveAndRenameFieldChange(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
             case RENAME_ATTRIBUTE:
-                fieldChangeList.add(new RenameFieldChange(refactoringElement, revCommit));
+                //fieldChangeList.add(new RenameFieldChange(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
             case CHANGE_ATTRIBUTE_TYPE:
-                fieldChangeList.add(new ChangeInTypeField(refactoringElement, revCommit));
+                //fieldChangeList.add(new ChangeInTypeField(refactoringElement, revCommit));
                 fieldChangeList.addAll(detectOtherChange(refactoringElement.getOriginalClass(), refactoringElement.getOriginalAttribute(), refactoringElement.getNextClass(), refactoringElement.getOriginalAttribute()));
                 break;
         }

@@ -2,40 +2,39 @@ package apiminer.util.category.field;
 
 import apiminer.enums.Category;
 import apiminer.util.category.FieldChange;
-import extension.RefactoringElement;
-import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.diff.ChangeAttributeTypeRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.refactoringminer.api.Refactoring;
+
+import java.util.Map;
 
 public class ChangeInTypeField extends FieldChange {
-    private UMLClass originalClass;
-    private UMLAttribute originalAttribute;
-    private UMLClass nextClass;
-    private UMLAttribute nextAttribute;
 
-    public ChangeInTypeField(RefactoringElement refactoringElement, RevCommit revCommit) {
+    public ChangeInTypeField(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
         super(revCommit);
-        this.originalClass = refactoringElement.getOriginalClass();
-        this.originalAttribute = refactoringElement.getOriginalAttribute();
-        this.nextClass = refactoringElement.getNextClass();
-        this.nextAttribute = refactoringElement.getNextAttribute();
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(nextClass.getSourceFile());
-        this.setOriginalElement(originalAttribute.getName());
-        this.setNextElement(nextAttribute.getName());
-        this.setCategory(Category.FIELD_PULL_UP);
-        this.setBreakingChange(false);
+        ChangeAttributeTypeRefactoring changeAttributeType = (ChangeAttributeTypeRefactoring) refactoring;
+        this.setOriginalClass(parentClassMap.get(changeAttributeType.getClassNameBefore()));
+        this.setNextClass(currentClassMap.get(changeAttributeType.getClassNameAfter()));
+        this.setOriginalAttribute(changeAttributeType.getOriginalAttribute());
+        this.setNextAttribute(changeAttributeType.getChangedTypeAttribute());
+        this.setOriginalPath(this.getOriginalClass().toString());
+        this.setNextPath(this.getNextClass().toString());
+        this.setOriginalElement(this.getOriginalAttribute().toString());
+        this.setNextElement(this.getNextAttribute().toString());
+        this.setCategory(Category.FIELD_CHANGE_TYPE);
+        this.setBreakingChange(true);
         this.setDescription(isDescription());
-        this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(isDeprecated(nextAttribute));
+        this.setJavadoc(isJavaDoc(this.getNextAttribute()));
+        this.setDeprecated(isDeprecated(this.getNextAttribute()));
         this.setRevCommit(revCommit);
     }
 
     private String isDescription() {
         String message = "";
-        message += "<br>field <code>" + originalAttribute.toString() + "</code>";
-        message += "<br>changed field type to <code>" + nextAttribute.toString() + "</code>";
-        message += "<br>in <code>"+ nextClass.toString() + "</code>";
+        message += "<br>field <code>" + this.getOriginalElement() + "</code>";
+        message += "<br>changed field type to <code>" + this.getNextElement() + "</code>";
+        message += "<br>in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;
     }

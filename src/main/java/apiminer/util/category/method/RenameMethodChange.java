@@ -4,19 +4,17 @@ import apiminer.enums.Category;
 import apiminer.enums.ElementType;
 import apiminer.util.category.MethodChange;
 import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.diff.MoveClassRefactoring;
 import gr.uom.java.xmi.diff.RenameOperationRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.refactoringminer.api.Refactoring;
 
 import java.util.Map;
 
-public class RenameMethodChange extends MethodChange{
-    private RenameOperationRefactoring renameOperation;
+public class RenameMethodChange extends MethodChange {
 
-    public RenameMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String,UMLClass> currentClassMap,RevCommit revCommit){
+    public RenameMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
         super(revCommit);
-        this.renameOperation = (RenameOperationRefactoring) refactoring;
+        RenameOperationRefactoring renameOperation = (RenameOperationRefactoring) refactoring;
         this.setOriginalClass(parentClassMap.get(renameOperation.getOriginalOperation().getClassName()));
         this.setNextClass(currentClassMap.get(renameOperation.getRenamedOperation().getClassName()));
         this.setOriginalOperation(renameOperation.getOriginalOperation());
@@ -31,18 +29,18 @@ public class RenameMethodChange extends MethodChange{
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
         this.setDeprecated(isDeprecated(this.getNextOperation()));
         this.setRevCommit(revCommit);
-        if(this.getNextOperation().isConstructor()){
+        if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);
-        }else{
+        } else {
             this.setElementType(ElementType.METHOD);
         }
-
     }
 
-    private String isDescription(){
+    private String isDescription() {
         String message = "";
-        message += "<br>extract subType <code>" + this.getNextElement() + "</code>";
-        message += "<br>from <code>" + this.getOriginalElement() + "</code>";
+        message += "<br>method <code>" + this.getOriginalElement() + "</code>";
+        message += "<br>renamed to <code>" + this.getNextElement() + "</code>";
+        message += "<br>in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;
     }

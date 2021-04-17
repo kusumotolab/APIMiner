@@ -32,6 +32,24 @@ public class NewUtilTools {
         }
     }
 
+    public static boolean isAPIMethod(UMLClass umlClass,UMLOperation umlOperation){
+        if(isAPIClass(umlClass)){
+            if(umlOperation.getVisibility().equals("public")||umlOperation.getVisibility().equals("protected")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAPIField(UMLClass umlClass,UMLAttribute umlAttribute){
+        if(isAPIClass(umlClass)){
+            if(umlAttribute.getVisibility().equals("public")||umlAttribute.getVisibility().equals("protected")){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Todo fix
     public static Boolean isAPIByClassifier(String packageName, Classifier classifierAPI) throws IOException {
         Boolean isAPI = false;

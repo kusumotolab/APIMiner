@@ -6,7 +6,7 @@ public class ChangeSuperTypeChange {
     private UMLClass originalClass;
     private UMLClass nextClass;
 
-    private String isDescription(){
+    private String isDescription() {
         String message = "";
         message += "<br>type <code>" + nextClass.getName() + "</code>";
 

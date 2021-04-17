@@ -7,8 +7,9 @@ import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class RemoveTypeChange extends ClassChange {
-    private UMLClass removedClass;
-    public RemoveTypeChange(UMLClass removedClass,RevCommit revCommit){
+    private final UMLClass removedClass;
+
+    public RemoveTypeChange(UMLClass removedClass, RevCommit revCommit) {
         super(revCommit);
         this.removedClass = removedClass;
         this.setOriginalPath(removedClass.getSourceFile());
@@ -21,16 +22,16 @@ public class RemoveTypeChange extends ClassChange {
         this.setJavadoc(isJavaDoc(removedClass));
         this.setDeprecated(isDeprecated(removedClass));
         this.setRevCommit(revCommit);
-        if(removedClass.isInterface()){
+        if (removedClass.isInterface()) {
             this.setElementType(ElementType.INTERFACE);
-        }else if(removedClass.isEnum()){
+        } else if (removedClass.isEnum()) {
             this.setElementType(ElementType.ENUM);
-        }else{
+        } else {
             this.setElementType(ElementType.CLASS);
         }
     }
 
-    private String isDescription(){
+    private String isDescription() {
         String message = "";
         message += "<br>type <code>" + removedClass.getName() + "</code>";
         message += "<br>was removed";
