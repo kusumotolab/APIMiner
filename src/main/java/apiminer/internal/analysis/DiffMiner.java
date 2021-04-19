@@ -3,11 +3,10 @@
 // (powered by FernFlower decompiler)
 //
 
-package apiminer.internal.analysis.description;
+package apiminer.internal.analysis;
 
 import apiminer.enums.Classifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import extension.ModelDiff;
 import gr.uom.java.xmi.UMLModel;
 import gr.uom.java.xmi.UMLModelASTReader;
 import gr.uom.java.xmi.diff.UMLModelDiff;
@@ -25,7 +24,10 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositoryWrapper;
 import org.kohsuke.github.GitHub;
-import org.refactoringminer.api.*;
+import org.refactoringminer.api.GitService;
+import org.refactoringminer.api.Refactoring;
+import org.refactoringminer.api.RefactoringHandler;
+import org.refactoringminer.api.RefactoringMinerTimedOutException;
 import org.refactoringminer.rm1.GitHistoryRefactoringMinerImpl;
 import org.refactoringminer.util.GitServiceImpl;
 import org.slf4j.Logger;
@@ -50,7 +52,7 @@ public class DiffMiner {
     Logger logger = LoggerFactory.getLogger(GitHistoryRefactoringMinerImpl.class);
     private Classifier classifierAPI;
     private RevCommit revCommit;
-    private ModelDiff newModelDiff;
+    private APIModelDiff newModelDiff;
 
     private GitHub gitHub;
 
@@ -92,7 +94,7 @@ public class DiffMiner {
         return downloadLink;
     }
 
-    public ModelDiff createModelDiff(Repository repository, String commitId, Classifier classifierAPI,RevCommit revCommit) {
+    public APIModelDiff createModelDiff(Repository repository, String commitId, Classifier classifierAPI, RevCommit revCommit) {
         this.classifierAPI = classifierAPI;
         this.revCommit = revCommit;
         detectAtCommit(repository, commitId, new RefactoringHandler() {
@@ -114,20 +116,21 @@ public class DiffMiner {
 
         List refactoringsAtRevision;
         try {
-            if (!filePathsBefore.isEmpty() && !filePathsCurrent.isEmpty() && currentCommit.getParentCount() > 0) {
+            if (currentCommit.getParentCount() > 0) {
                 RevCommit parentCommit = currentCommit.getParent(0);
-                this.populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore, repositoryDirectoriesBefore);
-                UMLModel parentUMLModel = this.createModel((Map) fileContentsBefore, (Set) repositoryDirectoriesBefore);
-                this.populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent, repositoryDirectoriesCurrent);
-                UMLModel currentUMLModel = this.createModel((Map) fileContentsCurrent, (Set) repositoryDirectoriesCurrent);
-                UMLModelDiff modelDiff = parentUMLModel.diff(currentUMLModel, renamedFilesHint);
-                refactoringsAtRevision = modelDiff.getRefactorings();
-                newModelDiff = new ModelDiff(parentUMLModel, currentUMLModel, modelDiff,classifierAPI,revCommit);
-            } else {
-                refactoringsAtRevision = Collections.emptyList();
+                UMLModel parentUMLModel = null;
+                UMLModel currentUMLModel = null;
+                if (!filePathsBefore.isEmpty()) {
+                    this.populateFileContents(repository, parentCommit, filePathsBefore, fileContentsBefore, repositoryDirectoriesBefore);
+                    parentUMLModel = this.createModel(fileContentsBefore, repositoryDirectoriesBefore);
+                }
+                if (!filePathsCurrent.isEmpty()) {
+                    this.populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent, repositoryDirectoriesCurrent);
+                    currentUMLModel = this.createModel(fileContentsCurrent, repositoryDirectoriesCurrent);
+                }
+                newModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
             }
-
-            handler.handle(commitId, refactoringsAtRevision);
+            handler.handle(commitId, Collections.emptyList());
             walk.dispose();
         } catch (Throwable var21) {
             try {
@@ -140,11 +143,11 @@ public class DiffMiner {
         }
 
         walk.close();
-        return refactoringsAtRevision;
+        return Collections.emptyList();
     }
 
     private void populateFileContents(Repository repository, RevCommit commit, List<String> filePaths, Map<String, String> fileContents, Set<String> repositoryDirectories) throws Exception {
-        this.logger.info("Processing {} {} ...", repository.getDirectory().getParent().toString(), commit.getName());
+        this.logger.info("Processing {} {} ...", repository.getDirectory().getParent(), commit.getName());
         RevTree parentTree = commit.getTree();
         TreeWalk treeWalk = new TreeWalk(repository);
 
@@ -174,7 +177,7 @@ public class DiffMiner {
 
                 String directory = pathString.substring(0, pathString.lastIndexOf("/"));
                 repositoryDirectories.add(directory);
-                String subDirectory = new String(directory);
+                String subDirectory = directory;
 
                 while (subDirectory.contains("/")) {
                     subDirectory = subDirectory.substring(0, subDirectory.lastIndexOf("/"));
@@ -222,7 +225,7 @@ public class DiffMiner {
                 UMLModel parentUMLModel = this.createModel(parentFolder, filesBefore);
                 UMLModelDiff modelDiff = parentUMLModel.diff(currentUMLModel, renamedFilesHint);
                 refactoringsAtRevision = modelDiff.getRefactorings();
-                newModelDiff = new ModelDiff(parentUMLModel, currentUMLModel, modelDiff,classifierAPI,revCommit);
+                newModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
             } else {
                 this.logger.warn(String.format("Folder %s not found", currentFolder.getPath()));
             }
@@ -275,20 +278,18 @@ public class DiffMiner {
         File jsonFile = new File(projectFolder.getParent(), jsonFilePath);
         if (jsonFile.exists()) {
             ObjectMapper mapper = new ObjectMapper();
-            GitHistoryRefactoringMinerImpl.ChangedFileInfo changedFileInfo = (GitHistoryRefactoringMinerImpl.ChangedFileInfo) mapper.readValue(jsonFile, GitHistoryRefactoringMinerImpl.ChangedFileInfo.class);
+            GitHistoryRefactoringMinerImpl.ChangedFileInfo changedFileInfo = mapper.readValue(jsonFile, GitHistoryRefactoringMinerImpl.ChangedFileInfo.class);
             return changedFileInfo;
         } else {
             GHRepository repository = this.getGitHubRepository(cloneURL);
             List<org.kohsuke.github.GHCommit.File> commitFiles = new ArrayList();
             GHCommit commit = (new GHRepositoryWrapper(repository)).getCommit(currentCommitId, commitFiles);
-            String parentCommitId = ((GHCommit) commit.getParents().get(0)).getSHA1();
+            String parentCommitId = commit.getParents().get(0).getSHA1();
             List<String> filesBefore = new ArrayList();
             List<String> filesCurrent = new ArrayList();
             Map<String, String> renamedFilesHint = new HashMap();
-            Iterator var13 = commitFiles.iterator();
 
-            while (var13.hasNext()) {
-                org.kohsuke.github.GHCommit.File commitFile = (org.kohsuke.github.GHCommit.File) var13.next();
+            for (GHCommit.File commitFile : commitFiles) {
                 if (commitFile.getFileName().endsWith(".java")) {
                     if (commitFile.getStatus().equals("modified")) {
                         filesBefore.add(commitFile.getFileName());
@@ -344,14 +345,12 @@ public class DiffMiner {
     protected UMLModel createModel(File projectFolder, List<String> filePaths) throws Exception {
         Map<String, String> fileContents = new LinkedHashMap();
         Set<String> repositoryDirectories = new LinkedHashSet();
-        Iterator var5 = filePaths.iterator();
 
-        while (var5.hasNext()) {
-            String path = (String) var5.next();
+        for (String path : filePaths) {
             String fullPath = projectFolder + File.separator + path.replaceAll("/", systemFileSeparator);
             String contents = FileUtils.readFileToString(new File(fullPath));
             fileContents.put(path, contents);
-            String directory = new String(path);
+            String directory = path;
 
             while (directory.contains("/")) {
                 directory = directory.substring(0, directory.lastIndexOf("/"));

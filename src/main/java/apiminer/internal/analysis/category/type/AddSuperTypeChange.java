@@ -2,11 +2,11 @@ package apiminer.internal.analysis.category.type;
 
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
-import apiminer.internal.analysis.category.ClassChange;
+import apiminer.internal.analysis.category.TypeChange;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class AddSuperTypeChange extends ClassChange {
+public class AddSuperTypeChange extends TypeChange {
     public AddSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLClass addedSuperClass, RevCommit revCommit){
         super(revCommit);
         this.setOriginalClass(originalClass);

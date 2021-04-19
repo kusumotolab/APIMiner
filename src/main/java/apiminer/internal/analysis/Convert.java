@@ -4,13 +4,13 @@ import apiminer.enums.Classifier;
 import apiminer.enums.ChangeType;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
-import apiminer.internal.analysis.category.ClassChange;
+import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.FieldChange;
 import apiminer.internal.analysis.category.MethodChange;
 import apiminer.internal.analysis.category.field.*;
 import apiminer.internal.analysis.category.method.*;
 import apiminer.internal.analysis.category.type.*;
-import apiminer.internal.analysis.model.Refactored;
+import apiminer.internal.analysis.model.RefIdentifier;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.refactoringminer.api.Refactoring;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class Convert {
     private boolean isAPI;
-    private Refactored refactored;
+    private RefIdentifier refIdentifier;
     private Change change;
 
     public Convert(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit, Classifier classifier) {
@@ -33,50 +33,50 @@ public class Convert {
         }
     }
 
-    private ClassChange convertClassChange(Refactoring refactoring, RevCommit revCommit,Classifier classifier) {
-        ClassChange classChange;
+    private TypeChange convertClassChange(Refactoring refactoring, RevCommit revCommit, Classifier classifier) {
+        TypeChange typeChange;
         switch (refactoring.getRefactoringType()) {
             case EXTRACT_SUPERCLASS:
             case EXTRACT_INTERFACE:
-                classChange = new ExtractSuperTypeChange(refactoring, revCommit);
+                typeChange = new ExtractSuperTypeChange(refactoring, revCommit);
                 break;
             case EXTRACT_CLASS:
-                classChange = new ExtractTypeChange(refactoring, revCommit);
+                typeChange = new ExtractTypeChange(refactoring, revCommit);
                 break;
             case EXTRACT_SUBCLASS:
-                classChange = new ExtractSubTypeChange(refactoring, revCommit);
+                typeChange = new ExtractSubTypeChange(refactoring, revCommit);
                 break;
             default:
-                classChange = null;
+                typeChange = null;
         }
-        if (classChange != null) {
-            this.isAPI = UtilTools.isAPIByClassifier(classChange.getNextClass(),classifier)&& UtilTools.isAPIClass(classChange.getNextClass());
-            this.refactored = new Refactored();
-            refactored.setRefType(ChangeType.CLASS);
-            refactored.setNextClass(classChange.getNextClass());
+        if (typeChange != null) {
+            this.isAPI = UtilTools.isAPIByClassifier(typeChange.getNextClass(),classifier)&& UtilTools.isAPIClass(typeChange.getNextClass());
+            this.refIdentifier = new RefIdentifier();
+            refIdentifier.setRefType(ChangeType.CLASS);
+            refIdentifier.setNextClass(typeChange.getNextClass());
         } else {
             switch (refactoring.getRefactoringType()) {
                 case MOVE_CLASS:
-                    classChange = new MoveTypeChange(refactoring, revCommit);
+                    typeChange = new MoveTypeChange(refactoring, revCommit);
                     break;
                 case RENAME_CLASS:
-                    classChange = new RenameTypeChange(refactoring, revCommit);
+                    typeChange = new RenameTypeChange(refactoring, revCommit);
                     break;
                 case MOVE_RENAME_CLASS:
-                    classChange = new MoveAndRenameTypeChange(refactoring, revCommit);
+                    typeChange = new MoveAndRenameTypeChange(refactoring, revCommit);
                     break;
                 default:
-                    classChange = null;
+                    typeChange = null;
             }
-            if (classChange != null) {
-                this.isAPI = UtilTools.isClassBeforeAfterAPIByClassifier(classChange.getOriginalClass(),classChange.getNextClass(),classifier)&&(UtilTools.isAPIClass(classChange.getOriginalClass()) || UtilTools.isAPIClass(classChange.getNextClass()));
-                this.refactored = new Refactored();
-                refactored.setRefType(ChangeType.CLASS);
-                refactored.setOriginalClass(classChange.getOriginalClass());
-                refactored.setNextClass(classChange.getNextClass());
+            if (typeChange != null) {
+                this.isAPI = UtilTools.isClassBeforeAfterAPIByClassifier(typeChange.getOriginalClass(), typeChange.getNextClass(),classifier)&&(UtilTools.isAPIClass(typeChange.getOriginalClass()) || UtilTools.isAPIClass(typeChange.getNextClass()));
+                this.refIdentifier = new RefIdentifier();
+                refIdentifier.setRefType(ChangeType.CLASS);
+                refIdentifier.setOriginalClass(typeChange.getOriginalClass());
+                refIdentifier.setNextClass(typeChange.getNextClass());
             }
         }
-        return classChange;
+        return typeChange;
     }
 
     private MethodChange convertMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit,Classifier classifier) {
@@ -86,18 +86,18 @@ public class Convert {
             case EXTRACT_AND_MOVE_OPERATION:
                 methodChange = new ExtractMethodChange(refactoring, parentClassMap, currentClassMap, revCommit);
                 this.isAPI = UtilTools.isAPIByClassifier(methodChange.getNextClass(),classifier)&& UtilTools.isAPIClass(methodChange.getNextClass())&& UtilTools.isAPIMethod(methodChange.getNextOperation());
-                this.refactored = new Refactored();
-                refactored.setRefType(ChangeType.METHOD);
-                refactored.setNextClass(methodChange.getNextClass());
-                refactored.setNextOperation(methodChange.getNextOperation());
+                this.refIdentifier = new RefIdentifier();
+                refIdentifier.setRefType(ChangeType.METHOD);
+                refIdentifier.setNextClass(methodChange.getNextClass());
+                refIdentifier.setNextOperation(methodChange.getNextOperation());
             case INLINE_OPERATION:
             case MOVE_AND_INLINE_OPERATION:
                 methodChange = new InlineMethodChange(refactoring, parentClassMap, currentClassMap, revCommit);
                 this.isAPI = UtilTools.isAPIByClassifier(methodChange.getOriginalClass(),classifier)&& UtilTools.isAPIClass(methodChange.getOriginalClass())&& UtilTools.isAPIMethod(methodChange.getOriginalOperation());
-                this.refactored = new Refactored();
-                refactored.setRefType(ChangeType.METHOD);
-                refactored.setOriginalClass(methodChange.getOriginalClass());
-                refactored.setOriginalOperation(methodChange.getOriginalOperation());
+                this.refIdentifier = new RefIdentifier();
+                refIdentifier.setRefType(ChangeType.METHOD);
+                refIdentifier.setOriginalClass(methodChange.getOriginalClass());
+                refIdentifier.setOriginalOperation(methodChange.getOriginalOperation());
                 break;
             default:
                 switch (refactoring.getRefactoringType()) {
@@ -133,12 +133,12 @@ public class Convert {
                 }
                 if (methodChange != null) {
                     this.isAPI = UtilTools.isClassBeforeAfterAPIByClassifier(methodChange.getOriginalClass(), methodChange.getNextClass(),classifier)&&((UtilTools.isAPIClass(methodChange.getOriginalClass())&& UtilTools.isAPIMethod(methodChange.getOriginalOperation()))|| (UtilTools.isAPIClass(methodChange.getNextClass())&& UtilTools.isAPIMethod(methodChange.getNextOperation())));
-                    this.refactored = new Refactored();
-                    refactored.setRefType(ChangeType.METHOD);
-                    refactored.setOriginalClass(methodChange.getOriginalClass());
-                    refactored.setNextClass(methodChange.getNextClass());
-                    refactored.setOriginalOperation(methodChange.getOriginalOperation());
-                    refactored.setNextOperation(methodChange.getNextOperation());
+                    this.refIdentifier = new RefIdentifier();
+                    refIdentifier.setRefType(ChangeType.METHOD);
+                    refIdentifier.setOriginalClass(methodChange.getOriginalClass());
+                    refIdentifier.setNextClass(methodChange.getNextClass());
+                    refIdentifier.setOriginalOperation(methodChange.getOriginalOperation());
+                    refIdentifier.setNextOperation(methodChange.getNextOperation());
                 }
         }
         return methodChange;
@@ -149,10 +149,10 @@ public class Convert {
         if (refactoring.getRefactoringType().equals(RefactoringType.EXTRACT_ATTRIBUTE)) {
             fieldChange = new ExtractFieldChange(refactoring, parentClassMap, currentClassMap, revCommit);
             this.isAPI = UtilTools.isAPIByClassifier(fieldChange.getNextClass(), classifier)&& UtilTools.isAPIClass(fieldChange.getNextClass())&& UtilTools.isAPIField(fieldChange.getNextAttribute());
-            this.refactored = new Refactored();
-            refactored.setRefType(ChangeType.FIELD);
-            refactored.setNextClass(fieldChange.getNextClass());
-            refactored.setNextAttribute(fieldChange.getNextAttribute());
+            this.refIdentifier = new RefIdentifier();
+            refIdentifier.setRefType(ChangeType.FIELD);
+            refIdentifier.setNextClass(fieldChange.getNextClass());
+            refIdentifier.setNextAttribute(fieldChange.getNextAttribute());
         } else {
             switch (refactoring.getRefactoringType()) {
                 case MOVE_ATTRIBUTE:
@@ -178,12 +178,12 @@ public class Convert {
             }
             if (fieldChange != null) {
                 this.isAPI = UtilTools.isClassBeforeAfterAPIByClassifier(fieldChange.getOriginalClass(), fieldChange.getNextClass(), classifier)&&((UtilTools.isAPIClass(fieldChange.getOriginalClass() )&& UtilTools.isAPIField(fieldChange.getOriginalAttribute()))||(UtilTools.isAPIClass(fieldChange.getNextClass())&& UtilTools.isAPIField(fieldChange.getNextAttribute())));
-                this.refactored = new Refactored();
-                refactored.setRefType(ChangeType.FIELD);
-                refactored.setOriginalClass(fieldChange.getOriginalClass());
-                refactored.setNextClass(fieldChange.getNextClass());
-                refactored.setOriginalAttribute(fieldChange.getOriginalAttribute());
-                refactored.setNextAttribute(fieldChange.getNextAttribute());
+                this.refIdentifier = new RefIdentifier();
+                refIdentifier.setRefType(ChangeType.FIELD);
+                refIdentifier.setOriginalClass(fieldChange.getOriginalClass());
+                refIdentifier.setNextClass(fieldChange.getNextClass());
+                refIdentifier.setOriginalAttribute(fieldChange.getOriginalAttribute());
+                refIdentifier.setNextAttribute(fieldChange.getNextAttribute());
             }
         }
         return fieldChange;
@@ -193,8 +193,8 @@ public class Convert {
         return isAPI;
     }
 
-    public Refactored getRefactored() {
-        return refactored;
+    public RefIdentifier getRefactored() {
+        return refIdentifier;
     }
 
     public Change getChange() {

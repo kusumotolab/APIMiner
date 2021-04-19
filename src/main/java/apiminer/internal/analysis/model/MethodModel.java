@@ -2,10 +2,10 @@ package apiminer.internal.analysis.model;
 
 import gr.uom.java.xmi.UMLOperation;
 
-public class OperationModel {
+public class MethodModel {
     private UMLOperation umlOperation;
     private boolean isRefactored = false;
-    public OperationModel(UMLOperation umlOperation){
+    public MethodModel(UMLOperation umlOperation){
         this.umlOperation = umlOperation;
     }
 

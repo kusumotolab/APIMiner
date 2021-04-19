@@ -2,11 +2,11 @@ package apiminer.internal.analysis.model;
 
 import gr.uom.java.xmi.UMLAttribute;
 
-public class AttributeModel {
+public class FieldModel {
     private UMLAttribute umlAttribute;
     private boolean isRefactored = false;
 
-    public AttributeModel(UMLAttribute umlAttribute){
+    public FieldModel(UMLAttribute umlAttribute){
         this.umlAttribute = umlAttribute;
     }
 

@@ -8,12 +8,12 @@ import gr.uom.java.xmi.UMLOperation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModelClass {
+public class ModelType {
     private UMLClass umlClass;
     private Map<String , UMLOperation> operationMap = new HashMap<String,UMLOperation>();
     private Map<String, UMLAttribute> attributeMap = new HashMap<String,UMLAttribute>();
 
-    public ModelClass(UMLClass umlClass){
+    public ModelType(UMLClass umlClass){
         this.umlClass = umlClass;
         for(UMLOperation umlOperation:umlClass.getOperations()){
             operationMap.put(UtilTools.getSignatureMethod(umlOperation),umlOperation);

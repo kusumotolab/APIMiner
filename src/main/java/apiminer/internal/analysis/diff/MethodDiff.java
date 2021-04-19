@@ -12,7 +12,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperationDiff {
+public class MethodDiff {
     private final UMLClass originalClass;
     private UMLOperation originalOperation;
     private final UMLClass nextClass;
@@ -20,7 +20,7 @@ public class OperationDiff {
     private final RevCommit revCommit;
     private final List<Change> changeList = new ArrayList<>();
 
-    public OperationDiff(UMLClass originalClass,UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation,List<Change> changeList, RevCommit revCommit) {
+    public MethodDiff(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, List<Change> changeList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.originalOperation = originalOperation;
         this.nextClass = nextClass;

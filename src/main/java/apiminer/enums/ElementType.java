@@ -10,7 +10,7 @@ public enum ElementType {
 	
 	private String type;
 	
-	private ElementType(final String type) {
+	ElementType(final String type) {
 		this.type = type;
 	}
 

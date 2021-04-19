@@ -10,7 +10,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassDiff {
+public class TypeDiff {
     private final UMLClass originalClass;
     private final UMLClass nextClass;
     private final RevCommit revCommit;
@@ -18,7 +18,7 @@ public class ClassDiff {
     private List<UMLClass> parentClassList;
     private List<UMLClass> currentClassList;
 
-    public ClassDiff(UMLClass originalClass, UMLClass nextClass, List<Change> changeList, List<UMLClass> parentClassList,List<UMLClass> currentClassList,RevCommit revCommit) {
+    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<Change> changeList, List<UMLClass> parentClassList, List<UMLClass> currentClassList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.nextClass = nextClass;
         this.changeList.addAll(changeList);

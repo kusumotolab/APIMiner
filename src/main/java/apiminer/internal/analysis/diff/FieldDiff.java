@@ -13,7 +13,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttributeDiff {
+public class FieldDiff {
     private final UMLClass originalClass;
     private final UMLClass nextClass;
     private final RevCommit revCommit;
@@ -21,7 +21,7 @@ public class AttributeDiff {
     private final UMLAttribute originalAttribute;
     private final UMLAttribute nextAttribute;
 
-    public AttributeDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, List<Change> changeList, RevCommit revCommit) {
+    public FieldDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, List<Change> changeList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.originalAttribute = originalAttribute;
         this.nextClass = nextClass;

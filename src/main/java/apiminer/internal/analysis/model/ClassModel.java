@@ -3,7 +3,7 @@ package apiminer.internal.analysis.model;
 import gr.uom.java.xmi.UMLClass;
 
 public class ClassModel {
-    private UMLClass umlClass;
+    private final UMLClass umlClass;
     private boolean isRefactored = false;
 
     public ClassModel(UMLClass umlClass){

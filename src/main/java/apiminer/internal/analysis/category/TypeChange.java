@@ -8,11 +8,11 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.List;
 
-public class ClassChange extends Change {
+public class TypeChange extends Change {
     private UMLClass originalClass;
     private UMLClass nextClass;
 
-    public ClassChange(RevCommit revCommit){
+    public TypeChange(RevCommit revCommit){
         super(revCommit);
     }
 

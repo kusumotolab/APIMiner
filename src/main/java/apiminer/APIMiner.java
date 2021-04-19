@@ -4,16 +4,13 @@ import apiminer.enums.Classifier;
 import apiminer.internal.analysis.DiffProcessor;
 import apiminer.internal.service.git.GitService;
 import apiminer.internal.service.git.GitServiceImpl;
-import apiminer.internal.util.UtilTools;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class APIMiner implements DiffDetector{
@@ -64,10 +61,8 @@ public class APIMiner implements DiffDetector{
         Repository repository = service.openRepositoryAndCloneIfNotExists(this.path, this.nameProject, this.url);
         RevWalk revWalk = service.createAllRevsWalk(repository, branch);
         //Commits.
-        Iterator<RevCommit> i = revWalk.iterator();
-        while(i.hasNext()){
-            RevCommit currentCommit = i.next();
-            for(Classifier classifierAPI: classifiers){
+        for (RevCommit currentCommit : revWalk) {
+            for (Classifier classifierAPI : classifiers) {
                 Result resultByClassifier = this.diffCommit(currentCommit, repository, classifierAPI);
                 result.getChangeType().addAll(resultByClassifier.getChangeType());
                 result.getChangeMethod().addAll(resultByClassifier.getChangeMethod());
@@ -91,11 +86,9 @@ public class APIMiner implements DiffDetector{
             Repository repository = service.openRepositoryAndCloneIfNotExists(this.path, this.nameProject, this.url);
             RevWalk revWalk = service.fetchAndCreateNewRevsWalk(repository, null);
             //Commits.
-            Iterator<RevCommit> i = revWalk.iterator();
-            while(i.hasNext()){
-                RevCommit currentCommit = i.next();
-                for(Classifier classifierAPI : classifiers){
-                    Result resultByClassifier = this.diffCommit(currentCommit, repository,  classifierAPI);
+            for (RevCommit currentCommit : revWalk) {
+                for (Classifier classifierAPI : classifiers) {
+                    Result resultByClassifier = this.diffCommit(currentCommit, repository, classifierAPI);
                     result.getChangeType().addAll(resultByClassifier.getChangeType());
                     result.getChangeMethod().addAll(resultByClassifier.getChangeMethod());
                     result.getChangeField().addAll(resultByClassifier.getChangeField());
@@ -120,11 +113,11 @@ public class APIMiner implements DiffDetector{
     }
 
     @Override
-    public Result fetchAndDetectChange(Classifier classifier) throws Exception {
+    public Result fetchAndDetectChange(Classifier classifier) {
         return this.fetchAndDetectChange(Arrays.asList(classifier));
     }
 
-    private Result diffCommit(final RevCommit currentCommit, final Repository repository, Classifier classifierAPI) throws Exception{
+    private Result diffCommit(final RevCommit currentCommit, final Repository repository, Classifier classifierAPI) {
         if(currentCommit.getParentCount() != 0){//there is at least one parent
             try {
                 DiffProcessor diffProcessor = new DiffProcessor();

@@ -2,12 +2,12 @@ package apiminer.internal.analysis.category.type;
 
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
-import apiminer.internal.analysis.category.ClassChange;
+import apiminer.internal.analysis.category.TypeChange;
 import gr.uom.java.xmi.diff.ExtractClassRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.refactoringminer.api.Refactoring;
 
-public class ExtractSubTypeChange extends ClassChange {
+public class ExtractSubTypeChange extends TypeChange {
 
     public ExtractSubTypeChange(Refactoring refactoring, RevCommit revCommit) {
         super(revCommit);

@@ -2,11 +2,11 @@ package apiminer.internal.analysis.model;
 
 import gr.uom.java.xmi.UMLOperation;
 
-public class CommonOperation {
+public class CommonMethod {
     private UMLOperation originalOperation;
     private UMLOperation nextOperation;
 
-    public CommonOperation(UMLOperation originalOperation,UMLOperation nextOperation){
+    public CommonMethod(UMLOperation originalOperation, UMLOperation nextOperation){
         this.originalOperation = originalOperation;
         this.nextOperation = nextOperation;
     }
