@@ -3,7 +3,7 @@ package apiminer.internal.analysis.model;
 import gr.uom.java.xmi.UMLAttribute;
 
 public class FieldModel {
-    private UMLAttribute umlAttribute;
+    private final UMLAttribute umlAttribute;
     private boolean isRefactored = false;
 
     public FieldModel(UMLAttribute umlAttribute){
@@ -14,7 +14,7 @@ public class FieldModel {
         return umlAttribute;
     }
 
-    public boolean isRefactored() {
+    public boolean getIsRefactored() {
         return isRefactored;
     }
 

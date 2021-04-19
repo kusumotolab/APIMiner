@@ -1,10 +1,11 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.method.DeprecatedMethodChange;
+import apiminer.internal.analysis.category.method.StaticMethodChange;
+import apiminer.internal.analysis.category.method.VisibilityMethodChange;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
-import apiminer.internal.analysis.category.method.DeprecatedMethodChange;
-import apiminer.internal.analysis.category.method.VisibilityMethodChange;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -14,9 +15,9 @@ import java.util.List;
 
 public class MethodDiff {
     private final UMLClass originalClass;
-    private UMLOperation originalOperation;
+    private final UMLOperation originalOperation;
     private final UMLClass nextClass;
-    private UMLOperation nextOperation;
+    private final UMLOperation nextOperation;
     private final RevCommit revCommit;
     private final List<Change> changeList = new ArrayList<>();
 
@@ -54,7 +55,7 @@ public class MethodDiff {
         return changeList;
     }
 
-    private void detectOtherChange(){
+    private void detectOtherChange() {
         boolean isBreakingChange = false;
         if (originalClass != null && nextClass != null) {
             detectVisibilityChange();
@@ -72,8 +73,9 @@ public class MethodDiff {
             }
         }
     }
+
     private void detectVisibilityChange() {
-        if(UtilTools.isAPIClass(originalClass)&& UtilTools.isAPIClass(nextClass)){
+        if (UtilTools.isAPIClass(originalClass) && UtilTools.isAPIClass(nextClass)) {
             String originalAccessModifier = originalOperation.getVisibility();
             String nextAccessModifier = nextOperation.getVisibility();
             if (!originalAccessModifier.equals(nextAccessModifier)) {
@@ -81,18 +83,18 @@ public class MethodDiff {
                     case "private":
                     case "default":
                         if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
-                            changeList.add(new VisibilityMethodChange(originalClass, originalOperation,nextClass, nextOperation,Category.METHOD_GAIN_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_GAIN_VISIBILITY, revCommit));
                         }
                         break;
                     case "protected":
                         if (nextAccessModifier.equals("public")) {
-                            changeList.add(new VisibilityMethodChange(originalClass,originalOperation, nextClass, nextOperation,Category.METHOD_GAIN_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_GAIN_VISIBILITY, revCommit));
                         } else {
-                            changeList.add(new VisibilityMethodChange(originalClass, originalOperation,nextClass, nextOperation,Category.METHOD_LOST_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_LOST_VISIBILITY, revCommit));
                         }
                         break;
                     case "pubic":
-                        changeList.add(new VisibilityMethodChange(originalClass,originalOperation, nextClass, nextOperation,Category.METHOD_LOST_VISIBILITY, revCommit));
+                        changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_LOST_VISIBILITY, revCommit));
                         break;
                 }
             }
@@ -101,22 +103,26 @@ public class MethodDiff {
 
 
     private void detectFinalModifierChange() {
-        if(originalOperation.isFinal()&&!nextOperation.isFinal()){
+        if (originalOperation.isFinal() && !nextOperation.isFinal()) {
 
-        }else if(!originalOperation.isFinal()&&nextOperation.isFinal()){
+        } else if (!originalOperation.isFinal() && nextOperation.isFinal()) {
 
         }
     }
 
     private void detectStaticModifierChange() {
-
+        if (originalOperation.isStatic() && !nextOperation.isStatic()) {
+            changeList.add(new StaticMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
+        } else if (!originalOperation.isStatic() && nextOperation.isStatic()) {
+            changeList.add(new StaticMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
+        }
     }
 
-    private void detectDeprecatedChange(){
-        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass)|| UtilTools.isDeprecatedMethod(originalOperation);
-        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass)|| UtilTools.isDeprecatedMethod(nextOperation);
-        if(!isOriginalDeprecated&&isNextDeprecated){
-            changeList.add(new DeprecatedMethodChange(originalClass,originalOperation,nextClass,nextOperation,revCommit));
+    private void detectDeprecatedChange() {
+        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass) || UtilTools.isDeprecatedMethod(originalOperation);
+        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass) || UtilTools.isDeprecatedMethod(nextOperation);
+        if (!isOriginalDeprecated && isNextDeprecated) {
+            changeList.add(new DeprecatedMethodChange(originalClass, originalOperation, nextClass, nextOperation, revCommit));
         }
     }
 }

@@ -90,6 +90,7 @@ public class Convert {
                 refIdentifier.setRefType(ChangeType.METHOD);
                 refIdentifier.setNextClass(methodChange.getNextClass());
                 refIdentifier.setNextOperation(methodChange.getNextOperation());
+                break;
             case INLINE_OPERATION:
             case MOVE_AND_INLINE_OPERATION:
                 methodChange = new InlineMethodChange(refactoring, parentClassMap, currentClassMap, revCommit);
@@ -193,7 +194,7 @@ public class Convert {
         return isAPI;
     }
 
-    public RefIdentifier getRefactored() {
+    public RefIdentifier getRefIdentifier() {
         return refIdentifier;
     }
 

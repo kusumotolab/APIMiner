@@ -1,6 +1,7 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.field.FinalFieldChange;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
 import apiminer.internal.analysis.category.field.ChangeInDefaultValue;
@@ -103,9 +104,9 @@ public class FieldDiff {
 
     private void detectFinalModifierChange() {
         if (originalAttribute.isFinal() && !nextAttribute.isFinal()) {
-
+            changeList.add(new FinalFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_REMOVE_MODIFIER_FINAL,revCommit));
         } else if (!originalAttribute.isFinal() && nextAttribute.isFinal()) {
-
+            changeList.add(new FinalFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_ADD_MODIFIER_FINAL,revCommit));
         }
     }
 

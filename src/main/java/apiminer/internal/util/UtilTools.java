@@ -36,6 +36,25 @@ public class UtilTools {
         String attributeType = umlAttribute.getType().toString();
         return attributeName + " : " + attributeType;
     }
+    public static String getTypeDescriptionName(UMLClass umlClass){
+        return umlClass.toString();
+    }
+    public static String getMethodDescriptionName(UMLOperation umlOperation){
+        String signature;
+        String methodName = umlOperation.getName();
+        List<String> parameterTypeList = new ArrayList<>();
+        String parameters;
+        for (UMLParameter parameter : umlOperation.getParametersWithoutReturnType()) {
+            parameterTypeList.add(parameter.getType().toString()+" "+parameter.getName());
+        }
+        parameters = StringUtils.join(parameterTypeList, ", ");
+        signature = methodName + "(" + parameters + ")";
+        return signature;
+    }
+
+    public static String getFieldDescriptionName(UMLAttribute umlAttribute){
+        return umlAttribute.getName();
+    }
 
     public static boolean isAPIClass(UMLClass umlClass) {
         return umlClass.getVisibility().equals("public") || umlClass.getVisibility().equals("protected");

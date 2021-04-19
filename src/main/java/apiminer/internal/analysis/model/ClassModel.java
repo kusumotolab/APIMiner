@@ -14,7 +14,7 @@ public class ClassModel {
         return umlClass;
     }
 
-    public boolean isRefactored() {
+    public boolean getIsRefactored() {
         return isRefactored;
     }
 

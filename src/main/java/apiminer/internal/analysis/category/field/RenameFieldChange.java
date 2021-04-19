@@ -2,6 +2,7 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.diff.RenameAttributeRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -18,10 +19,10 @@ public class RenameFieldChange extends FieldChange {
         this.setNextClass(currentClassMap.get(renameAttribute.getClassNameAfter()));
         this.setOriginalAttribute(renameAttribute.getOriginalAttribute());
         this.setNextAttribute(renameAttribute.getRenamedAttribute());
-        this.setOriginalPath(this.getOriginalClass().toString());
-        this.setNextPath(this.getNextClass().toString());
-        this.setOriginalElement(this.getOriginalAttribute().toString());
-        this.setNextElement(this.getNextAttribute().toString());
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
+        this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
+        this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
+        this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_RENAME);
         this.setBreakingChange(true);
         this.setDescription(isDescription());

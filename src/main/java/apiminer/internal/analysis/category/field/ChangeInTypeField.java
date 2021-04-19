@@ -2,6 +2,7 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.diff.ChangeAttributeTypeRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -18,10 +19,10 @@ public class ChangeInTypeField extends FieldChange {
         this.setNextClass(currentClassMap.get(changeAttributeType.getClassNameAfter()));
         this.setOriginalAttribute(changeAttributeType.getOriginalAttribute());
         this.setNextAttribute(changeAttributeType.getChangedTypeAttribute());
-        this.setOriginalPath(this.getOriginalClass().toString());
-        this.setNextPath(this.getNextClass().toString());
-        this.setOriginalElement(this.getOriginalAttribute().toString());
-        this.setNextElement(this.getNextAttribute().toString());
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
+        this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
+        this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
+        this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_CHANGE_TYPE);
         this.setBreakingChange(true);
         this.setDescription(isDescription());
@@ -32,8 +33,8 @@ public class ChangeInTypeField extends FieldChange {
 
     private String isDescription() {
         String message = "";
-        message += "<br>field <code>" + this.getOriginalElement() + "</code>";
-        message += "<br>changed field type to <code>" + this.getNextElement() + "</code>";
+        message += "<br>field <code>" + this.getNextElement() + "</code>";
+        message += "<br>changed field type";
         message += "<br>in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;

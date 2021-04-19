@@ -1,9 +1,9 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.type.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
-import apiminer.internal.analysis.category.type.*;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
@@ -15,8 +15,8 @@ public class TypeDiff {
     private final UMLClass nextClass;
     private final RevCommit revCommit;
     private final List<Change> changeList = new ArrayList<>();
-    private List<UMLClass> parentClassList;
-    private List<UMLClass> currentClassList;
+    private final List<UMLClass> parentClassList;
+    private final List<UMLClass> currentClassList;
 
     public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<Change> changeList, List<UMLClass> parentClassList, List<UMLClass> currentClassList, RevCommit revCommit) {
         this.originalClass = originalClass;
@@ -97,91 +97,50 @@ public class TypeDiff {
 
     }
 
-    private void detectDeprecatedChange(){
+    private void detectDeprecatedChange() {
         boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass);
         boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass);
-        if(!isOriginalDeprecated&&isNextDeprecated){
-            changeList.add(new DeprecateTypeChange(originalClass,nextClass,revCommit));
-        }
-    }
-/*
-    private void detectSuperTypeChange(){
-        List<UMLType> removedSuperTypeList = new ArrayList<>();
-        List<UMLType> addedSuperTypeList = new ArrayList<>();
-        Map<String,UMLType> originalSuperTypeMap = new HashMap<>();
-        if(originalClass.getSuperclass()!=null){
-            originalSuperTypeMap.put(originalClass.getSuperclass().toString(),originalClass.getSuperclass());
-        }
-        for(UMLType originalInterface:originalClass.getImplementedInterfaces()){
-            originalSuperTypeMap.put(originalInterface.toString(),originalInterface);
-        }
-        List<UMLType> nextSuperTypeList = new ArrayList<>();
-        if(nextClass.getSuperclass()!=null){
-            nextSuperTypeList.add(nextClass.getSuperclass());
-        }
-        nextSuperTypeList.addAll(nextClass.getImplementedInterfaces());
-        for(UMLType nextSuperType:nextSuperTypeList){
-            UMLType umlType = originalSuperTypeMap.remove(nextSuperType.toString());
-            if(umlType==null){
-                   addedSuperTypeList.add(nextSuperType);
-            }
-        }
-        removedSuperTypeList.addAll(originalSuperTypeMap.values());
-        for(UMLType removedSuperType:removedSuperTypeList){
-            for(UMLClass parentClass:parentClassList){
-                if(parentClass.getName().endsWith("."+removedSuperType.getClassType())){
-                    //Todo fix
-                    String a = "";
-                }
-            }
-        }
-        for(UMLType addedSuperType:addedSuperTypeList){
-            for(UMLClass currentClass:currentClassList){
-                if(currentClass.getName().endsWith("."+addedSuperType.getClassType())){
-                    //Todo fix
-                    String a = "";
-                }
-            }
+        if (!isOriginalDeprecated && isNextDeprecated) {
+            changeList.add(new DeprecateTypeChange(originalClass, nextClass, revCommit));
         }
     }
 
- */
-
-    private void detectSuperTypeChange(){
-        if(originalClass.getSuperclass()==null){
-            if(nextClass.getSuperclass()!=null){
-                for(UMLClass currentClass:currentClassList){
-                    if(currentClass.toString().endsWith("."+nextClass.getSuperclass().toString())){
-                        changeList.add(new AddSuperTypeChange(originalClass,nextClass,currentClass,revCommit));
+    private void detectSuperTypeChange() {
+        //todo fix
+        if (originalClass.getSuperclass() == null) {
+            if (nextClass.getSuperclass() != null) {
+                for (UMLClass currentClass : currentClassList) {
+                    if (currentClass.toString().endsWith("." + nextClass.getSuperclass().toString())) {
+                        changeList.add(new AddSuperTypeChange(originalClass, nextClass, currentClass, revCommit));
                         break;
                     }
                 }
             }
-        }else{
-            if(nextClass.getSuperclass()==null){
-                for(UMLClass parentClass:parentClassList){
-                    if(parentClass.toString().endsWith("."+originalClass.getSuperclass().toString())){
-                        changeList.add(new RemoveSuperTypeChange(originalClass,nextClass,parentClass,revCommit));
+        } else {
+            if (nextClass.getSuperclass() == null) {
+                for (UMLClass parentClass : parentClassList) {
+                    if (parentClass.toString().endsWith("." + originalClass.getSuperclass().toString())) {
+                        changeList.add(new RemoveSuperTypeChange(originalClass, nextClass, parentClass, revCommit));
                         break;
                     }
                 }
-            }else if(!originalClass.getSuperclass().toString().equals(nextClass.getSuperclass().toString())){
+            } else if (!originalClass.getSuperclass().toString().equals(nextClass.getSuperclass().toString())) {
                 UMLClass originalSuperClass = null;
                 UMLClass nextSuperClass = null;
-                for(UMLClass parentClass:parentClassList){
-                    if(parentClass.toString().endsWith("."+originalClass.getSuperclass().toString())){
+                for (UMLClass parentClass : parentClassList) {
+                    if (parentClass.toString().endsWith("." + originalClass.getSuperclass().toString())) {
                         originalSuperClass = parentClass;
                         break;
                     }
                 }
-                for(UMLClass currentClass:currentClassList){
-                    if(currentClass.toString().endsWith("."+nextClass.getSuperclass().toString())){
+                for (UMLClass currentClass : currentClassList) {
+                    if (currentClass.toString().endsWith("." + nextClass.getSuperclass().toString())) {
                         nextSuperClass = currentClass;
                         break;
                     }
                 }
-                if(originalSuperClass!=null&&nextSuperClass!=null){
-                    changeList.add(new ChangeSuperTypeChange(originalClass,nextClass,originalSuperClass,nextSuperClass,revCommit));
+                if (originalSuperClass != null && nextSuperClass != null) {
+                    changeList.add(new ChangeSuperTypeChange(originalClass, nextClass, originalSuperClass, nextSuperClass, revCommit));
                 }
             }
         }

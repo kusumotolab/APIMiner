@@ -3,6 +3,7 @@ package apiminer.internal.analysis.category.method;
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.MethodChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -14,12 +15,12 @@ public class DeprecatedMethodChange extends MethodChange {
         this.setNextClass(nextClass);
         this.setOriginalOperation(originalOperation);
         this.setNextOperation(nextOperation);
-        this.setOriginalPath(this.getOriginalClass().toString());
-        this.setNextPath(this.getNextClass().toString());
-        this.setOriginalElement(this.getOriginalOperation().toString());
-        this.setNextElement(this.getNextOperation().toString());
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
+        this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
+        this.setOriginalElement(UtilTools.getMethodDescriptionName(this.getOriginalOperation()));
+        this.setNextElement(UtilTools.getMethodDescriptionName(this.getNextOperation()));
         this.setCategory(Category.METHOD_DEPRECATED);
-        this.setBreakingChange(true);
+        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
         this.setDeprecated(isDeprecated(this.getNextOperation()));
@@ -34,7 +35,7 @@ public class DeprecatedMethodChange extends MethodChange {
 
     private String isDescription() {
         String message = "";
-        message += "<br>method <code>" + this.getNextOperation() +"</code>";
+        message += "<br>method <code>" + this.getNextElement() +"</code>";
         message += "<br>deprecated in <code>" + this.getNextPath() +"</code>";
         message += "<br>";
         return message;

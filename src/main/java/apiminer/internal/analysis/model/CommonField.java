@@ -3,8 +3,8 @@ package apiminer.internal.analysis.model;
 import gr.uom.java.xmi.UMLAttribute;
 
 public class CommonField {
-    private UMLAttribute originalAttribute;
-    private UMLAttribute nextAttribute;
+    private final UMLAttribute originalAttribute;
+    private final UMLAttribute nextAttribute;
 
     public CommonField(UMLAttribute originalAttribute, UMLAttribute nextAttribute){
         this.originalAttribute = originalAttribute;

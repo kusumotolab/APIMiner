@@ -3,23 +3,22 @@ package apiminer.internal.analysis.category.type;
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.TypeChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class VisibilityTypeChange extends TypeChange {
-    private UMLClass originalClass;
-    private UMLClass nextClass;
 
     public VisibilityTypeChange(UMLClass originalClass, UMLClass nextClass, Category category, RevCommit revCommit) {
         super(revCommit);
-        this.originalClass = originalClass;
-        this.nextClass = nextClass;
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(nextClass.getSourceFile());
-        this.setOriginalElement(originalClass.getName());
-        this.setNextElement(nextClass.getName());
+        this.setOriginalClass(originalClass);
+        this.setNextClass(nextClass);
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
+        this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
+        this.setOriginalElement(UtilTools.getTypeDescriptionName(originalClass));
+        this.setNextElement(UtilTools.getTypeDescriptionName(nextClass));
         this.setCategory(category);
-        this.setBreakingChange(true);
+        this.setBreakingChange(this.getCategory().equals(Category.TYPE_LOST_VISIBILITY));
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextClass));
         this.setDeprecated(isDeprecated(nextClass));
@@ -35,8 +34,8 @@ public class VisibilityTypeChange extends TypeChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + nextClass.getName() + "</code>";
-        message += "<br>changed visibility from <code>" + originalClass.getVisibility() + "</code> to <code>" + nextClass.getVisibility() + "</code>";
+        message += "<br>type <code>" + this.getNextElement() + "</code>";
+        message += "<br>changed visibility from <code>" + this.getOriginalClass().getVisibility() + "</code> to <code>" + this.getNextClass() + "</code>";
         message += "<br>";
         return message;
     }

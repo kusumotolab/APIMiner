@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Diff {
-    private Map<String, ClassModel> removedClassMap = new HashMap<String,ClassModel>();
-    private Map<String, CommonType> commonClassMap = new HashMap<String, CommonType>();
-    private Map<String,ClassModel> addedClassMap = new HashMap<String,ClassModel>();
+    private final Map<String, ClassModel> removedClassMap = new HashMap<>();
+    private final Map<String, CommonType> commonClassMap = new HashMap<>();
+    private final Map<String,ClassModel> addedClassMap = new HashMap<>();
 
     public Map<String, ClassModel> getRemovedClassMap() {
         return removedClassMap;

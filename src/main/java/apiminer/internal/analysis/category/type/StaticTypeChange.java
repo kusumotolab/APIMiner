@@ -3,24 +3,23 @@ package apiminer.internal.analysis.category.type;
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.TypeChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class StaticTypeChange extends TypeChange {
-    private UMLClass originalClass;
-    private UMLClass nextClass;
 
 
     public StaticTypeChange(UMLClass originalClass,UMLClass nextClass,Category category, RevCommit revCommit) {
         super(revCommit);
-        this.originalClass = originalClass;
-        this.nextClass = nextClass;
-        this.setOriginalPath(originalClass.getSourceFile());
-        this.setNextPath(nextClass.getSourceFile());
-        this.setOriginalElement(originalClass.getName());
-        this.setNextElement(nextClass.getName());
+        this.setOriginalClass(originalClass);
+        this.setNextClass(nextClass);
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
+        this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
+        this.setOriginalElement(UtilTools.getTypeDescriptionName(originalClass));
+        this.setNextElement(UtilTools.getTypeDescriptionName(nextClass));
         this.setCategory(category);
-        this.setBreakingChange(true);
+        this.setBreakingChange(category.equals(Category.TYPE_REMOVE_MODIFIER_STATIC));
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextClass));
         this.setDeprecated(isDeprecated(nextClass));
@@ -36,7 +35,7 @@ public class StaticTypeChange extends TypeChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + nextClass.getName() + "</code>";
+        message += "<br>type <code>" + this.getNextElement() + "</code>";
         if(getCategory().equals(Category.TYPE_ADD_MODIFIER_STATIC)){
             message += "<br>received the modifier <code>static</code>";
         }else{

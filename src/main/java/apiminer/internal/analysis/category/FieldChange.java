@@ -1,5 +1,6 @@
 package apiminer.internal.analysis.category;
 
+import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
 import gr.uom.java.xmi.*;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -57,12 +58,6 @@ public class FieldChange extends Change {
     }
 
     protected boolean isDeprecated(UMLAttribute umlAttribute){
-        List<UMLAnnotation> annotationList = umlAttribute.getAnnotations();
-        for(UMLAnnotation annotation:annotationList){
-            if(annotation.toString().equals("@Deprecated")){
-                return true;
-            }
-        }
-        return false;
+        return UtilTools.isDeprecatedField(umlAttribute);
     }
 }

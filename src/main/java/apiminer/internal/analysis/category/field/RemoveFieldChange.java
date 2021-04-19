@@ -2,24 +2,23 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class RemoveFieldChange extends FieldChange {
-    private UMLClass umlClass;
-    private UMLAttribute removedAttribute;
 
     public RemoveFieldChange(UMLClass umlClass, UMLAttribute removedAttribute, RevCommit revCommit){
         super(revCommit);
-        this.umlClass = umlClass;
-        this.removedAttribute = removedAttribute;
-        this.setOriginalPath(umlClass.getSourceFile());
+        this.setOriginalClass(umlClass);
+        this.setOriginalAttribute(removedAttribute);
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
         this.setNextPath("");
-        this.setOriginalElement(removedAttribute.getName());
+        this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
         this.setNextElement("");
         this.setCategory(Category.FIELD_REMOVE);
-        this.setBreakingChange(false);
+        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(removedAttribute));
         this.setDeprecated(isDeprecated(removedAttribute));
@@ -28,8 +27,8 @@ public class RemoveFieldChange extends FieldChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>field <code>" + removedAttribute.getName() +"</code>";
-        message += "<br>removed from <code>" + umlClass.getName() + "</code>";
+        message += "<br>field <code>" + this.getOriginalElement() +"</code>";
+        message += "<br>removed from <code>" + this.getOriginalPath() + "</code>";
         message += "<br>";
         return message;
     }

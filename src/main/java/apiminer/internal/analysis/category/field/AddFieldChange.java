@@ -2,22 +2,21 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class AddFieldChange extends FieldChange {
-    private UMLClass umlClass;
-    private UMLAttribute addedAttribute;
 
-    public AddFieldChange(UMLClass umlClass,UMLAttribute addedAttribute,RevCommit revCommit){
+    public AddFieldChange(UMLClass umlClass, UMLAttribute addedAttribute, RevCommit revCommit) {
         super(revCommit);
-        this.umlClass = umlClass;
-        this.addedAttribute = addedAttribute;
+        this.setNextClass(umlClass);
+        this.setNextAttribute(addedAttribute);
         this.setOriginalPath("");
-        this.setNextPath(umlClass.getSourceFile());
+        this.setNextPath(UtilTools.getTypeDescriptionName(umlClass));
         this.setOriginalElement("");
-        this.setNextElement(addedAttribute.getName());
+        this.setNextElement(UtilTools.getFieldDescriptionName(addedAttribute));
         this.setCategory(Category.FIELD_ADD);
         this.setBreakingChange(false);
         this.setDescription(isDescription());
@@ -26,10 +25,10 @@ public class AddFieldChange extends FieldChange {
         this.setRevCommit(revCommit);
     }
 
-    private String isDescription(){
+    private String isDescription() {
         String message = "";
-        message += "<br>field <code>" + addedAttribute.getName() +"</code>";
-        message += "<br>added in <code>" + umlClass.getName() +"</code>";
+        message += "<br>field <code>" + this.getNextElement() + "</code>";
+        message += "<br>added in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;
     }

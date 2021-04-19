@@ -2,6 +2,7 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.diff.MoveAttributeRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -18,12 +19,12 @@ public class PullUpFieldChange extends FieldChange {
         this.setNextClass(currentClassMap.get(moveAttribute.getTargetClassName()));
         this.setOriginalAttribute(moveAttribute.getOriginalAttribute());
         this.setNextAttribute(moveAttribute.getMovedAttribute());
-        this.setOriginalPath(this.getOriginalClass().toString());
-        this.setNextPath(this.getNextClass().toString());
-        this.setOriginalElement(this.getOriginalAttribute().toString());
-        this.setNextElement(this.getNextAttribute().toString());
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
+        this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
+        this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
+        this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_PULL_UP);
-        this.setBreakingChange(true);
+        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
         this.setDeprecated(isDeprecated(this.getNextAttribute()));
@@ -32,7 +33,7 @@ public class PullUpFieldChange extends FieldChange {
 
     private String isDescription() {
         String message = "";
-        message += "<br>pull up field <code>" + this.getNextElement() + "</code>";
+        message += "<br>pull up field <code>" + this.getOriginalElement() + "</code>";
         message += "<br>from <code>" + this.getOriginalPath() + "</code>";
         message += "<br>to <code>" + this.getNextPath() + "</code>";
         message += "<br>";

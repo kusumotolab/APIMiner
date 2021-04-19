@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModelType {
-    private UMLClass umlClass;
-    private Map<String , UMLOperation> operationMap = new HashMap<String,UMLOperation>();
-    private Map<String, UMLAttribute> attributeMap = new HashMap<String,UMLAttribute>();
+    private final UMLClass umlClass;
+    private final Map<String, UMLOperation> operationMap = new HashMap<>();
+    private final Map<String, UMLAttribute> attributeMap = new HashMap<>();
 
-    public ModelType(UMLClass umlClass){
+    public ModelType(UMLClass umlClass) {
         this.umlClass = umlClass;
-        for(UMLOperation umlOperation:umlClass.getOperations()){
-            operationMap.put(UtilTools.getSignatureMethod(umlOperation),umlOperation);
+        for (UMLOperation umlOperation : umlClass.getOperations()) {
+            operationMap.put(UtilTools.getSignatureMethod(umlOperation), umlOperation);
         }
-        for(UMLAttribute umlAttribute: umlClass.getAttributes()){
-            attributeMap.put(UtilTools.getAttributeName(umlAttribute),umlAttribute);
+        for (UMLAttribute umlAttribute : umlClass.getAttributes()) {
+            attributeMap.put(UtilTools.getAttributeName(umlAttribute), umlAttribute);
         }
     }
 

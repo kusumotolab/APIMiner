@@ -3,18 +3,18 @@ package apiminer.internal.analysis.category.type;
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.TypeChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class AddTypeChange extends TypeChange {
-    private UMLClass addedClass;
     public AddTypeChange(UMLClass addedClass, RevCommit revCommit){
         super(revCommit);
-        this.addedClass = addedClass;
+        this.setOriginalClass(addedClass);
         this.setOriginalPath("");
-        this.setNextPath(addedClass.getSourceFile());
+        this.setNextPath(UtilTools.getTypeDescriptionName(addedClass));
         this.setOriginalElement("");
-        this.setNextElement(addedClass.getName());
+        this.setNextElement(UtilTools.getTypeDescriptionName(addedClass));
         this.setCategory(Category.TYPE_ADD);
         this.setBreakingChange(false);
         this.setDescription(isDescription());
@@ -32,7 +32,7 @@ public class AddTypeChange extends TypeChange {
 
     private String isDescription(){
         String message = "";
-        message += "<br>type <code>" + addedClass.getName() + "</code> added";
+        message += "<br>type <code>" + this.getNextPath() + "</code> added";
         message += "<br>";
         return message;
     }

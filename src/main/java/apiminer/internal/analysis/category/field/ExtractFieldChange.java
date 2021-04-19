@@ -2,6 +2,7 @@ package apiminer.internal.analysis.category.field;
 
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.diff.ExtractAttributeRefactoring;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -16,12 +17,12 @@ public class ExtractFieldChange extends FieldChange {
         ExtractAttributeRefactoring extractAttribute = (ExtractAttributeRefactoring) refactoring;
         this.setNextClass(extractAttribute.getNextClass());
         this.setNextAttribute(extractAttribute.getVariableDeclaration());
-        this.setOriginalPath(extractAttribute.getOriginalClass().toString());
-        this.setNextPath(this.getNextClass().toString());
-        this.setOriginalElement(extractAttribute.getOriginalClass().toString());
-        this.setNextElement(this.getNextAttribute().toString());
+        this.setOriginalPath(UtilTools.getTypeDescriptionName(extractAttribute.getOriginalClass()));
+        this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
+        this.setOriginalElement(UtilTools.getTypeDescriptionName(extractAttribute.getOriginalClass()));
+        this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_EXTRACT);
-        this.setBreakingChange(true);
+        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
         this.setDeprecated(isDeprecated(this.getNextAttribute()));
