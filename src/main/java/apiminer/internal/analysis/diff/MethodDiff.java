@@ -1,17 +1,18 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
-import apiminer.internal.analysis.category.method.DeprecatedMethodChange;
-import apiminer.internal.analysis.category.method.StaticMethodChange;
-import apiminer.internal.analysis.category.method.VisibilityMethodChange;
+import apiminer.internal.analysis.category.method.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
+import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MethodDiff {
     private final UMLClass originalClass;
@@ -62,6 +63,7 @@ public class MethodDiff {
             detectFinalModifierChange();
             detectStaticModifierChange();
             detectDeprecatedChange();
+            detectExceptionListChange();
             for (Change change : changeList) {
                 if (change.getBreakingChange()) {
                     isBreakingChange = true;
@@ -104,9 +106,9 @@ public class MethodDiff {
 
     private void detectFinalModifierChange() {
         if (originalOperation.isFinal() && !nextOperation.isFinal()) {
-
+            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
         } else if (!originalOperation.isFinal() && nextOperation.isFinal()) {
-
+            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_ADD_MODIFIER_STATIC, revCommit));
         }
     }
 
@@ -114,7 +116,7 @@ public class MethodDiff {
         if (originalOperation.isStatic() && !nextOperation.isStatic()) {
             changeList.add(new StaticMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
         } else if (!originalOperation.isStatic() && nextOperation.isStatic()) {
-            changeList.add(new StaticMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
+            changeList.add(new StaticMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_ADD_MODIFIER_STATIC, revCommit));
         }
     }
 
@@ -122,7 +124,27 @@ public class MethodDiff {
         boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass) || UtilTools.isDeprecatedMethod(originalOperation);
         boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass) || UtilTools.isDeprecatedMethod(nextOperation);
         if (!isOriginalDeprecated && isNextDeprecated) {
-            changeList.add(new DeprecatedMethodChange(originalClass, originalOperation, nextClass, nextOperation, revCommit));
+            changeList.add(new DeprecateMethodChange(originalClass, originalOperation, nextClass, nextOperation, revCommit));
+        }
+    }
+    private void detectExceptionListChange(){
+        if(originalOperation.getThrownExceptionTypes().size()!=nextOperation.getThrownExceptionTypes().size()){
+            changeList.add(new ChangeInExceptionList(originalClass,originalOperation,nextClass,nextOperation,revCommit));
+        }else{
+            Map<String, UMLType> originalExceptionMap = new HashMap<>();
+            for(UMLType umlType:originalOperation.getThrownExceptionTypes()){
+                originalExceptionMap.put(umlType.toString(),umlType);
+            }
+            List<UMLType> nextExceptionList = new ArrayList<>();
+            for(UMLType nextException:nextOperation.getThrownExceptionTypes()){
+                UMLType originalException = originalExceptionMap.remove(nextException.toString());
+                if(originalException==null){
+                    nextExceptionList.add(nextException);
+                }
+            }
+            if(originalExceptionMap.size()>0||nextExceptionList.size()>0){
+                changeList.add(new ChangeInExceptionList(originalClass,originalOperation,nextClass,nextOperation,revCommit));
+            }
         }
     }
 }

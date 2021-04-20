@@ -1,11 +1,9 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
-import apiminer.internal.analysis.category.field.FinalFieldChange;
+import apiminer.internal.analysis.category.field.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
-import apiminer.internal.analysis.category.field.ChangeInDefaultValue;
-import apiminer.internal.analysis.category.field.VisibilityFieldChange;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.decomposition.AbstractExpression;
@@ -63,6 +61,7 @@ public class FieldDiff {
             detectFinalModifierChange();
             detectStaticModifierChange();
             detectDefaultValueChange();
+            detectDeprecatedChange();
             for (Change change : changeList) {
                 if (change.getBreakingChange()) {
                     isBreakingChange = true;
@@ -111,7 +110,11 @@ public class FieldDiff {
     }
 
     private void detectStaticModifierChange() {
-
+        if (originalAttribute.isStatic() && !nextAttribute.isStatic()) {
+            changeList.add(new StaticFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_REMOVE_MODIFIER_FINAL,revCommit));
+        } else if (!originalAttribute.isStatic() && nextAttribute.isStatic()) {
+            changeList.add(new StaticFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_ADD_MODIFIER_FINAL,revCommit));
+        }
     }
 
     private void detectDefaultValueChange() {
@@ -127,6 +130,13 @@ public class FieldDiff {
             } else if (!originalDefault.getExpression().equals(nextDefault.getExpression())) {
                 changeList.add(new ChangeInDefaultValue(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
             }
+        }
+    }
+    private void detectDeprecatedChange() {
+        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass) || UtilTools.isDeprecatedField(originalAttribute);
+        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass) || UtilTools.isDeprecatedField(nextAttribute);
+        if (!isOriginalDeprecated && isNextDeprecated) {
+            changeList.add(new DeprecateFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
         }
     }
 }

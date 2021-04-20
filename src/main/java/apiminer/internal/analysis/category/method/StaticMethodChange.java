@@ -35,7 +35,7 @@ public class StaticMethodChange extends MethodChange {
     private String isDescription() {
         String message = "";
         message += "<br>method <code>" + this.getNextElement() + "</code>";
-        if (this.getCategory().equals(Category.TYPE_REMOVE_MODIFIER_STATIC)) {
+        if (this.getCategory().equals(Category.METHOD_REMOVE_MODIFIER_STATIC)) {
             message += "<br>lost the modifier <code>static</code>";
         } else {
             message += "<br>received the modifier <code>static</code>";

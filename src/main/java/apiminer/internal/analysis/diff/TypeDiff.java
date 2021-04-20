@@ -5,6 +5,9 @@ import apiminer.internal.analysis.category.type.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.UMLEnumConstant;
+import gr.uom.java.xmi.UMLType;
+import gr.uom.java.xmi.UMLTypeParameter;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
@@ -48,8 +51,6 @@ public class TypeDiff {
         boolean isBreakingChange = false;
         if (originalClass != null && nextClass != null) {
             detectVisibilityChange();
-            detectFinalModifierChange();
-            detectStaticModifierChange();
             detectDeprecatedChange();
             detectSuperTypeChange();
             for (Change change : changeList) {
@@ -89,13 +90,6 @@ public class TypeDiff {
         }
     }
 
-    private void detectFinalModifierChange() {
-
-    }
-
-    private void detectStaticModifierChange() {
-
-    }
 
     private void detectDeprecatedChange() {
         boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass);

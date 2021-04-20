@@ -8,8 +8,8 @@ import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class DeprecatedMethodChange extends MethodChange {
-    public DeprecatedMethodChange(UMLClass originalClass, UMLOperation originalOperation,UMLClass nextClass,UMLOperation nextOperation, RevCommit revCommit) {
+public class DeprecateMethodChange extends MethodChange {
+    public DeprecateMethodChange(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, RevCommit revCommit) {
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);

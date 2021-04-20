@@ -12,10 +12,6 @@ public enum Category {
     TYPE_REMOVE("Remove Type"),
     TYPE_LOST_VISIBILITY("Lost Visibility in Type"),
     TYPE_GAIN_VISIBILITY("Gain Visibility in Type"),
-    TYPE_REMOVE_MODIFIER_FINAL("Remove Final Modifier in Type"),
-    TYPE_ADD_MODIFIER_FINAL("Add Final Modifier in Type"),
-    TYPE_REMOVE_MODIFIER_STATIC("Remove Static Modifier in Type"),
-    TYPE_ADD_MODIFIER_STATIC("Add Static Modifier in Type"),
     TYPE_CHANGE_SUPERCLASS("Change in Supertype"),
     TYPE_REMOVE_SUPERCLASS("Remove Supertype"),
     TYPE_ADD_SUPER_CLASS("Add Supertype"),
@@ -55,7 +51,9 @@ public enum Category {
     FIELD_LOST_VISIBILITY("Lost Visibility in Field"),
     FIELD_GAIN_VISIBILITY("Gain Visibility in Field"),
     FIELD_REMOVE_MODIFIER_FINAL("Remove Final Modifier in Field"),
-    FIELD_ADD_MODIFIER_FINAL("Add Final Modifier in Field");
+    FIELD_ADD_MODIFIER_FINAL("Add Final Modifier in Field"),
+    FIELD_REMOVE_MODIFIER_STATIC("Remove Static Modifier in Field"),
+    FIELD_ADD_MODIFIER_STATIC("Add Static Modifier in Field");
 
     private String displayName;
 
