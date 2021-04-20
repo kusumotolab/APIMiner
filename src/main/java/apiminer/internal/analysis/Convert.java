@@ -23,7 +23,7 @@ public class Convert {
     private RefIdentifier refIdentifier;
     private Change change;
 
-    public Convert(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit, Classifier classifier) {
+    public Convert(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit, Classifier classifier) throws Exception {
         this.change = convertClassChange(refactoring, revCommit,classifier);
         if (change == null) {
             change = convertMethodChange(refactoring, parentClassMap, currentClassMap, revCommit,classifier);
@@ -145,7 +145,7 @@ public class Convert {
         return methodChange;
     }
 
-    private FieldChange convertFieldChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit,Classifier classifier) {
+    private FieldChange convertFieldChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit,Classifier classifier) throws Exception {
         FieldChange fieldChange;
         if (refactoring.getRefactoringType().equals(RefactoringType.EXTRACT_ATTRIBUTE)) {
             fieldChange = new ExtractFieldChange(refactoring, parentClassMap, currentClassMap, revCommit);

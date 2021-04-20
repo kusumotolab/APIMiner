@@ -29,7 +29,7 @@ public class InlineMethodChange extends MethodChange {
         this.setJavadoc(isJavaDoc(this.getOriginalOperation()));
         this.setDeprecated(isDeprecated(this.getOriginalOperation()));
         this.setRevCommit(revCommit);
-        if (this.getNextOperation().isConstructor()) {
+        if (this.getOriginalOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);
         } else {
             this.setElementType(ElementType.METHOD);

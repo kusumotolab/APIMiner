@@ -1,6 +1,5 @@
 package apiminer.internal.analysis;
 
-import apiminer.APIMiner;
 import apiminer.enums.Classifier;
 import apiminer.internal.analysis.category.field.AddFieldChange;
 import apiminer.internal.analysis.category.field.RemoveFieldChange;
@@ -48,7 +47,7 @@ public class APIModelDiff {
     private final List<Change> changeMethodList = new ArrayList<>();
     private final List<Change> changeFieldList = new ArrayList<>();
 
-    private Logger logger = LoggerFactory.getLogger(APIModelDiff.class);
+    private final Logger logger = LoggerFactory.getLogger(APIModelDiff.class);
 
     public APIModelDiff(UMLModel parentUMLModel, UMLModel currentUMLModel, Map<String, String> renamedFilesHint, Classifier classifierAPI, RevCommit revCommit) {
         this.parentUMLModel = parentUMLModel;
@@ -200,54 +199,58 @@ public class APIModelDiff {
             currentClassMap.put(UtilTools.getClassName(currentClass), currentClass);
         }
         for (Refactoring refactoring : refactorings) {
-            Convert convert = new Convert(refactoring, parentClassMap, currentClassMap, revCommit, classifierAPI);
-            if (convert.isAPI()) {
-                RefIdentifier refIdentifier = convert.getRefIdentifier();
-                boolean isExist = false;
-                switch (refIdentifier.getRefType()) {
-                    case CLASS:
-                        for (Map.Entry<RefIdentifier, List<Change>> entry : apiClassRefactoredMap.entrySet()) {
-                            if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                entry.getValue().add(convert.getChange());
-                                isExist = true;
-                                break;
+            try{
+                Convert convert = new Convert(refactoring, parentClassMap, currentClassMap, revCommit, classifierAPI);
+                if (convert.isAPI()) {
+                    RefIdentifier refIdentifier = convert.getRefIdentifier();
+                    boolean isExist = false;
+                    switch (refIdentifier.getRefType()) {
+                        case CLASS:
+                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiClassRefactoredMap.entrySet()) {
+                                if (entry.getKey().equalIdentifier(refIdentifier)) {
+                                    entry.getValue().add(convert.getChange());
+                                    isExist = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (!isExist) {
-                            List<Change> changeList = new ArrayList<>();
-                            changeList.add(convert.getChange());
-                            apiClassRefactoredMap.put(convert.getRefIdentifier(), changeList);
-                        }
-                        break;
-                    case METHOD:
-                        for (Map.Entry<RefIdentifier, List<Change>> entry : apiOperationRefactoredMap.entrySet()) {
-                            if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                entry.getValue().add(convert.getChange());
-                                isExist = true;
-                                break;
+                            if (!isExist) {
+                                List<Change> changeList = new ArrayList<>();
+                                changeList.add(convert.getChange());
+                                apiClassRefactoredMap.put(convert.getRefIdentifier(), changeList);
                             }
-                        }
-                        if (!isExist) {
-                            List<Change> changeList = new ArrayList<>();
-                            changeList.add(convert.getChange());
-                            apiOperationRefactoredMap.put(convert.getRefIdentifier(), changeList);
-                        }
-                        break;
-                    case FIELD:
-                        for (Map.Entry<RefIdentifier, List<Change>> entry : apiAttributeRefactoredMap.entrySet()) {
-                            if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                entry.getValue().add(convert.getChange());
-                                isExist = true;
-                                break;
+                            break;
+                        case METHOD:
+                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiOperationRefactoredMap.entrySet()) {
+                                if (entry.getKey().equalIdentifier(refIdentifier)) {
+                                    entry.getValue().add(convert.getChange());
+                                    isExist = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (!isExist) {
-                            List<Change> changeList = new ArrayList<>();
-                            changeList.add(convert.getChange());
-                            apiAttributeRefactoredMap.put(convert.getRefIdentifier(), changeList);
-                        }
-                        break;
+                            if (!isExist) {
+                                List<Change> changeList = new ArrayList<>();
+                                changeList.add(convert.getChange());
+                                apiOperationRefactoredMap.put(convert.getRefIdentifier(), changeList);
+                            }
+                            break;
+                        case FIELD:
+                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiAttributeRefactoredMap.entrySet()) {
+                                if (entry.getKey().equalIdentifier(refIdentifier)) {
+                                    entry.getValue().add(convert.getChange());
+                                    isExist = true;
+                                    break;
+                                }
+                            }
+                            if (!isExist) {
+                                List<Change> changeList = new ArrayList<>();
+                                changeList.add(convert.getChange());
+                                apiAttributeRefactoredMap.put(convert.getRefIdentifier(), changeList);
+                            }
+                            break;
+                    }
                 }
+            }catch (Exception ignored){
+
             }
         }
 

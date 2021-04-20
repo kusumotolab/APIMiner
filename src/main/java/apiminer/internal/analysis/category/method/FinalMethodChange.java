@@ -8,7 +8,6 @@ import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-//Todo fix
 public class FinalMethodChange extends MethodChange {
     public FinalMethodChange(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, Category category, RevCommit revCommit) {
         super(revCommit);

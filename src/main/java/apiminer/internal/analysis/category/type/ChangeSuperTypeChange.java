@@ -5,18 +5,22 @@ import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import java.util.List;
+
 public class ChangeSuperTypeChange extends TypeChange {
-    //Todo fix
-    public ChangeSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLClass originalSuperClass, UMLClass nextSuperClass, RevCommit revCommit) {
+    public ChangeSuperTypeChange(UMLClass originalClass, UMLClass nextClass, List<UMLType> originalSuperClassList, List<UMLType> nextSuperClassList, RevCommit revCommit) {
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
-        this.setOriginalElement(UtilTools.getTypeDescriptionName(originalSuperClass));
-        this.setNextElement(UtilTools.getTypeDescriptionName(nextSuperClass));
+        String originalSuperClass = originalSuperClassList.toString();
+        String nextSuperClass = nextSuperClassList.toString();
+        this.setOriginalElement(originalSuperClass.substring(1,originalSuperClass.length()-1));
+        this.setNextElement(nextSuperClass.substring(1,nextSuperClass.length()-1));
         this.setCategory(Category.TYPE_CHANGE_SUPERCLASS);
         this.setBreakingChange(true);
         this.setDescription(isDescription());

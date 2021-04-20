@@ -9,7 +9,6 @@ import gr.uom.java.xmi.UMLOperation;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public class ChangeInExceptionList extends MethodChange {
-    //Todo fix
     public ChangeInExceptionList(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, RevCommit revCommit) {
         super(revCommit);
         this.setOriginalClass(originalClass);

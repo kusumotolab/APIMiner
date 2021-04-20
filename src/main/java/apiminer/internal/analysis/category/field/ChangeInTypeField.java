@@ -12,9 +12,12 @@ import java.util.Map;
 
 public class ChangeInTypeField extends FieldChange {
 
-    public ChangeInTypeField(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
+    public ChangeInTypeField(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) throws Exception {
         super(revCommit);
         ChangeAttributeTypeRefactoring changeAttributeType = (ChangeAttributeTypeRefactoring) refactoring;
+        if(parentClassMap.get(changeAttributeType.getClassNameBefore())==null||currentClassMap.get(changeAttributeType.getClassNameAfter())==null){
+            throw new Exception();
+        }
         this.setOriginalClass(parentClassMap.get(changeAttributeType.getClassNameBefore()));
         this.setNextClass(currentClassMap.get(changeAttributeType.getClassNameAfter()));
         this.setOriginalAttribute(changeAttributeType.getOriginalAttribute());

@@ -5,16 +5,20 @@ import apiminer.enums.ElementType;
 import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import java.util.List;
+
 public class RemoveSuperTypeChange extends TypeChange {
-    public RemoveSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLClass removedSuperClass, RevCommit revCommit){
+    public RemoveSuperTypeChange(UMLClass originalClass, UMLClass nextClass, List<UMLType> removedSuperClassList, RevCommit revCommit){
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
-        this.setOriginalElement(UtilTools.getTypeDescriptionName(removedSuperClass));
+        String removedSuperClass = removedSuperClassList.toString();
+        this.setOriginalElement(removedSuperClass.substring(1,removedSuperClass.length()-1));
         this.setNextElement("");
         this.setCategory(Category.TYPE_REMOVE_SUPERCLASS);
         this.setBreakingChange(true);

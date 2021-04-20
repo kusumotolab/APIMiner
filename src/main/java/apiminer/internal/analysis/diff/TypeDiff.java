@@ -5,13 +5,13 @@ import apiminer.internal.analysis.category.type.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.util.Change;
 import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.UMLEnumConstant;
 import gr.uom.java.xmi.UMLType;
-import gr.uom.java.xmi.UMLTypeParameter;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TypeDiff {
     private final UMLClass originalClass;
@@ -100,43 +100,37 @@ public class TypeDiff {
     }
 
     private void detectSuperTypeChange() {
-        //todo fix
-        if (originalClass.getSuperclass() == null) {
-            if (nextClass.getSuperclass() != null) {
-                for (UMLClass currentClass : currentClassList) {
-                    if (currentClass.toString().endsWith("." + nextClass.getSuperclass().toString())) {
-                        changeList.add(new AddSuperTypeChange(originalClass, nextClass, currentClass, revCommit));
-                        break;
-                    }
-                }
+        List<UMLType> originalSuperTypeList = new ArrayList<>();
+        Map<String, UMLType> removedSuperTypeMap = new HashMap<>();
+        if (originalClass.getSuperclass() != null) {
+            removedSuperTypeMap.put(originalClass.getSuperclass().toString(), originalClass.getSuperclass());
+            originalSuperTypeList.add(originalClass.getSuperclass());
+        }
+        for (UMLType originalSuperType : originalClass.getImplementedInterfaces()) {
+            removedSuperTypeMap.put(originalSuperType.toString(), originalSuperType);
+            originalSuperTypeList.add(originalSuperType);
+        }
+        List<UMLType> nextSuperTypeList = new ArrayList<>();
+        if (nextClass.getSuperclass() != null) {
+            nextSuperTypeList.add(nextClass.getSuperclass());
+        }
+        nextSuperTypeList.addAll(nextClass.getImplementedInterfaces());
+        List<UMLType> addedSuperTypeList = new ArrayList<>();
+        for (UMLType nextSuperType : nextSuperTypeList) {
+            if (removedSuperTypeMap.remove(nextSuperType.toString()) == null) {
+                addedSuperTypeList.add(nextSuperType);
             }
-        } else {
-            if (nextClass.getSuperclass() == null) {
-                for (UMLClass parentClass : parentClassList) {
-                    if (parentClass.toString().endsWith("." + originalClass.getSuperclass().toString())) {
-                        changeList.add(new RemoveSuperTypeChange(originalClass, nextClass, parentClass, revCommit));
-                        break;
-                    }
-                }
-            } else if (!originalClass.getSuperclass().toString().equals(nextClass.getSuperclass().toString())) {
-                UMLClass originalSuperClass = null;
-                UMLClass nextSuperClass = null;
-                for (UMLClass parentClass : parentClassList) {
-                    if (parentClass.toString().endsWith("." + originalClass.getSuperclass().toString())) {
-                        originalSuperClass = parentClass;
-                        break;
-                    }
-                }
-                for (UMLClass currentClass : currentClassList) {
-                    if (currentClass.toString().endsWith("." + nextClass.getSuperclass().toString())) {
-                        nextSuperClass = currentClass;
-                        break;
-                    }
-                }
-                if (originalSuperClass != null && nextSuperClass != null) {
-                    changeList.add(new ChangeSuperTypeChange(originalClass, nextClass, originalSuperClass, nextSuperClass, revCommit));
-                }
+        }
+        if (removedSuperTypeMap.size() > 0 && addedSuperTypeList.size() > 0) {
+            changeList.add(new ChangeSuperTypeChange(originalClass, nextClass, originalSuperTypeList, nextSuperTypeList, revCommit));
+        } else if (removedSuperTypeMap.size() == 0 && addedSuperTypeList.size() > 0) {
+            changeList.add(new AddSuperTypeChange(originalClass, nextClass, addedSuperTypeList, revCommit));
+        } else if (removedSuperTypeMap.size() > 0) {
+            List<UMLType> removedSuperTypeList = new ArrayList<>();
+            for (UMLType removedSuperType : removedSuperTypeMap.values()) {
+                removedSuperTypeList.add(removedSuperType);
             }
+            changeList.add(new RemoveSuperTypeChange(originalClass, nextClass, removedSuperTypeList, revCommit));
         }
     }
 }
