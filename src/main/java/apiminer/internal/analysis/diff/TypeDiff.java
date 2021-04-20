@@ -3,7 +3,7 @@ package apiminer.internal.analysis.diff;
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.type.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.util.Change;
+import apiminer.Change;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;

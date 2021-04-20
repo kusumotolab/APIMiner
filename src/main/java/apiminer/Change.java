@@ -1,4 +1,4 @@
-package apiminer.util;
+package apiminer;
 
 import apiminer.enums.Category;
 import apiminer.enums.ElementType;
@@ -86,15 +86,15 @@ public class Change {
         this.description = description;
     }
 
-    public Boolean getJavadoc() {
-        return javadoc;
+    public boolean containsJavadoc() {
+        return this.javadoc;
     }
 
     public void setJavadoc(Boolean javadoc) {
         this.javadoc = javadoc;
     }
 
-    public Boolean getDeprecated() {
+    public boolean isDeprecated() {
         return deprecated;
     }
 

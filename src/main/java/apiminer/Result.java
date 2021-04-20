@@ -1,7 +1,5 @@
 package apiminer;
 
-import apiminer.util.Change;
-
 import java.util.List;
 import java.util.ArrayList;
 

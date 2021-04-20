@@ -1,11 +1,9 @@
 package apiminer.internal.analysis.category;
 
 import apiminer.internal.util.UtilTools;
-import apiminer.util.Change;
+import apiminer.Change;
 import gr.uom.java.xmi.*;
 import org.eclipse.jgit.revwalk.RevCommit;
-
-import java.util.List;
 
 public class FieldChange extends Change {
     private UMLClass originalClass;

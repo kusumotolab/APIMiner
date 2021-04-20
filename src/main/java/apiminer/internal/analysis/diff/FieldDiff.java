@@ -3,7 +3,7 @@ package apiminer.internal.analysis.diff;
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.field.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.util.Change;
+import apiminer.Change;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.decomposition.AbstractExpression;

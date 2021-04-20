@@ -12,7 +12,7 @@ import apiminer.internal.analysis.diff.MethodDiff;
 import apiminer.internal.analysis.diff.TypeDiff;
 import apiminer.internal.analysis.model.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.util.Change;
+import apiminer.Change;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLModel;

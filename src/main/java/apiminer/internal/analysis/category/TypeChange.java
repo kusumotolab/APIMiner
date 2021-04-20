@@ -1,6 +1,6 @@
 package apiminer.internal.analysis.category;
 
-import apiminer.util.Change;
+import apiminer.Change;
 import gr.uom.java.xmi.UMLAnnotation;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLJavadoc;

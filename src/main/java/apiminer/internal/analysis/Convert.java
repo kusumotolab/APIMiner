@@ -3,7 +3,7 @@ package apiminer.internal.analysis;
 import apiminer.enums.Classifier;
 import apiminer.enums.ChangeType;
 import apiminer.internal.util.UtilTools;
-import apiminer.util.Change;
+import apiminer.Change;
 import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.FieldChange;
 import apiminer.internal.analysis.category.MethodChange;
