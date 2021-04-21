@@ -71,7 +71,7 @@ public class TypeDiff {
         if (!originalAccessModifier.equals(nextAccessModifier)) {
             switch (originalAccessModifier) {
                 case "private":
-                case "default":
+                case "package":
                     if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
                         changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_GAIN_VISIBILITY, revCommit));
                     }
@@ -83,7 +83,7 @@ public class TypeDiff {
                         changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
                     }
                     break;
-                case "pubic":
+                case "public":
                     changeList.add(new VisibilityTypeChange(originalClass, nextClass, Category.TYPE_LOST_VISIBILITY, revCommit));
                     break;
             }

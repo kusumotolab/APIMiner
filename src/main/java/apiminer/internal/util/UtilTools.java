@@ -36,24 +36,33 @@ public class UtilTools {
         String attributeType = umlAttribute.getType().toString();
         return attributeName + " : " + attributeType;
     }
-    public static String getTypeDescriptionName(UMLClass umlClass){
+
+    public static String getTypeDescriptionName(UMLClass umlClass) {
         return umlClass.toString();
     }
-    public static String getMethodDescriptionName(UMLOperation umlOperation){
+
+    public static String getMethodDescriptionName(UMLOperation umlOperation) {
         String signature;
         String methodName = umlOperation.getName();
         List<String> parameterTypeList = new ArrayList<>();
         String parameters;
         for (UMLParameter parameter : umlOperation.getParametersWithoutReturnType()) {
-            parameterTypeList.add(parameter.getType().toString()+" "+parameter.getName());
+            parameterTypeList.add(parameter.getType().toString() + " " + parameter.getName());
         }
         parameters = StringUtils.join(parameterTypeList, ", ");
         signature = methodName + "(" + parameters + ")";
         return signature;
     }
 
-    public static String getFieldDescriptionName(UMLAttribute umlAttribute){
+    public static String getFieldDescriptionName(UMLAttribute umlAttribute) {
         return umlAttribute.getName();
+    }
+
+    public static String getVisibilityDescriptionName(String visibility){
+        if(visibility.equals("package")){
+            return "default";
+        }
+        return visibility;
     }
 
     public static boolean isAPIClass(UMLClass umlClass) {
@@ -97,36 +106,35 @@ public class UtilTools {
     }
 
     public static Boolean isNonAPITest(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
-        boolean isTestJava = umlClass.getSourceFile().endsWith("test.java") || umlClass.getSourceFile().endsWith("tests.java");
+        String pathAPI = umlClass.toString();
         String regexTest = "(?i)(^test)|(.test)|(test.)|(test$)|(^tests)|(.tests)|(tests.)|(tests$)";
-        return pathAPI != null && !"".equals(pathAPI) && isTestJava && checkContainsByRegex(regexTest, pathAPI);
+        return pathAPI != null && !"".equals(pathAPI) && checkContainsByRegex(regexTest, pathAPI);
     }
 
     public static Boolean isNonAPIInternal(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
+        String pathAPI = umlClass.toString();
         return pathAPI != null && !"".equals(pathAPI) && pathAPI.toLowerCase().contains(".internal.");
     }
 
     public static Boolean isNonAPIExperimental(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
+        String pathAPI = umlClass.toString();
         return pathAPI != null && !"".equals(pathAPI) && pathAPI.toLowerCase().contains(".experimental.");
     }
 
     public static Boolean isNonAPIDemo(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
+        String pathAPI = umlClass.toString();
         String regexDemo = "(?i)(^demo)|(.demo)|(demo.)|(demo$)";
         return pathAPI != null && !"".equals(pathAPI) && checkContainsByRegex(regexDemo, pathAPI);
     }
 
     public static Boolean isNonAPISample(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
+        String pathAPI = umlClass.toString();
         String regexSample = "(?i)(^sample)|(.sample)|(sample.)|(sample$)|(^samples)|(.samples)|(samples.)|(samples$)";
         return pathAPI != null && !"".equals(pathAPI) && checkContainsByRegex(regexSample, pathAPI);
     }
 
     public static Boolean isNonAPIExample(UMLClass umlClass) {
-        String pathAPI = umlClass.getPackageName();
+        String pathAPI = umlClass.toString();
         String regexExample = "(?i)(^example)|(.example)|(example.)|(example$)|(^examples)|(.examples)|(examples.)|(examples$)";
         boolean isNonAPIExample = checkContainsByRegex(regexExample, pathAPI) || isNonAPIDemo(umlClass) || isNonAPISample(umlClass);
         return !"".equals(pathAPI) && isNonAPIExample;

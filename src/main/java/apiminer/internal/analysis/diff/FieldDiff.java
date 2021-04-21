@@ -81,7 +81,7 @@ public class FieldDiff {
             if (!originalAccessModifier.equals(nextAccessModifier)) {
                 switch (originalAccessModifier) {
                     case "private":
-                    case "default":
+                    case "package":
                         if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
                             changeList.add(new VisibilityFieldChange(originalClass, originalAttribute,nextClass, nextAttribute,Category.FIELD_GAIN_VISIBILITY, revCommit));
                         }
@@ -93,7 +93,7 @@ public class FieldDiff {
                             changeList.add(new VisibilityFieldChange(originalClass, originalAttribute,nextClass, nextAttribute,Category.FIELD_LOST_VISIBILITY, revCommit));
                         }
                         break;
-                    case "pubic":
+                    case "public":
                         changeList.add(new VisibilityFieldChange(originalClass,originalAttribute, nextClass, nextAttribute,Category.FIELD_LOST_VISIBILITY, revCommit));
                         break;
                 }

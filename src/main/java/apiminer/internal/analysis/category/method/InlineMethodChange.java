@@ -12,16 +12,15 @@ import org.refactoringminer.api.Refactoring;
 import java.util.Map;
 
 public class InlineMethodChange extends MethodChange {
-    InlineOperationRefactoring inlineOperation;
 
     public InlineMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
         super(revCommit);
-        this.inlineOperation = (InlineOperationRefactoring) refactoring;
+        InlineOperationRefactoring inlineOperation = (InlineOperationRefactoring) refactoring;
         this.setOriginalClass(parentClassMap.get(inlineOperation.getInlinedOperation().getClassName()));
         this.setOriginalOperation(inlineOperation.getInlinedOperation());
         this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
         this.setNextPath(UtilTools.getTypeDescriptionName(currentClassMap.get(inlineOperation.getTargetOperationAfterInline().getClassName())));
-        this.setOriginalElement(this.getOriginalOperation().toString());
+        this.setOriginalElement(UtilTools.getMethodDescriptionName(this.getOriginalOperation()));
         this.setNextElement(UtilTools.getMethodDescriptionName(inlineOperation.getTargetOperationAfterInline()));
         this.setCategory(Category.METHOD_INLINE);
         this.setBreakingChange(true);

@@ -30,7 +30,7 @@ public class VisibilityFieldChange extends FieldChange {
     private String isDescription() {
         String message = "";
         message += "<br>field <code>" + this.getNextElement() +"</code>";
-        message += "<br>changed visibility from <code>" + this.getOriginalAttribute().getVisibility()  + "</code> to <code>"  + this.getNextAttribute().getVisibility() + "</code>";
+        message += "<br>changed visibility from <code>" + UtilTools.getVisibilityDescriptionName(this.getOriginalAttribute().getVisibility())  + "</code> to <code>"  + UtilTools.getVisibilityDescriptionName(this.getNextAttribute().getVisibility()) + "</code>";
         message += "<br>in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;

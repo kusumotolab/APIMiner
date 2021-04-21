@@ -83,7 +83,7 @@ public class MethodDiff {
             if (!originalAccessModifier.equals(nextAccessModifier)) {
                 switch (originalAccessModifier) {
                     case "private":
-                    case "default":
+                    case "package":
                         if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
                             changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_GAIN_VISIBILITY, revCommit));
                         }
@@ -95,7 +95,7 @@ public class MethodDiff {
                             changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_LOST_VISIBILITY, revCommit));
                         }
                         break;
-                    case "pubic":
+                    case "public":
                         changeList.add(new VisibilityMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_LOST_VISIBILITY, revCommit));
                         break;
                 }
