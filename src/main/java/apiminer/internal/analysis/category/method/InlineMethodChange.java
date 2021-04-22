@@ -12,10 +12,11 @@ import org.refactoringminer.api.Refactoring;
 import java.util.Map;
 
 public class InlineMethodChange extends MethodChange {
+    private InlineOperationRefactoring inlineOperation;
 
     public InlineMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
         super(revCommit);
-        InlineOperationRefactoring inlineOperation = (InlineOperationRefactoring) refactoring;
+        this.inlineOperation = (InlineOperationRefactoring) refactoring;
         this.setOriginalClass(parentClassMap.get(inlineOperation.getInlinedOperation().getClassName()));
         this.setOriginalOperation(inlineOperation.getInlinedOperation());
         this.setOriginalPath(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
@@ -34,6 +35,9 @@ public class InlineMethodChange extends MethodChange {
             this.setElementType(ElementType.METHOD);
         }
 
+    }
+    public InlineOperationRefactoring getInlineOperation(){
+        return inlineOperation;
     }
 
     private String isDescription() {

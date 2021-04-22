@@ -52,7 +52,7 @@ public class DiffMiner {
     Logger logger = LoggerFactory.getLogger(GitHistoryRefactoringMinerImpl.class);
     private Classifier classifierAPI;
     private RevCommit revCommit;
-    private APIModelDiff newModelDiff;
+    private APIModelDiff apiModelDiff;
 
     private GitHub gitHub;
 
@@ -99,7 +99,7 @@ public class DiffMiner {
         this.revCommit = revCommit;
         detectAtCommit(repository, commitId, new RefactoringHandler() {
         });
-        return newModelDiff;
+        return apiModelDiff;
     }
 
     protected List<Refactoring> detectRefactorings(GitService gitService, Repository repository, RefactoringHandler handler, File projectFolder, RevCommit currentCommit) throws Exception {
@@ -128,7 +128,7 @@ public class DiffMiner {
                     this.populateFileContents(repository, currentCommit, filePathsCurrent, fileContentsCurrent, repositoryDirectoriesCurrent);
                     currentUMLModel = this.createModel(fileContentsCurrent, repositoryDirectoriesCurrent);
                 }
-                newModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
+                apiModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
             }
             handler.handle(commitId, Collections.emptyList());
             walk.dispose();
@@ -225,7 +225,7 @@ public class DiffMiner {
                 UMLModel parentUMLModel = this.createModel(parentFolder, filesBefore);
                 UMLModelDiff modelDiff = parentUMLModel.diff(currentUMLModel, renamedFilesHint);
                 refactoringsAtRevision = modelDiff.getRefactorings();
-                newModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
+                apiModelDiff = new APIModelDiff(parentUMLModel, currentUMLModel, renamedFilesHint, classifierAPI, revCommit);
             } else {
                 this.logger.warn(String.format("Folder %s not found", currentFolder.getPath()));
             }

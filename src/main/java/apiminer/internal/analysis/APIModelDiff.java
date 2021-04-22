@@ -92,6 +92,7 @@ public class APIModelDiff {
     }
 
     private void detectOnlyCurrentExist(){
+        this.logger.info("Processing Types...");
         for (UMLClass addedClass : currentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(addedClass, classifierAPI) && UtilTools.isAPIClass(addedClass)) {
                 Change change = new AddTypeChange(addedClass, revCommit);
@@ -101,6 +102,7 @@ public class APIModelDiff {
     }
 
     private void detectOnlyParentExist(){
+        this.logger.info("Processing Types...");
         for (UMLClass removedClass : parentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(removedClass, classifierAPI) && UtilTools.isAPIClass(removedClass)) {
                 Change change = new RemoveTypeChange(removedClass, revCommit);
@@ -257,6 +259,7 @@ public class APIModelDiff {
     }
 
     private void detectClassChange() {
+        this.logger.info("Processing Types...");
         for (Map.Entry<RefIdentifier, List<Change>> entry : apiClassRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null) {
@@ -293,6 +296,7 @@ public class APIModelDiff {
     }
 
     private void detectMethodChange() {
+        this.logger.info("Processing Methods...");
         for (Map.Entry<RefIdentifier, List<Change>> entry : apiOperationRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalOperation() != null) {
@@ -337,6 +341,7 @@ public class APIModelDiff {
     }
 
     private void detectFieldChange() {
+        this.logger.info("Processing Fields...");
         for (Map.Entry<RefIdentifier, List<Change>> entry : apiAttributeRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalAttribute() != null) {

@@ -22,7 +22,7 @@ public class ExtractMethodChange extends MethodChange {
         UMLClass originalClass = parentClassMap.get(extractOperation.getSourceOperationBeforeExtraction().getClassName());
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(this.getNextClass()));
-        this.setOriginalElement(UtilTools.getTypeDescriptionName(originalClass));
+        this.setOriginalElement(UtilTools.getMethodDescriptionName(extractOperation.getSourceOperationBeforeExtraction()));
         this.setNextElement(UtilTools.getMethodDescriptionName(this.getNextOperation()));
         this.setCategory(Category.METHOD_EXTRACT);
         this.setBreakingChange(false);
@@ -36,6 +36,10 @@ public class ExtractMethodChange extends MethodChange {
             this.setElementType(ElementType.METHOD);
         }
 
+    }
+
+    public ExtractOperationRefactoring getExtractOperation(){
+        return getExtractOperation();
     }
 
     private String isDescription() {
