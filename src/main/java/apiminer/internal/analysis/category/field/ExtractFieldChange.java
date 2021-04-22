@@ -32,7 +32,8 @@ public class ExtractFieldChange extends FieldChange {
     private String isDescription() {
         String message = "";
         message += "<br>field <code>" + this.getNextElement() + "</code>";
-        message += "<br>extracted in <code>" + this.getNextPath() + "</code>";
+        message += "<br>in <code>" + this.getNextPath() + "</code>";
+        message += "<br>extracted from <code>" + this.getOriginalPath() + "</code>";
         message += "<br>";
         return message;
     }
