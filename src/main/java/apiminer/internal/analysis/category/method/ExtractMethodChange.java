@@ -12,7 +12,7 @@ import org.refactoringminer.api.Refactoring;
 import java.util.Map;
 
 public class ExtractMethodChange extends MethodChange {
-    ExtractOperationRefactoring extractOperation;
+    private ExtractOperationRefactoring extractOperation;
 
     public ExtractMethodChange(Refactoring refactoring, Map<String, UMLClass> parentClassMap, Map<String, UMLClass> currentClassMap, RevCommit revCommit) {
         super(revCommit);
@@ -39,7 +39,7 @@ public class ExtractMethodChange extends MethodChange {
     }
 
     public ExtractOperationRefactoring getExtractOperation(){
-        return getExtractOperation();
+        return extractOperation;
     }
 
     private String isDescription() {
