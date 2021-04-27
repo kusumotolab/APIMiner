@@ -121,8 +121,8 @@ public class MethodDiff {
     }
 
     private void detectDeprecatedChange() {
-        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass) || UtilTools.isDeprecatedMethod(originalOperation);
-        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass) || UtilTools.isDeprecatedMethod(nextOperation);
+        boolean isOriginalDeprecated = UtilTools.isDeprecated(originalClass.getAnnotations()) || UtilTools.isDeprecated(originalOperation.getAnnotations());
+        boolean isNextDeprecated = UtilTools.isDeprecated(nextClass.getAnnotations()) || UtilTools.isDeprecated(nextOperation.getAnnotations());
         if (!isOriginalDeprecated && isNextDeprecated) {
             changeList.add(new DeprecateMethodChange(originalClass, originalOperation, nextClass, nextOperation, revCommit));
         }

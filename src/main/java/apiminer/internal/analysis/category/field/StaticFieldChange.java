@@ -19,11 +19,11 @@ public class StaticFieldChange extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(originalAttribute));
         this.setNextElement(UtilTools.getFieldDescriptionName(nextAttribute));
         this.setCategory(category);
-        this.setBreakingChange(category.equals(Category.FIELD_REMOVE_MODIFIER_STATIC));
-        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(isDeprecated(nextAttribute));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        boolean isBreakingChange = category.equals(Category.FIELD_REMOVE_MODIFIER_STATIC);
+        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

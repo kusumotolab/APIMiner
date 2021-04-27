@@ -24,7 +24,7 @@ public class AddInterfaceChange extends TypeChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

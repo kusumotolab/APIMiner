@@ -93,8 +93,8 @@ public class TypeDiff {
 
 
     private void detectDeprecatedChange() {
-        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass);
-        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass);
+        boolean isOriginalDeprecated = UtilTools.isDeprecated(originalClass.getAnnotations());
+        boolean isNextDeprecated = UtilTools.isDeprecated(nextClass.getAnnotations());
         if (!isOriginalDeprecated && isNextDeprecated) {
             changeList.add(new DeprecateTypeChange(originalClass, nextClass, revCommit));
         }

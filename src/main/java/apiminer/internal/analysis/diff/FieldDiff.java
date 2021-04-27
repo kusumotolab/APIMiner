@@ -133,8 +133,8 @@ public class FieldDiff {
         }
     }
     private void detectDeprecatedChange() {
-        boolean isOriginalDeprecated = UtilTools.isDeprecatedClass(originalClass) || UtilTools.isDeprecatedField(originalAttribute);
-        boolean isNextDeprecated = UtilTools.isDeprecatedClass(nextClass) || UtilTools.isDeprecatedField(nextAttribute);
+        boolean isOriginalDeprecated = UtilTools.isDeprecated(originalClass.getAnnotations()) || UtilTools.isDeprecated(originalAttribute.getAnnotations());
+        boolean isNextDeprecated = UtilTools.isDeprecated(nextClass.getAnnotations()) || UtilTools.isDeprecated(nextAttribute.getAnnotations());
         if (!isOriginalDeprecated && isNextDeprecated) {
             changeList.add(new DeprecateFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
         }

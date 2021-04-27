@@ -24,10 +24,10 @@ public class InlineMethodChange extends MethodChange {
         this.setOriginalElement(UtilTools.getMethodDescriptionName(this.getOriginalOperation()));
         this.setNextElement(UtilTools.getMethodDescriptionName(inlineOperation.getTargetOperationAfterInline()));
         this.setCategory(Category.METHOD_INLINE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getOriginalOperation()));
-        this.setDeprecated(isDeprecated(this.getOriginalOperation()));
+        this.setDeprecated(checkDeprecated(this.getOriginalClass(),this.getOriginalOperation()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getOriginalOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

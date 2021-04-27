@@ -22,7 +22,7 @@ public class AddMethodChange extends MethodChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(addedOperation));
-        this.setDeprecated(isDeprecated(addedOperation));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
         this.setRevCommit(revCommit);
         if (addedOperation.isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

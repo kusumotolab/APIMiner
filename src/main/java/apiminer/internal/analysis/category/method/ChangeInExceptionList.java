@@ -20,10 +20,10 @@ public class ChangeInExceptionList extends MethodChange {
         this.setOriginalElement(UtilTools.getMethodDescriptionName(this.getOriginalOperation()));
         this.setNextElement(UtilTools.getMethodDescriptionName(this.getNextOperation()));
         this.setCategory(Category.METHOD_CHANGE_EXCEPTION_LIST);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
-        this.setDeprecated(isDeprecated(this.getNextOperation()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

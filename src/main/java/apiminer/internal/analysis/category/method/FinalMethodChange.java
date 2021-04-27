@@ -20,10 +20,11 @@ public class FinalMethodChange extends MethodChange {
         this.setOriginalElement(UtilTools.getMethodDescriptionName(originalOperation));
         this.setNextElement(UtilTools.getMethodDescriptionName(nextOperation));
         this.setCategory(category);
-        this.setBreakingChange(category.equals(Category.METHOD_ADD_MODIFIER_FINAL));
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
-        this.setDeprecated(isDeprecated(this.getNextOperation()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
+        boolean isBreakingChange = category.equals(Category.METHOD_ADD_MODIFIER_FINAL);
+        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
         this.setRevCommit(revCommit);
         if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

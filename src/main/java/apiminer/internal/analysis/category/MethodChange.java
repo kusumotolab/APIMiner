@@ -1,10 +1,8 @@
 package apiminer.internal.analysis.category;
 
 import apiminer.Change;
-import gr.uom.java.xmi.UMLAnnotation;
-import gr.uom.java.xmi.UMLClass;
-import gr.uom.java.xmi.UMLJavadoc;
-import gr.uom.java.xmi.UMLOperation;
+import apiminer.internal.util.UtilTools;
+import gr.uom.java.xmi.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.List;
@@ -59,13 +57,7 @@ public class MethodChange extends Change {
         return false;
     }
 
-    protected boolean isDeprecated(UMLOperation umlOperation){
-        List<UMLAnnotation> annotationList = umlOperation.getAnnotations();
-        for(UMLAnnotation annotation:annotationList){
-            if(annotation.toString().equals("@Deprecated")){
-                return true;
-            }
-        }
-        return false;
+    protected boolean checkDeprecated(UMLClass umlClass, UMLOperation umlOperation){
+        return UtilTools.isDeprecated(umlClass.getAnnotations())||UtilTools.isDeprecated(umlOperation.getAnnotations());
     }
 }

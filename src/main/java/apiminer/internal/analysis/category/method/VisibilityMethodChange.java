@@ -19,10 +19,11 @@ public class VisibilityMethodChange extends MethodChange {
         this.setOriginalElement(UtilTools.getMethodDescriptionName(this.getOriginalOperation()));
         this.setNextElement(UtilTools.getMethodDescriptionName(this.getNextOperation()));
         this.setCategory(category);
-        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
-        this.setDeprecated(isDeprecated(this.getNextOperation()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
+        boolean isBreakingChange = category.equals(Category.METHOD_LOST_VISIBILITY);
+        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

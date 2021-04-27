@@ -8,8 +8,6 @@ import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import java.util.List;
-
 public class ChangeSuperTypeChange extends TypeChange {
     public ChangeSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLType originalUMLType, UMLType nextUMLType, RevCommit revCommit) {
         super(revCommit);
@@ -20,10 +18,10 @@ public class ChangeSuperTypeChange extends TypeChange {
         this.setOriginalElement(originalUMLType.toString());
         this.setNextElement(nextUMLType.toString());
         this.setCategory(Category.TYPE_CHANGE_SUPERCLASS);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

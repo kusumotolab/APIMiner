@@ -55,7 +55,7 @@ public class FieldChange extends Change {
         return false;
     }
 
-    protected boolean isDeprecated(UMLAttribute umlAttribute){
-        return UtilTools.isDeprecatedField(umlAttribute);
+    protected boolean checkDeprecated(UMLClass umlClass, UMLAttribute umlAttribute){
+        return UtilTools.isDeprecated(umlClass.getAnnotations())||UtilTools.isDeprecated(umlAttribute.getAnnotations());
     }
 }

@@ -20,10 +20,11 @@ public class VisibilityFieldChange extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(originalAttribute));
         this.setNextElement(UtilTools.getFieldDescriptionName(nextAttribute));
         this.setCategory(category);
-        this.setBreakingChange(category.equals(Category.FIELD_LOST_VISIBILITY));
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(isDeprecated(nextAttribute));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        boolean isBreakingChange = category.equals(Category.FIELD_LOST_VISIBILITY);
+        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

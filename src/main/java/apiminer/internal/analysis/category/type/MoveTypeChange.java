@@ -20,10 +20,10 @@ public class MoveTypeChange extends TypeChange {
         this.setOriginalElement(UtilTools.getTypeDescriptionName(this.getOriginalClass()));
         this.setNextElement(UtilTools.getTypeDescriptionName(this.getNextClass()));
         this.setCategory(Category.TYPE_MOVE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

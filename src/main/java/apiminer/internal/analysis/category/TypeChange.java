@@ -1,6 +1,7 @@
 package apiminer.internal.analysis.category;
 
 import apiminer.Change;
+import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLAnnotation;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLJavadoc;
@@ -40,13 +41,7 @@ public class TypeChange extends Change {
         return false;
     }
 
-    protected boolean isDeprecated(UMLClass umlClass){
-        List<UMLAnnotation> annotationList = umlClass.getAnnotations();
-        for(UMLAnnotation annotation:annotationList){
-            if(annotation.toString().equals("@Deprecated")){
-                return true;
-            }
-        }
-        return false;
+    protected boolean checkDeprecated(UMLClass umlClass){
+        return UtilTools.isDeprecated(umlClass.getAnnotations());
     }
 }

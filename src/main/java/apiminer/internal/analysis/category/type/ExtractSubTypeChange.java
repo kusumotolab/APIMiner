@@ -19,10 +19,10 @@ public class ExtractSubTypeChange extends TypeChange {
         this.setOriginalElement(UtilTools.getTypeDescriptionName(extractClass.getOriginalClass()));
         this.setNextElement(UtilTools.getTypeDescriptionName(this.getNextClass()));
         this.setCategory(Category.TYPE_EXTRACT_SUBTYPE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

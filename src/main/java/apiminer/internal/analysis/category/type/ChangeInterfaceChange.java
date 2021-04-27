@@ -22,10 +22,10 @@ public class ChangeInterfaceChange extends TypeChange {
         this.setOriginalElement(originalSuperClass.substring(1,originalSuperClass.length()-1));
         this.setNextElement(nextSuperClass.substring(1,nextSuperClass.length()-1));
         this.setCategory(Category.TYPE_CHANGE_INTERFACE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

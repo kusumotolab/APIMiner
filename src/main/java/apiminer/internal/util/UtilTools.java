@@ -144,26 +144,8 @@ public class UtilTools {
         return !"".equals(umlClass.getPackageName()) && !isNonAPIExample(umlClass) && !isNonAPIExperimental(umlClass) && !isNonAPIInternal(umlClass) && !isNonAPITest(umlClass);
     }
 
-    public static boolean isDeprecatedClass(UMLClass umlClass) {
-        for (UMLAnnotation umlAnnotation : umlClass.getAnnotations()) {
-            if (umlAnnotation.toString().equals("@Deprecated")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isDeprecatedMethod(UMLOperation umlOperation) {
-        for (UMLAnnotation umlAnnotation : umlOperation.getAnnotations()) {
-            if (umlAnnotation.toString().equals("@Deprecated")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isDeprecatedField(UMLAttribute umlAttribute) {
-        for (UMLAnnotation umlAnnotation : umlAttribute.getAnnotations()) {
+    public static boolean isDeprecated(List<UMLAnnotation> umlAnnotationList) {
+        for (UMLAnnotation umlAnnotation : umlAnnotationList) {
             if (umlAnnotation.toString().equals("@Deprecated")) {
                 return true;
             }

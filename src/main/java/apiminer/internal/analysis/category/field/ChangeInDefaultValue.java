@@ -20,10 +20,10 @@ public class ChangeInDefaultValue extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(originalAttribute));
         this.setNextElement(UtilTools.getFieldDescriptionName(nextAttribute));
         this.setCategory(Category.FIELD_CHANGE_DEFAULT_VALUE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(isDeprecated(nextAttribute));
+        this.setDeprecated(this.checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
     }
 

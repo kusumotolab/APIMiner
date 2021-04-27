@@ -27,10 +27,10 @@ public class ChangeInTypeField extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
         this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_CHANGE_TYPE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
-        this.setDeprecated(isDeprecated(this.getNextAttribute()));
+        this.setDeprecated(this.checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
     }
 

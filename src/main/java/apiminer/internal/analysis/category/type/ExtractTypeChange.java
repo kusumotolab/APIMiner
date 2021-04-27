@@ -19,10 +19,10 @@ public class ExtractTypeChange extends TypeChange {
         this.setOriginalElement(UtilTools.getTypeDescriptionName(extractClass.getOriginalClass()));
         this.setNextElement(UtilTools.getTypeDescriptionName(extractClass.getExtractedClass()));
         this.setCategory(Category.TYPE_EXTRACT_TYPE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

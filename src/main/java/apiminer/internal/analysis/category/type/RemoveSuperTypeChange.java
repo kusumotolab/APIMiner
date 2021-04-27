@@ -8,8 +8,6 @@ import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import java.util.List;
-
 public class RemoveSuperTypeChange extends TypeChange {
     public RemoveSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLType removedUMLType, RevCommit revCommit){
         super(revCommit);
@@ -20,10 +18,10 @@ public class RemoveSuperTypeChange extends TypeChange {
         this.setOriginalElement(removedUMLType.toString());
         this.setNextElement("");
         this.setCategory(Category.TYPE_REMOVE_SUPERCLASS);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

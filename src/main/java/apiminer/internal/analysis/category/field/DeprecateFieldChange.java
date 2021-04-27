@@ -19,10 +19,10 @@ public class DeprecateFieldChange extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(originalAttribute));
         this.setNextElement(UtilTools.getFieldDescriptionName(nextAttribute));
         this.setCategory(Category.FIELD_DEPRECATED);
-        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(isDeprecated(nextAttribute));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        this.setBreakingChange(false);
         this.setRevCommit(revCommit);
     }
 

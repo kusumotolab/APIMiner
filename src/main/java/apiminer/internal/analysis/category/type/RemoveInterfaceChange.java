@@ -21,10 +21,10 @@ public class RemoveInterfaceChange extends TypeChange {
         this.setOriginalElement(removedSuperClass.substring(1,removedSuperClass.length()-1));
         this.setNextElement("");
         this.setCategory(Category.TYPE_REMOVE_INTERFACE);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
-        this.setDeprecated(isDeprecated(this.getNextClass()));
+        this.setDeprecated(checkDeprecated(this.getNextClass()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

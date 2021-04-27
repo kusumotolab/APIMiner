@@ -18,10 +18,10 @@ public class AddFieldChange extends FieldChange {
         this.setOriginalElement("");
         this.setNextElement(UtilTools.getFieldDescriptionName(addedAttribute));
         this.setCategory(Category.FIELD_ADD);
-        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(addedAttribute));
-        this.setDeprecated(isDeprecated(addedAttribute));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        this.setBreakingChange(false);
         this.setRevCommit(revCommit);
     }
 

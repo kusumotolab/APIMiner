@@ -24,10 +24,10 @@ public class PushDownFieldChange extends FieldChange {
         this.setOriginalElement(UtilTools.getFieldDescriptionName(this.getOriginalAttribute()));
         this.setNextElement(UtilTools.getFieldDescriptionName(this.getNextAttribute()));
         this.setCategory(Category.FIELD_PUSH_DOWN);
-        this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
-        this.setDeprecated(isDeprecated(this.getNextAttribute()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
+        this.setBreakingChange(this.isDeprecated()?false:true);
         this.setRevCommit(revCommit);
     }
 

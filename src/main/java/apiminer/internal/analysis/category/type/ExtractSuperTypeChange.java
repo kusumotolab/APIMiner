@@ -24,7 +24,7 @@ public class ExtractSuperTypeChange extends TypeChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(extractSuperclass.getExtractedClass()));
-        this.setDeprecated(isDeprecated(extractSuperclass.getExtractedClass()));
+        this.setDeprecated(checkDeprecated(extractSuperclass.getExtractedClass()));
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

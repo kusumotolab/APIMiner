@@ -23,7 +23,7 @@ public class DeprecateMethodChange extends MethodChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
-        this.setDeprecated(isDeprecated(this.getNextOperation()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
         this.setRevCommit(revCommit);
         if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

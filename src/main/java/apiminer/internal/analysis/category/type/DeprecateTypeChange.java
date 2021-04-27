@@ -21,7 +21,7 @@ public class DeprecateTypeChange extends TypeChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextClass));
-        this.setDeprecated(isDeprecated(nextClass));
+        this.setDeprecated(checkDeprecated(nextClass));
         this.setRevCommit(revCommit);
         if (nextClass.isInterface()) {
             this.setElementType(ElementType.INTERFACE);

@@ -25,7 +25,7 @@ public class ExtractFieldChange extends FieldChange {
         this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
-        this.setDeprecated(isDeprecated(this.getNextAttribute()));
+        this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
         this.setRevCommit(revCommit);
     }
 
