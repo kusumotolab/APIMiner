@@ -42,7 +42,7 @@ public class PushDownMethodChange extends MethodChange {
         String message = "";
         message += "<br>push down method <code>" + this.getOriginalElement() + "</code>";
         message += "<br>from <code>" + this.getOriginalPath() + "</code>";
-        message += "<br>to <code>" + this.getNextElement() + "</code>";
+        message += "<br>to <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;
     }

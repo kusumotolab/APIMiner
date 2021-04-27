@@ -106,9 +106,9 @@ public class MethodDiff {
 
     private void detectFinalModifierChange() {
         if (originalOperation.isFinal() && !nextOperation.isFinal()) {
-            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_STATIC, revCommit));
+            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_REMOVE_MODIFIER_FINAL, revCommit));
         } else if (!originalOperation.isFinal() && nextOperation.isFinal()) {
-            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_ADD_MODIFIER_STATIC, revCommit));
+            changeList.add(new FinalMethodChange(originalClass, originalOperation, nextClass, nextOperation, Category.METHOD_ADD_MODIFIER_FINAL, revCommit));
         }
     }
 

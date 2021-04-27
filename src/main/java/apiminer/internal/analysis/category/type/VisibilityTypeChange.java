@@ -35,7 +35,7 @@ public class VisibilityTypeChange extends TypeChange {
     private String isDescription(){
         String message = "";
         message += "<br>type <code>" + this.getNextElement() + "</code>";
-        message += "<br>changed visibility from <code>" + UtilTools.getVisibilityDescriptionName(this.getOriginalClass().getVisibility()) + "</code> to <code>" + UtilTools.getVisibilityDescriptionName(this.getNextClass().getVisibility()) + "</code>";
+        message += "<br>changed visibility from <code>" + UtilTools.getVisibilityDescriptionName(this.getOriginalClass().getVisibility()) + "</code>to <code>" + UtilTools.getVisibilityDescriptionName(this.getNextClass().getVisibility()) + "</code>";
         message += "<br>";
         return message;
     }

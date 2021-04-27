@@ -10,16 +10,17 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.List;
 
-public class RemoveSuperTypeChange extends TypeChange {
-    public RemoveSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLType removedUMLType, RevCommit revCommit){
+public class RemoveInterfaceChange extends TypeChange {
+    public RemoveInterfaceChange(UMLClass originalClass, UMLClass nextClass, List<UMLType> removedSuperClassList, RevCommit revCommit){
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
-        this.setOriginalElement(removedUMLType.toString());
+        String removedSuperClass = removedSuperClassList.toString();
+        this.setOriginalElement(removedSuperClass.substring(1,removedSuperClass.length()-1));
         this.setNextElement("");
-        this.setCategory(Category.TYPE_REMOVE_SUPERCLASS);
+        this.setCategory(Category.TYPE_REMOVE_INTERFACE);
         this.setBreakingChange(true);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
@@ -37,7 +38,7 @@ public class RemoveSuperTypeChange extends TypeChange {
     private String isDescription() {
         String message = "";
         message += "<br>type <code>" + this.getNextPath() + "</code>";
-        message += "<br>removed superType <code>" + this.getOriginalElement() + "</code>";
+        message += "<br>removed interface <code>" + this.getOriginalElement() + "</code>";
         message += "<br>";
         return message;
     }

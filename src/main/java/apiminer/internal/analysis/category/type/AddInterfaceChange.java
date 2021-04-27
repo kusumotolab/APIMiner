@@ -10,17 +10,18 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.List;
 
-public class RemoveSuperTypeChange extends TypeChange {
-    public RemoveSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLType removedUMLType, RevCommit revCommit){
+public class AddInterfaceChange extends TypeChange {
+    public AddInterfaceChange(UMLClass originalClass, UMLClass nextClass, List<UMLType> addedSuperClassList, RevCommit revCommit){
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
-        this.setOriginalElement(removedUMLType.toString());
-        this.setNextElement("");
-        this.setCategory(Category.TYPE_REMOVE_SUPERCLASS);
-        this.setBreakingChange(true);
+        this.setOriginalElement("");
+        String addedSuperClass = addedSuperClassList.toString();
+        this.setNextElement(addedSuperClass.substring(1,addedSuperClass.length()-1));
+        this.setCategory(Category.TYPE_ADD_INTERFACE);
+        this.setBreakingChange(false);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
         this.setDeprecated(isDeprecated(this.getNextClass()));
@@ -37,7 +38,7 @@ public class RemoveSuperTypeChange extends TypeChange {
     private String isDescription() {
         String message = "";
         message += "<br>type <code>" + this.getNextPath() + "</code>";
-        message += "<br>removed superType <code>" + this.getOriginalElement() + "</code>";
+        message += "<br>added interface <code>" + this.getNextElement() + "</code>";
         message += "<br>";
         return message;
     }

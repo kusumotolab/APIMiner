@@ -11,16 +11,14 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import java.util.List;
 
 public class ChangeSuperTypeChange extends TypeChange {
-    public ChangeSuperTypeChange(UMLClass originalClass, UMLClass nextClass, List<UMLType> originalSuperClassList, List<UMLType> nextSuperClassList, RevCommit revCommit) {
+    public ChangeSuperTypeChange(UMLClass originalClass, UMLClass nextClass, UMLType originalUMLType, UMLType nextUMLType, RevCommit revCommit) {
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setNextClass(nextClass);
         this.setOriginalPath(UtilTools.getTypeDescriptionName(originalClass));
         this.setNextPath(UtilTools.getTypeDescriptionName(nextClass));
-        String originalSuperClass = originalSuperClassList.toString();
-        String nextSuperClass = nextSuperClassList.toString();
-        this.setOriginalElement(originalSuperClass.substring(1,originalSuperClass.length()-1));
-        this.setNextElement(nextSuperClass.substring(1,nextSuperClass.length()-1));
+        this.setOriginalElement(originalUMLType.toString());
+        this.setNextElement(nextUMLType.toString());
         this.setCategory(Category.TYPE_CHANGE_SUPERCLASS);
         this.setBreakingChange(true);
         this.setDescription(isDescription());

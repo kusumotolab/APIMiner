@@ -10,7 +10,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 public class AddTypeChange extends TypeChange {
     public AddTypeChange(UMLClass addedClass, RevCommit revCommit){
         super(revCommit);
-        this.setOriginalClass(addedClass);
+        this.setNextClass(addedClass);
         this.setOriginalPath("");
         this.setNextPath(UtilTools.getTypeDescriptionName(addedClass));
         this.setOriginalElement("");

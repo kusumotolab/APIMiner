@@ -29,7 +29,7 @@ public class VisibilityMethodChange extends MethodChange {
     private String isDescription() {
         String message = "";
         message += "<br>method <code>" + this.getNextElement() +"</code>";
-        message += "<br>changed visibility from <code>" + UtilTools.getVisibilityDescriptionName(this.getOriginalOperation().getVisibility())  + "</code> to <code>"  + UtilTools.getVisibilityDescriptionName(this.getNextOperation().getVisibility()) + "</code>";
+        message += "<br>changed visibility from <code>" + UtilTools.getVisibilityDescriptionName(this.getOriginalOperation().getVisibility())  + "</code>to <code>"  + UtilTools.getVisibilityDescriptionName(this.getNextOperation().getVisibility()) + "</code>";
         message += "<br>in <code>" + this.getNextPath() + "</code>";
         message += "<br>";
         return message;

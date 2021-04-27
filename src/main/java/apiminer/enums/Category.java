@@ -15,6 +15,9 @@ public enum Category {
     TYPE_CHANGE_SUPERCLASS("Change in Supertype"),
     TYPE_REMOVE_SUPERCLASS("Remove Supertype"),
     TYPE_ADD_SUPER_CLASS("Add Supertype"),
+    TYPE_CHANGE_INTERFACE("Change in Interface"),
+    TYPE_REMOVE_INTERFACE("Remove Interface"),
+    TYPE_ADD_INTERFACE("Add Interface"),
     TYPE_DEPRECATED("Deprecated Type"),
 
     METHOD_MOVE("Move Method"),
