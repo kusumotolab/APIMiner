@@ -1,6 +1,7 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.MethodChange;
 import apiminer.internal.analysis.category.method.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.Change;
@@ -20,9 +21,9 @@ public class MethodDiff {
     private final UMLClass nextClass;
     private final UMLOperation nextOperation;
     private final RevCommit revCommit;
-    private final List<Change> changeList = new ArrayList<>();
+    private final List<MethodChange> changeList = new ArrayList<>();
 
-    public MethodDiff(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, List<Change> changeList, RevCommit revCommit) {
+    public MethodDiff(UMLClass originalClass, UMLOperation originalOperation, UMLClass nextClass, UMLOperation nextOperation, List<MethodChange> changeList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.originalOperation = originalOperation;
         this.nextClass = nextClass;
@@ -52,7 +53,7 @@ public class MethodDiff {
         return revCommit;
     }
 
-    public List<Change> getChangeList() {
+    public List<MethodChange> getChangeList() {
         return changeList;
     }
 

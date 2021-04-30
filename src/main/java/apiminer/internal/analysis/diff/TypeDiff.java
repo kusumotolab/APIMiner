@@ -1,6 +1,7 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.type.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.Change;
@@ -17,11 +18,11 @@ public class TypeDiff {
     private final UMLClass originalClass;
     private final UMLClass nextClass;
     private final RevCommit revCommit;
-    private final List<Change> changeList = new ArrayList<>();
+    private final List<TypeChange> changeList = new ArrayList<>();
     private final List<UMLClass> parentClassList;
     private final List<UMLClass> currentClassList;
 
-    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<Change> changeList, List<UMLClass> parentClassList, List<UMLClass> currentClassList, RevCommit revCommit) {
+    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<TypeChange> changeList, List<UMLClass> parentClassList, List<UMLClass> currentClassList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.nextClass = nextClass;
         this.changeList.addAll(changeList);
@@ -43,7 +44,7 @@ public class TypeDiff {
         return revCommit;
     }
 
-    public List<Change> getChangeList() {
+    public List<TypeChange> getChangeList() {
         return changeList;
     }
 

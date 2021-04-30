@@ -1,6 +1,8 @@
 package apiminer.internal.analysis.diff;
 
 import apiminer.enums.Category;
+import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.field.*;
 import apiminer.internal.util.UtilTools;
 import apiminer.Change;
@@ -16,11 +18,11 @@ public class FieldDiff {
     private final UMLClass originalClass;
     private final UMLClass nextClass;
     private final RevCommit revCommit;
-    private final List<Change> changeList = new ArrayList<>();
+    private final List<FieldChange> changeList = new ArrayList<>();
     private final UMLAttribute originalAttribute;
     private final UMLAttribute nextAttribute;
 
-    public FieldDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, List<Change> changeList, RevCommit revCommit) {
+    public FieldDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, List<FieldChange> changeList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.originalAttribute = originalAttribute;
         this.nextClass = nextClass;
@@ -50,7 +52,7 @@ public class FieldDiff {
         return nextAttribute;
     }
 
-    public List<Change> getChangeList() {
+    public List<FieldChange> getChangeList() {
         return changeList;
     }
 

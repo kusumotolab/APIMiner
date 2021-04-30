@@ -1,6 +1,10 @@
 package apiminer.internal.analysis;
 
+import apiminer.enums.Category;
 import apiminer.enums.Classifier;
+import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.analysis.category.MethodChange;
+import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.field.AddFieldChange;
 import apiminer.internal.analysis.category.field.RemoveFieldChange;
 import apiminer.internal.analysis.category.method.AddMethodChange;
@@ -23,6 +27,7 @@ import org.refactoringminer.api.RefactoringMinerTimedOutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,17 +40,17 @@ public class APIModelDiff {
     private final Classifier classifierAPI;
     private final RevCommit revCommit;
 
-    private final Map<RefIdentifier, List<Change>> apiClassRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<TypeChange>> apiClassRefactoredMap = new HashMap<>();
 
-    private final Map<RefIdentifier, List<Change>> apiOperationRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<MethodChange>> apiOperationRefactoredMap = new HashMap<>();
 
-    private final Map<RefIdentifier, List<Change>> apiAttributeRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<FieldChange>> apiAttributeRefactoredMap = new HashMap<>();
 
     private final Diff diff = new Diff();
 
-    private final List<Change> changeTypeList = new ArrayList<>();
-    private final List<Change> changeMethodList = new ArrayList<>();
-    private final List<Change> changeFieldList = new ArrayList<>();
+    private final List<TypeChange> changeTypeList = new ArrayList<>();
+    private final List<MethodChange> changeMethodList = new ArrayList<>();
+    private final List<FieldChange> changeFieldList = new ArrayList<>();
 
     private final Logger logger = LoggerFactory.getLogger(APIModelDiff.class);
 
@@ -57,15 +62,15 @@ public class APIModelDiff {
         this.revCommit = revCommit;
     }
 
-    public List<Change> getChangeTypeList() {
+    public List<TypeChange> getChangeTypeList() {
         return changeTypeList;
     }
 
-    public List<Change> getChangeMethodList() {
+    public List<MethodChange> getChangeMethodList() {
         return changeMethodList;
     }
 
-    public List<Change> getChangeFieldList() {
+    public List<FieldChange> getChangeFieldList() {
         return changeFieldList;
     }
 
@@ -95,7 +100,7 @@ public class APIModelDiff {
         this.logger.info("Processing Types...");
         for (UMLClass addedClass : currentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(addedClass, classifierAPI) && UtilTools.isAPIClass(addedClass)) {
-                Change change = new AddTypeChange(addedClass, revCommit);
+                TypeChange change = new AddTypeChange(addedClass, revCommit);
                 changeTypeList.add(change);
             }
         }
@@ -105,7 +110,7 @@ public class APIModelDiff {
         this.logger.info("Processing Types...");
         for (UMLClass removedClass : parentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(removedClass, classifierAPI) && UtilTools.isAPIClass(removedClass)) {
-                Change change = new RemoveTypeChange(removedClass, revCommit);
+                TypeChange change = new RemoveTypeChange(removedClass, revCommit);
                 changeTypeList.add(change);
             }
         }
@@ -208,44 +213,58 @@ public class APIModelDiff {
                     boolean isExist = false;
                     switch (refIdentifier.getRefType()) {
                         case CLASS:
-                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiClassRefactoredMap.entrySet()) {
+                            for (Map.Entry<RefIdentifier, List<TypeChange>> entry : apiClassRefactoredMap.entrySet()) {
                                 if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                    entry.getValue().add(convert.getChange());
+                                    entry.getValue().add((TypeChange) convert.getChange());
                                     isExist = true;
                                     break;
                                 }
                             }
                             if (!isExist) {
-                                List<Change> changeList = new ArrayList<>();
-                                changeList.add(convert.getChange());
+                                List<TypeChange> changeList = new ArrayList<>();
+                                changeList.add((TypeChange) convert.getChange());
                                 apiClassRefactoredMap.put(convert.getRefIdentifier(), changeList);
                             }
                             break;
                         case METHOD:
-                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiOperationRefactoredMap.entrySet()) {
+                            for (Map.Entry<RefIdentifier, List<MethodChange>> entry : apiOperationRefactoredMap.entrySet()) {
                                 if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                    entry.getValue().add(convert.getChange());
+                                    if(convert.getChange().getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)){
+                                        List<MethodChange> changeList = entry.getValue();
+                                        boolean isExistParameterChange = false;
+                                        for(Change change:changeList){
+                                            if(change.getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)){
+                                                isExistParameterChange=true;
+                                                break;
+                                            }
+                                        }
+                                        if(!isExistParameterChange){
+                                            entry.getValue().add((MethodChange) convert.getChange());
+                                        }
+                                    }else{
+                                        entry.getValue().add((MethodChange) convert.getChange());
+                                    }
                                     isExist = true;
                                     break;
                                 }
                             }
                             if (!isExist) {
-                                List<Change> changeList = new ArrayList<>();
-                                changeList.add(convert.getChange());
+                                List<MethodChange> changeList = new ArrayList<>();
+                                changeList.add((MethodChange) convert.getChange());
                                 apiOperationRefactoredMap.put(convert.getRefIdentifier(), changeList);
                             }
                             break;
                         case FIELD:
-                            for (Map.Entry<RefIdentifier, List<Change>> entry : apiAttributeRefactoredMap.entrySet()) {
+                            for (Map.Entry<RefIdentifier, List<FieldChange>> entry : apiAttributeRefactoredMap.entrySet()) {
                                 if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                    entry.getValue().add(convert.getChange());
+                                    entry.getValue().add((FieldChange) convert.getChange());
                                     isExist = true;
                                     break;
                                 }
                             }
                             if (!isExist) {
-                                List<Change> changeList = new ArrayList<>();
-                                changeList.add(convert.getChange());
+                                List<FieldChange> changeList = new ArrayList<>();
+                                changeList.add((FieldChange) convert.getChange());
                                 apiAttributeRefactoredMap.put(convert.getRefIdentifier(), changeList);
                             }
                             break;
@@ -260,7 +279,7 @@ public class APIModelDiff {
 
     private void detectClassChange() {
         this.logger.info("Processing Types...");
-        for (Map.Entry<RefIdentifier, List<Change>> entry : apiClassRefactoredMap.entrySet()) {
+        for (Map.Entry<RefIdentifier, List<TypeChange>> entry : apiClassRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null) {
                 ClassModel classModel = diff.getRemovedClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
@@ -283,13 +302,13 @@ public class APIModelDiff {
         }
         for (ClassModel removedClassModel : diff.getRemovedClassMap().values()) {
             if (!removedClassModel.getIsRefactored()) {
-                Change change = new RemoveTypeChange(removedClassModel.getUmlClass(), revCommit);
+                TypeChange change = new RemoveTypeChange(removedClassModel.getUmlClass(), revCommit);
                 changeTypeList.add(change);
             }
         }
         for (ClassModel addedClassModel : diff.getAddedClassMap().values()) {
             if (!addedClassModel.getIsRefactored()) {
-                Change change = new AddTypeChange(addedClassModel.getUmlClass(), revCommit);
+                TypeChange change = new AddTypeChange(addedClassModel.getUmlClass(), revCommit);
                 changeTypeList.add(change);
             }
         }
@@ -297,7 +316,7 @@ public class APIModelDiff {
 
     private void detectMethodChange() {
         this.logger.info("Processing Methods...");
-        for (Map.Entry<RefIdentifier, List<Change>> entry : apiOperationRefactoredMap.entrySet()) {
+        for (Map.Entry<RefIdentifier, List<MethodChange>> entry : apiOperationRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalOperation() != null) {
                 CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
@@ -327,13 +346,13 @@ public class APIModelDiff {
             }
             for (MethodModel removedMethodModel : commonType.getRemovedOperationMap().values()) {
                 if (!removedMethodModel.getIsRefactored()) {
-                    Change change = new RemoveMethodChange(commonType.getOriginalClass(), removedMethodModel.getUmlOperation(), revCommit);
+                    MethodChange change = new RemoveMethodChange(commonType.getOriginalClass(), removedMethodModel.getUmlOperation(), revCommit);
                     changeMethodList.add(change);
                 }
             }
             for (MethodModel addedMethodModel : commonType.getAddedOperationMap().values()) {
                 if (!addedMethodModel.getIsRefactored()) {
-                    Change change = new AddMethodChange(commonType.getNextClass(), addedMethodModel.getUmlOperation(), revCommit);
+                    MethodChange change = new AddMethodChange(commonType.getNextClass(), addedMethodModel.getUmlOperation(), revCommit);
                     changeMethodList.add(change);
                 }
             }
@@ -342,7 +361,7 @@ public class APIModelDiff {
 
     private void detectFieldChange() {
         this.logger.info("Processing Fields...");
-        for (Map.Entry<RefIdentifier, List<Change>> entry : apiAttributeRefactoredMap.entrySet()) {
+        for (Map.Entry<RefIdentifier, List<FieldChange>> entry : apiAttributeRefactoredMap.entrySet()) {
             RefIdentifier refIdentifier = entry.getKey();
             if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalAttribute() != null) {
                 CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
@@ -372,13 +391,13 @@ public class APIModelDiff {
             }
             for (FieldModel removedFieldModel : commonType.getRemovedAttributeMap().values()) {
                 if (!removedFieldModel.getIsRefactored()) {
-                    Change change = new RemoveFieldChange(commonType.getOriginalClass(), removedFieldModel.getUmlAttribute(), revCommit);
+                    FieldChange change = new RemoveFieldChange(commonType.getOriginalClass(), removedFieldModel.getUmlAttribute(), revCommit);
                     changeFieldList.add(change);
                 }
             }
             for (FieldModel addedFieldModel : commonType.getAddedAttributeMap().values()) {
                 if (!addedFieldModel.getIsRefactored()) {
-                    Change change = new AddFieldChange(commonType.getNextClass(), addedFieldModel.getUmlAttribute(), revCommit);
+                    FieldChange change = new AddFieldChange(commonType.getNextClass(), addedFieldModel.getUmlAttribute(), revCommit);
                     changeFieldList.add(change);
                 }
             }

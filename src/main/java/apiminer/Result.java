@@ -1,37 +1,41 @@
 package apiminer;
 
+import apiminer.internal.analysis.category.FieldChange;
+import apiminer.internal.analysis.category.MethodChange;
+import apiminer.internal.analysis.category.TypeChange;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class Result {
 
-	private List<Change> changeType = new ArrayList<Change>();
+	private List<TypeChange> changeType = new ArrayList<TypeChange>();
 
-	private List<Change> changeMethod = new ArrayList<Change>();
+	private List<MethodChange> changeMethod = new ArrayList<MethodChange>();
 
-	private List<Change> changeField = new ArrayList<Change>();
+	private List<FieldChange> changeField = new ArrayList<FieldChange>();
 
-	public List<Change> getChangeType() {
+	public List<TypeChange> getChangeType() {
 		return changeType;
 	}
 
-	public void setChangeType(List<Change> changeType) {
+	public void setChangeType(List<TypeChange> changeType) {
 		this.changeType = changeType;
 	}
 
-	public List<Change> getChangeMethod() {
+	public List<MethodChange> getChangeMethod() {
 		return changeMethod;
 	}
 
-	public void setChangeMethod(List<Change> changeMethod) {
+	public void setChangeMethod(List<MethodChange> changeMethod) {
 		this.changeMethod = changeMethod;
 	}
 
-	public List<Change> getChangeField() {
+	public List<FieldChange> getChangeField() {
 		return changeField;
 	}
 
-	public void setChangeField(List<Change> changeField) {
+	public void setChangeField(List<FieldChange> changeField) {
 		this.changeField = changeField;
 	}
 }
