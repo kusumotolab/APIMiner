@@ -11,6 +11,7 @@ import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.decomposition.AbstractExpression;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,14 +65,20 @@ public class FieldDiff {
             detectStaticModifierChange();
             detectDefaultValueChange();
             detectDeprecatedChange();
-            for (Change change : changeList) {
-                if (change.getBreakingChange()) {
-                    isBreakingChange = true;
-                    break;
+            if(UtilTools.isAPIClass(originalClass)&& UtilTools.isAPIField(originalAttribute)){
+                for (Change change : changeList) {
+                    if (change.getBreakingChange()) {
+                        isBreakingChange = true;
+                        break;
+                    }
                 }
-            }
-            for (Change change : changeList) {
-                change.setBreakingChange(isBreakingChange);
+                for (Change change : changeList) {
+                    change.setBreakingChange(isBreakingChange);
+                }
+            }else{
+                for (Change change : changeList) {
+                    change.setBreakingChange(false);
+                }
             }
         }
     }

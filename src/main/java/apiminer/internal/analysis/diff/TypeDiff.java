@@ -55,14 +55,20 @@ public class TypeDiff {
             detectDeprecatedChange();
             detectSuperTypeChange();
             detectInterfaceChange();
-            for (Change change : changeList) {
-                if (change.getBreakingChange()) {
-                    isBreakingChange = true;
-                    break;
+            if(UtilTools.isAPIClass(originalClass)){
+                for (Change change : changeList) {
+                    if (change.getBreakingChange()) {
+                        isBreakingChange = true;
+                        break;
+                    }
                 }
-            }
-            for (Change change : changeList) {
-                change.setBreakingChange(isBreakingChange);
+                for (Change change : changeList) {
+                    change.setBreakingChange(isBreakingChange);
+                }
+            }else{
+                for (Change change : changeList) {
+                    change.setBreakingChange(false);
+                }
             }
         }
     }
