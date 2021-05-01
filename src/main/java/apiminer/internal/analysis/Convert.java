@@ -2,6 +2,7 @@ package apiminer.internal.analysis;
 
 import apiminer.enums.Classifier;
 import apiminer.enums.ChangeType;
+import apiminer.enums.RefClassifier;
 import apiminer.internal.util.UtilTools;
 import apiminer.Change;
 import apiminer.internal.analysis.category.TypeChange;
@@ -54,6 +55,7 @@ public class Convert {
             this.refIdentifier = new RefIdentifier();
             refIdentifier.setRefType(ChangeType.CLASS);
             refIdentifier.setNextClass(typeChange.getNextClass());
+            refIdentifier.setRefClassifier(RefClassifier.ADD);
         } else {
             switch (refactoring.getRefactoringType()) {
                 case MOVE_CLASS:
@@ -74,6 +76,7 @@ public class Convert {
                 refIdentifier.setRefType(ChangeType.CLASS);
                 refIdentifier.setOriginalClass(typeChange.getOriginalClass());
                 refIdentifier.setNextClass(typeChange.getNextClass());
+                refIdentifier.setRefClassifier(RefClassifier.CHANGE);
             }
         }
         return typeChange;
@@ -90,6 +93,7 @@ public class Convert {
                 refIdentifier.setRefType(ChangeType.METHOD);
                 refIdentifier.setNextClass(methodChange.getNextClass());
                 refIdentifier.setNextOperation(methodChange.getNextOperation());
+                refIdentifier.setRefClassifier(RefClassifier.ADD);
                 break;
             case INLINE_OPERATION:
             case MOVE_AND_INLINE_OPERATION:
@@ -99,6 +103,7 @@ public class Convert {
                 refIdentifier.setRefType(ChangeType.METHOD);
                 refIdentifier.setOriginalClass(methodChange.getOriginalClass());
                 refIdentifier.setOriginalOperation(methodChange.getOriginalOperation());
+                refIdentifier.setRefClassifier(RefClassifier.REMOVE);
                 break;
             default:
                 switch (refactoring.getRefactoringType()) {
@@ -140,6 +145,7 @@ public class Convert {
                     refIdentifier.setNextClass(methodChange.getNextClass());
                     refIdentifier.setOriginalOperation(methodChange.getOriginalOperation());
                     refIdentifier.setNextOperation(methodChange.getNextOperation());
+                    refIdentifier.setRefClassifier(RefClassifier.CHANGE);
                 }
         }
         return methodChange;
@@ -154,6 +160,7 @@ public class Convert {
             refIdentifier.setRefType(ChangeType.FIELD);
             refIdentifier.setNextClass(fieldChange.getNextClass());
             refIdentifier.setNextAttribute(fieldChange.getNextAttribute());
+            refIdentifier.setRefClassifier(RefClassifier.ADD);
         } else {
             switch (refactoring.getRefactoringType()) {
                 case MOVE_ATTRIBUTE:
@@ -185,6 +192,7 @@ public class Convert {
                 refIdentifier.setNextClass(fieldChange.getNextClass());
                 refIdentifier.setOriginalAttribute(fieldChange.getOriginalAttribute());
                 refIdentifier.setNextAttribute(fieldChange.getNextAttribute());
+                refIdentifier.setRefClassifier(RefClassifier.CHANGE);
             }
         }
         return fieldChange;

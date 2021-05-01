@@ -278,26 +278,58 @@ public class APIModelDiff {
 
     private void detectClassChange() {
         this.logger.info("Processing Types...");
-        for (Map.Entry<RefIdentifier, List<TypeChange>> entry : apiClassRefactoredMap.entrySet()) {
-            RefIdentifier refIdentifier = entry.getKey();
-            if (refIdentifier.getOriginalClass() != null) {
-                ClassModel classModel = diff.getRemovedClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
-                if (classModel != null) {
-                    classModel.setRefactored(true);
-                }
-            }
-            if (refIdentifier.getNextClass() != null) {
-                ClassModel classModel = diff.getAddedClassMap().get(UtilTools.getClassName(refIdentifier.getNextClass()));
-                if (classModel != null) {
-                    classModel.setRefactored(true);
-                }
-            }
-            TypeDiff typeDiff = new TypeDiff(refIdentifier.getOriginalClass(), refIdentifier.getNextClass(), entry.getValue(), revCommit);
+        for (CommonType commonType : diff.getCommonClassMap().values()) {
+            TypeDiff typeDiff = new TypeDiff(commonType.getOriginalClass(), commonType.getNextClass(), revCommit);
+            commonType.setTypeDiff(typeDiff);
             changeTypeList.addAll(typeDiff.getChangeList());
         }
-        for (CommonType commonType : diff.getCommonClassMap().values()) {
-            TypeDiff typeDiff = new TypeDiff(commonType.getOriginalClass(), commonType.getNextClass(), new ArrayList<>(), revCommit);
-            changeTypeList.addAll(typeDiff.getChangeList());
+        for (Map.Entry<RefIdentifier, List<TypeChange>> entry : apiClassRefactoredMap.entrySet()) {
+            RefIdentifier refIdentifier = entry.getKey();
+            UMLClass originalClass = refIdentifier.getOriginalClass();
+            UMLClass nextClass = refIdentifier.getNextClass();
+            ClassModel removedClassModel = null;
+            ClassModel addedClassModel = null;
+            CommonType originalCommonType = null;
+            CommonType nextCommonType = null;
+            TypeDiff typeDiff = null;
+            if (refIdentifier.getOriginalClass() != null) {
+                originalCommonType = diff.getCommonClassMap().get(UtilTools.getClassName(originalClass));
+                removedClassModel = diff.getRemovedClassMap().get(UtilTools.getClassName(originalClass));
+            }
+            if (refIdentifier.getNextClass() != null) {
+                nextCommonType = diff.getCommonClassMap().get(UtilTools.getClassName(nextClass));
+                addedClassModel = diff.getAddedClassMap().get(UtilTools.getClassName(nextClass));
+            }
+            if(removedClassModel!=null){
+                removedClassModel.setRefactored(true);
+            }
+            if(addedClassModel!=null){
+                addedClassModel.setRefactored(true);
+            }
+            switch (refIdentifier.getRefClassifier()){
+                case ADD:
+                    if(nextCommonType!=null){
+                        typeDiff = new TypeDiff(entry,nextCommonType,revCommit);
+                    }else{
+                        typeDiff = new TypeDiff(entry,null,revCommit);
+                    }
+                    break;
+                case CHANGE:
+                    if(originalCommonType==null&&nextCommonType==null){
+                        typeDiff = new TypeDiff(entry,null,revCommit);
+                    }else if(originalCommonType == null){
+                        if(UtilTools.isAPIClass(nextClass)){
+                            typeDiff = new TypeDiff(entry,nextCommonType,revCommit);
+                        }
+                    }else if(nextCommonType == null){
+                        if(UtilTools.isAPIClass(originalClass)){
+                            typeDiff = new TypeDiff(entry,null,revCommit);
+                        }
+                    }
+            }
+            if(typeDiff!=null){
+                changeTypeList.addAll(typeDiff.getChangeList());
+            }
         }
         for (ClassModel removedClassModel : diff.getRemovedClassMap().values()) {
             if (!removedClassModel.getIsRefactored()) {

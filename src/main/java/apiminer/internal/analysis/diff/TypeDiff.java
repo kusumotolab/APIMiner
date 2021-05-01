@@ -1,10 +1,13 @@
 package apiminer.internal.analysis.diff;
 
+import apiminer.Change;
 import apiminer.enums.Category;
+import apiminer.enums.RefClassifier;
 import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.type.*;
+import apiminer.internal.analysis.model.CommonType;
+import apiminer.internal.analysis.model.RefIdentifier;
 import apiminer.internal.util.UtilTools;
-import apiminer.Change;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLType;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -19,11 +22,24 @@ public class TypeDiff {
     private final UMLClass nextClass;
     private final RevCommit revCommit;
     private final List<TypeChange> changeList = new ArrayList<>();
+    private Map.Entry<RefIdentifier, List<TypeChange>> entry;
+    private CommonType commonType;
+    private boolean isBreakingChange = false;
 
-    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<TypeChange> changeList, RevCommit revCommit) {
+
+    public TypeDiff(Map.Entry<RefIdentifier, List<TypeChange>> entry, CommonType commonType, RevCommit revCommit) {
+        this.entry = entry;
+        this.commonType = commonType;
+        this.originalClass = entry.getKey().getOriginalClass();
+        this.nextClass = entry.getKey().getNextClass();
+        this.changeList.addAll(entry.getValue());
+        this.revCommit = revCommit;
+        detectOtherChange();
+    }
+
+    public TypeDiff(UMLClass originalClass, UMLClass nextClass, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.nextClass = nextClass;
-        this.changeList.addAll(changeList);
         this.revCommit = revCommit;
         detectOtherChange();
     }
@@ -44,25 +60,62 @@ public class TypeDiff {
         return changeList;
     }
 
+    public boolean isBreakingChange() {
+        return isBreakingChange;
+    }
+
     private void detectOtherChange() {
-        boolean isBreakingChange = false;
         if (originalClass != null && nextClass != null) {
             detectVisibilityChange();
             detectDeprecatedChange();
             detectSuperTypeChange();
             detectInterfaceChange();
-            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
-            boolean isAPINext = UtilTools.isAPIClass(nextClass);
-            if(isAPIOriginal&&isAPINext){
+            if (entry == null) {
+                boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
+                boolean isAPINext = UtilTools.isAPIClass(nextClass);
+                if (isAPIOriginal && isAPINext) {
+                    for (Change change : changeList) {
+                        if (change.getBreakingChange()) {
+                            isBreakingChange = true;
+                            break;
+                        }
+                    }
+                } else isBreakingChange = isAPIOriginal;
                 for (Change change : changeList) {
-                    if (change.getBreakingChange()) {
-                        isBreakingChange = true;
-                        break;
+                    change.setBreakingChange(isBreakingChange);
+                }
+            } else {
+                if (commonType == null) {
+                    boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
+                    boolean isAPINext = UtilTools.isAPIClass(nextClass);
+                    if (isAPIOriginal && isAPINext) {
+                        for (Change change : changeList) {
+                            if (change.getBreakingChange()) {
+                                isBreakingChange = true;
+                                break;
+                            }
+                        }
+                    } else isBreakingChange = isAPIOriginal;
+                    for (Change change : changeList) {
+                        change.setBreakingChange(isBreakingChange);
+                    }
+                } else {
+                    isBreakingChange = commonType.getTypeDiff().isBreakingChange();
+                    for (Change change : changeList) {
+                        change.setBreakingChange(isBreakingChange);
                     }
                 }
-            }else isBreakingChange = isAPIOriginal;
-            for (Change change : changeList) {
-                change.setBreakingChange(isBreakingChange);
+            }
+        } else if (entry != null && entry.getKey().getRefClassifier().equals(RefClassifier.ADD)) {
+            if (commonType != null) {
+                if (commonType.getTypeDiff().isBreakingChange()) {
+                    isBreakingChange = true;
+                    for (Change change : changeList) {
+                        change.setBreakingChange(isBreakingChange);
+                    }
+                } else {
+                    isBreakingChange = changeList.get(0).getBreakingChange();
+                }
             }
         }
     }
@@ -104,23 +157,23 @@ public class TypeDiff {
     private void detectSuperTypeChange() {
         UMLType originalUMLType = originalClass.getSuperclass();
         UMLType nextUMLType = nextClass.getSuperclass();
-        if(originalUMLType!=null&&nextUMLType==null){
+        if (originalUMLType != null && nextUMLType == null) {
             changeList.add(new RemoveSuperTypeChange(originalClass, nextClass, originalUMLType, revCommit));
-        }else if(originalUMLType==null&&nextUMLType!=null){
+        } else if (originalUMLType == null && nextUMLType != null) {
             changeList.add(new AddSuperTypeChange(originalClass, nextClass, nextUMLType, revCommit));
-        }else if(originalUMLType!=null&&nextUMLType!=null&&!originalUMLType.toString().equals(nextUMLType.toString())){
+        } else if (originalUMLType != null && !originalUMLType.toString().equals(nextUMLType.toString())) {
             changeList.add(new ChangeSuperTypeChange(originalClass, nextClass, originalUMLType, nextUMLType, revCommit));
         }
     }
-    private void detectInterfaceChange(){
+
+    private void detectInterfaceChange() {
         List<UMLType> originalInterfaceList = new ArrayList<>();
         Map<String, UMLType> removedInterfaceMap = new HashMap<>();
         for (UMLType originalInterface : originalClass.getImplementedInterfaces()) {
             removedInterfaceMap.put(originalInterface.toString(), originalInterface);
             originalInterfaceList.add(originalInterface);
         }
-        List<UMLType> nextInterfaceList = new ArrayList<>();
-        nextInterfaceList.addAll(nextClass.getImplementedInterfaces());
+        List<UMLType> nextInterfaceList = new ArrayList<>(nextClass.getImplementedInterfaces());
         List<UMLType> addedInterfaceList = new ArrayList<>();
         for (UMLType nextInterface : nextInterfaceList) {
             if (removedInterfaceMap.remove(nextInterface.toString()) == null) {
@@ -132,10 +185,7 @@ public class TypeDiff {
         } else if (removedInterfaceMap.size() == 0 && addedInterfaceList.size() > 0) {
             changeList.add(new AddInterfaceChange(originalClass, nextClass, addedInterfaceList, revCommit));
         } else if (removedInterfaceMap.size() > 0) {
-            List<UMLType> removedSuperTypeList = new ArrayList<>();
-            for (UMLType removedSuperType : removedInterfaceMap.values()) {
-                removedSuperTypeList.add(removedSuperType);
-            }
+            List<UMLType> removedSuperTypeList = new ArrayList<>(removedInterfaceMap.values());
             changeList.add(new RemoveInterfaceChange(originalClass, nextClass, removedSuperTypeList, revCommit));
         }
     }

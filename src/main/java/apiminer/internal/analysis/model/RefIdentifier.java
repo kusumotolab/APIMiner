@@ -1,6 +1,7 @@
 package apiminer.internal.analysis.model;
 
 import apiminer.enums.ChangeType;
+import apiminer.enums.RefClassifier;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
@@ -13,6 +14,7 @@ public class RefIdentifier {
     private UMLOperation nextOperation;
     private UMLAttribute originalAttribute;
     private UMLAttribute nextAttribute;
+    private RefClassifier refClassifier;
 
     public ChangeType getRefType() {
         return changeType;
@@ -68,6 +70,14 @@ public class RefIdentifier {
 
     public void setNextAttribute(UMLAttribute nextAttribute) {
         this.nextAttribute = nextAttribute;
+    }
+
+    public RefClassifier getRefClassifier() {
+        return refClassifier;
+    }
+
+    public void setRefClassifier(RefClassifier refClassifier) {
+        this.refClassifier = refClassifier;
     }
 
     public boolean equalIdentifier(RefIdentifier refIdentifier) {

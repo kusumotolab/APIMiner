@@ -1,5 +1,6 @@
 package apiminer.internal.analysis.model;
 
+import apiminer.internal.analysis.diff.TypeDiff;
 import gr.uom.java.xmi.UMLClass;
 
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 public class CommonType {
     private UMLClass originalClass;
     private UMLClass nextClass;
+    private TypeDiff typeDiff;
 
     private final Map<String, MethodModel> removedOperationMap = new HashMap<>();
     private final Map<String, CommonMethod> commonOperationMap = new HashMap<>();
@@ -62,4 +64,11 @@ public class CommonType {
         return addedAttributeMap;
     }
 
+    public TypeDiff getTypeDiff() {
+        return typeDiff;
+    }
+
+    public void setTypeDiff(TypeDiff typeDiff) {
+        this.typeDiff = typeDiff;
+    }
 }
