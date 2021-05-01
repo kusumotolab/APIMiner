@@ -2,8 +2,11 @@ package apiminer.internal.analysis.diff;
 
 import apiminer.Change;
 import apiminer.enums.Category;
+import apiminer.enums.RefClassifier;
 import apiminer.internal.analysis.category.FieldChange;
 import apiminer.internal.analysis.category.field.*;
+import apiminer.internal.analysis.model.CommonField;
+import apiminer.internal.analysis.model.RefIdentifier;
 import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
@@ -12,6 +15,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FieldDiff {
     private final UMLClass originalClass;
@@ -20,13 +24,28 @@ public class FieldDiff {
     private final List<FieldChange> changeList = new ArrayList<>();
     private final UMLAttribute originalAttribute;
     private final UMLAttribute nextAttribute;
+    private boolean isBreakingChange = false;
+    private Map.Entry<RefIdentifier, List<FieldChange>> entry;
+    private CommonField commonField;
 
-    public FieldDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, List<FieldChange> changeList, RevCommit revCommit) {
+
+    public FieldDiff(Map.Entry<RefIdentifier, List<FieldChange>> entry, CommonField commonField, RevCommit revCommit) {
+        this.entry = entry;
+        this.commonField = commonField;
+        this.originalClass = entry.getKey().getOriginalClass();
+        this.originalAttribute = entry.getKey().getOriginalAttribute();
+        this.nextClass = entry.getKey().getNextClass();
+        this.nextAttribute = entry.getKey().getNextAttribute();
+        this.changeList.addAll(entry.getValue());
+        this.revCommit = revCommit;
+        detectOtherChange();
+    }
+
+    public FieldDiff(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.originalAttribute = originalAttribute;
         this.nextClass = nextClass;
         this.nextAttribute = nextAttribute;
-        this.changeList.addAll(changeList);
         this.revCommit = revCommit;
         detectOtherChange();
     }
@@ -55,26 +74,47 @@ public class FieldDiff {
         return changeList;
     }
 
+    public boolean isBreakingChange() {
+        return isBreakingChange;
+    }
+
     private void detectOtherChange() {
-        boolean isBreakingChange = false;
         if (originalClass != null && nextClass != null) {
             detectVisibilityChange();
             detectFinalModifierChange();
             detectStaticModifierChange();
             detectDefaultValueChange();
             detectDeprecatedChange();
-            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass) && UtilTools.isAPIField(originalAttribute);
-            boolean isAPINext = UtilTools.isAPIClass(nextClass) && UtilTools.isAPIField(nextAttribute);
-            if (isAPIOriginal && isAPINext) {
-                for (Change change : changeList) {
-                    if (change.getBreakingChange()) {
-                        isBreakingChange = true;
-                        break;
+            if (entry == null || commonField == null) {
+                boolean isAPIOriginal = UtilTools.isAPIClass(originalClass) && UtilTools.isAPIField(originalAttribute);
+                boolean isAPINext = UtilTools.isAPIClass(nextClass) && UtilTools.isAPIField(nextAttribute);
+                if (isAPIOriginal && isAPINext) {
+                    for (Change change : changeList) {
+                        if (change.getBreakingChange()) {
+                            isBreakingChange = true;
+                            break;
+                        }
                     }
+                } else isBreakingChange = isAPIOriginal;
+                for (Change change : changeList) {
+                    change.setBreakingChange(isBreakingChange);
                 }
-            } else isBreakingChange = isAPIOriginal;
-            for (Change change : changeList) {
-                change.setBreakingChange(isBreakingChange);
+            } else {
+                isBreakingChange = commonField.getFieldDiff().isBreakingChange();
+                for (Change change : changeList) {
+                    change.setBreakingChange(isBreakingChange);
+                }
+            }
+        } else if (entry != null) {
+            if (entry.getKey().getRefClassifier().equals(RefClassifier.ADD) && commonField != null) {
+                if (commonField.getFieldDiff().isBreakingChange()) {
+                    isBreakingChange = true;
+                    for (Change change : changeList) {
+                        change.setBreakingChange(isBreakingChange);
+                    }
+                } else {
+                    isBreakingChange = changeList.get(0).getBreakingChange();
+                }
             }
         }
     }

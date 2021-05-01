@@ -437,34 +437,71 @@ public class APIModelDiff {
 
     private void detectFieldChange() {
         this.logger.info("Processing Fields...");
-        for (Map.Entry<RefIdentifier, List<FieldChange>> entry : apiAttributeRefactoredMap.entrySet()) {
-            RefIdentifier refIdentifier = entry.getKey();
-            if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalAttribute() != null) {
-                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
-                if (commonType != null) {
-                    FieldModel fieldModel = commonType.getRemovedAttributeMap().get(UtilTools.getAttributeName(refIdentifier.getOriginalAttribute()));
-                    if (fieldModel != null) {
-                        fieldModel.setRefactored(true);
-                    }
-                }
-            }
-            if (refIdentifier.getNextClass() != null && refIdentifier.getNextAttribute() != null) {
-                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getNextClass()));
-                if (commonType != null) {
-                    FieldModel fieldModel = commonType.getAddedAttributeMap().get(UtilTools.getAttributeName(refIdentifier.getNextAttribute()));
-                    if (fieldModel != null) {
-                        fieldModel.setRefactored(true);
-                    }
-                }
-            }
-            FieldDiff fieldDiff = new FieldDiff(refIdentifier.getOriginalClass(), refIdentifier.getOriginalAttribute(), refIdentifier.getNextClass(), refIdentifier.getNextAttribute(), entry.getValue(), revCommit);
-            changeFieldList.addAll(fieldDiff.getChangeList());
-        }
         for (CommonType commonType : diff.getCommonClassMap().values()) {
             for (CommonField commonField : commonType.getCommonAttributeMap().values()) {
-                FieldDiff fieldDiff = new FieldDiff(commonType.getOriginalClass(), commonField.getOriginalAttribute(), commonType.getNextClass(), commonField.getNextAttribute(), new ArrayList<>(), revCommit);
+                FieldDiff fieldDiff = new FieldDiff(commonType.getOriginalClass(), commonField.getOriginalAttribute(), commonType.getNextClass(), commonField.getNextAttribute(), revCommit);
+                commonField.setFieldDiff(fieldDiff);
                 changeFieldList.addAll(fieldDiff.getChangeList());
             }
+        }
+        for (Map.Entry<RefIdentifier, List<FieldChange>> entry : apiAttributeRefactoredMap.entrySet()) {
+            RefIdentifier refIdentifier = entry.getKey();
+            UMLClass originalClass = refIdentifier.getOriginalClass();
+            UMLAttribute originalAttribute = refIdentifier.getOriginalAttribute();
+            UMLClass nextClass = refIdentifier.getNextClass();
+            UMLAttribute nextAttribute = refIdentifier.getNextAttribute();
+            FieldModel removedFieldModel = null;
+            FieldModel addedFieldModel = null;
+            CommonField originalCommonField = null;
+            CommonField nextCommonField = null;
+            FieldDiff fieldDiff = null;
+            if (originalClass != null && originalAttribute != null) {
+                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(originalClass));
+                if (commonType != null) {
+                    originalCommonField = commonType.getCommonAttributeMap().get(UtilTools.getAttributeName(originalAttribute));
+                    removedFieldModel = commonType.getRemovedAttributeMap().get(UtilTools.getAttributeName(originalAttribute));
+                }
+            }
+            if (nextClass != null && nextAttribute != null) {
+                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getNextClass()));
+                if (commonType != null) {
+                    nextCommonField = commonType.getCommonAttributeMap().get(UtilTools.getAttributeName(nextAttribute));
+                    addedFieldModel = commonType.getAddedAttributeMap().get(UtilTools.getAttributeName(nextAttribute));
+                }
+            }
+            if (removedFieldModel != null) {
+                removedFieldModel.setRefactored(true);
+            }
+            if (addedFieldModel != null) {
+                addedFieldModel.setRefactored(true);
+            }
+            switch (refIdentifier.getRefClassifier()) {
+                case ADD:
+                    if (nextCommonField != null) {
+                        fieldDiff = new FieldDiff(entry, nextCommonField, revCommit);
+                    } else {
+                        fieldDiff = new FieldDiff(entry, null, revCommit);
+                    }
+                    break;
+                case CHANGE:
+                    if (originalCommonField == null && nextCommonField == null) {
+                        fieldDiff = new FieldDiff(entry, null, revCommit);
+                    } else if (originalCommonField == null) {
+                        if (UtilTools.isAPIClass(nextClass) && UtilTools.isAPIField(nextAttribute)) {
+                            fieldDiff = new FieldDiff(entry, nextCommonField, revCommit);
+                        }
+                    } else if (nextCommonField == null) {
+                        if (UtilTools.isAPIClass(originalClass) && UtilTools.isAPIField(originalAttribute)) {
+                            fieldDiff = new FieldDiff(entry, null, revCommit);
+                        }
+                    }
+                    break;
+            }
+            if (fieldDiff != null) {
+                changeFieldList.addAll(fieldDiff.getChangeList());
+            }
+        }
+        for (CommonType commonType : diff.getCommonClassMap().values()) {
             for (FieldModel removedFieldModel : commonType.getRemovedAttributeMap().values()) {
                 if (!removedFieldModel.getIsRefactored()) {
                     FieldChange change = new RemoveFieldChange(commonType.getOriginalClass(), removedFieldModel.getUmlAttribute(), revCommit);
