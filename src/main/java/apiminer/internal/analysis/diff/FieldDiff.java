@@ -1,17 +1,15 @@
 package apiminer.internal.analysis.diff;
 
+import apiminer.Change;
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.FieldChange;
-import apiminer.internal.analysis.category.TypeChange;
 import apiminer.internal.analysis.category.field.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.Change;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.decomposition.AbstractExpression;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,20 +63,16 @@ public class FieldDiff {
             detectStaticModifierChange();
             detectDefaultValueChange();
             detectDeprecatedChange();
-            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass)&&UtilTools.isAPIField(originalAttribute);
-            boolean isAPINext = UtilTools.isAPIClass(nextClass)&&UtilTools.isAPIField(nextAttribute);
-            if(isAPIOriginal&&isAPINext){
+            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass) && UtilTools.isAPIField(originalAttribute);
+            boolean isAPINext = UtilTools.isAPIClass(nextClass) && UtilTools.isAPIField(nextAttribute);
+            if (isAPIOriginal && isAPINext) {
                 for (Change change : changeList) {
                     if (change.getBreakingChange()) {
                         isBreakingChange = true;
                         break;
                     }
                 }
-            }else if(!isAPIOriginal){
-                isBreakingChange = false;
-            }else if(!isAPINext){
-                isBreakingChange = true;
-            }
+            } else isBreakingChange = isAPIOriginal;
             for (Change change : changeList) {
                 change.setBreakingChange(isBreakingChange);
             }
@@ -86,7 +80,7 @@ public class FieldDiff {
     }
 
     private void detectVisibilityChange() {
-        if(UtilTools.isAPIClass(originalClass)&& UtilTools.isAPIClass(nextClass)){
+        if (UtilTools.isAPIClass(originalClass) && UtilTools.isAPIClass(nextClass)) {
             String originalAccessModifier = originalAttribute.getVisibility();
             String nextAccessModifier = nextAttribute.getVisibility();
             if (!originalAccessModifier.equals(nextAccessModifier)) {
@@ -94,18 +88,18 @@ public class FieldDiff {
                     case "private":
                     case "package":
                         if (nextAccessModifier.equals("public") || nextAccessModifier.equals("protected")) {
-                            changeList.add(new VisibilityFieldChange(originalClass, originalAttribute,nextClass, nextAttribute,Category.FIELD_GAIN_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_GAIN_VISIBILITY, revCommit));
                         }
                         break;
                     case "protected":
                         if (nextAccessModifier.equals("public")) {
-                            changeList.add(new VisibilityFieldChange(originalClass,originalAttribute, nextClass, nextAttribute,Category.FIELD_GAIN_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_GAIN_VISIBILITY, revCommit));
                         } else {
-                            changeList.add(new VisibilityFieldChange(originalClass, originalAttribute,nextClass, nextAttribute,Category.FIELD_LOST_VISIBILITY, revCommit));
+                            changeList.add(new VisibilityFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_LOST_VISIBILITY, revCommit));
                         }
                         break;
                     case "public":
-                        changeList.add(new VisibilityFieldChange(originalClass,originalAttribute, nextClass, nextAttribute,Category.FIELD_LOST_VISIBILITY, revCommit));
+                        changeList.add(new VisibilityFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_LOST_VISIBILITY, revCommit));
                         break;
                 }
             }
@@ -114,17 +108,17 @@ public class FieldDiff {
 
     private void detectFinalModifierChange() {
         if (originalAttribute.isFinal() && !nextAttribute.isFinal()) {
-            changeList.add(new FinalFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_REMOVE_MODIFIER_FINAL,revCommit));
+            changeList.add(new FinalFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_REMOVE_MODIFIER_FINAL, revCommit));
         } else if (!originalAttribute.isFinal() && nextAttribute.isFinal()) {
-            changeList.add(new FinalFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_ADD_MODIFIER_FINAL,revCommit));
+            changeList.add(new FinalFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_ADD_MODIFIER_FINAL, revCommit));
         }
     }
 
     private void detectStaticModifierChange() {
         if (originalAttribute.isStatic() && !nextAttribute.isStatic()) {
-            changeList.add(new StaticFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_REMOVE_MODIFIER_FINAL,revCommit));
+            changeList.add(new StaticFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_REMOVE_MODIFIER_FINAL, revCommit));
         } else if (!originalAttribute.isStatic() && nextAttribute.isStatic()) {
-            changeList.add(new StaticFieldChange(originalClass,originalAttribute,nextClass,nextAttribute,Category.FIELD_ADD_MODIFIER_FINAL,revCommit));
+            changeList.add(new StaticFieldChange(originalClass, originalAttribute, nextClass, nextAttribute, Category.FIELD_ADD_MODIFIER_FINAL, revCommit));
         }
     }
 
@@ -143,6 +137,7 @@ public class FieldDiff {
             }
         }
     }
+
     private void detectDeprecatedChange() {
         boolean isOriginalDeprecated = UtilTools.isDeprecated(originalClass.getAnnotations()) || UtilTools.isDeprecated(originalAttribute.getAnnotations());
         boolean isNextDeprecated = UtilTools.isDeprecated(nextClass.getAnnotations()) || UtilTools.isDeprecated(nextAttribute.getAnnotations());

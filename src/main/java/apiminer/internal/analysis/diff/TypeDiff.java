@@ -19,15 +19,11 @@ public class TypeDiff {
     private final UMLClass nextClass;
     private final RevCommit revCommit;
     private final List<TypeChange> changeList = new ArrayList<>();
-    private final List<UMLClass> parentClassList;
-    private final List<UMLClass> currentClassList;
 
-    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<TypeChange> changeList, List<UMLClass> parentClassList, List<UMLClass> currentClassList, RevCommit revCommit) {
+    public TypeDiff(UMLClass originalClass, UMLClass nextClass, List<TypeChange> changeList, RevCommit revCommit) {
         this.originalClass = originalClass;
         this.nextClass = nextClass;
         this.changeList.addAll(changeList);
-        this.parentClassList = parentClassList;
-        this.currentClassList = currentClassList;
         this.revCommit = revCommit;
         detectOtherChange();
     }
@@ -64,11 +60,7 @@ public class TypeDiff {
                         break;
                     }
                 }
-            }else if(!isAPIOriginal){
-                isBreakingChange = false;
-            }else if(!isAPINext){
-                isBreakingChange = true;
-            }
+            }else isBreakingChange = isAPIOriginal;
             for (Change change : changeList) {
                 change.setBreakingChange(isBreakingChange);
             }

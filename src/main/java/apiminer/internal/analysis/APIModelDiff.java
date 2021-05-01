@@ -1,5 +1,6 @@
 package apiminer.internal.analysis;
 
+import apiminer.Change;
 import apiminer.enums.Category;
 import apiminer.enums.Classifier;
 import apiminer.internal.analysis.category.FieldChange;
@@ -16,7 +17,6 @@ import apiminer.internal.analysis.diff.MethodDiff;
 import apiminer.internal.analysis.diff.TypeDiff;
 import apiminer.internal.analysis.model.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.Change;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLModel;
@@ -27,7 +27,6 @@ import org.refactoringminer.api.RefactoringMinerTimedOutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,12 +82,12 @@ public class APIModelDiff {
             } else if (parentUMLModel != null) {
                 detectOnlyParentExist();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             this.logger.error("Error in detectChanges in APIModelDiff ", e);
         }
     }
 
-    private void detectBothExist(){
+    private void detectBothExist() {
         initDiff();
         detectAPIRefactoring();
         detectClassChange();
@@ -96,7 +95,7 @@ public class APIModelDiff {
         detectFieldChange();
     }
 
-    private void detectOnlyCurrentExist(){
+    private void detectOnlyCurrentExist() {
         this.logger.info("Processing Types...");
         for (UMLClass addedClass : currentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(addedClass, classifierAPI) && UtilTools.isAPIClass(addedClass)) {
@@ -106,7 +105,7 @@ public class APIModelDiff {
         }
     }
 
-    private void detectOnlyParentExist(){
+    private void detectOnlyParentExist() {
         this.logger.info("Processing Types...");
         for (UMLClass removedClass : parentUMLModel.getClassList()) {
             if (UtilTools.isAPIByClassifier(removedClass, classifierAPI) && UtilTools.isAPIClass(removedClass)) {
@@ -206,7 +205,7 @@ public class APIModelDiff {
             currentClassMap.put(UtilTools.getClassName(currentClass), currentClass);
         }
         for (Refactoring refactoring : refactorings) {
-            try{
+            try {
                 Convert convert = new Convert(refactoring, parentClassMap, currentClassMap, revCommit, classifierAPI);
                 if (convert.isAPI()) {
                     RefIdentifier refIdentifier = convert.getRefIdentifier();
@@ -229,19 +228,19 @@ public class APIModelDiff {
                         case METHOD:
                             for (Map.Entry<RefIdentifier, List<MethodChange>> entry : apiOperationRefactoredMap.entrySet()) {
                                 if (entry.getKey().equalIdentifier(refIdentifier)) {
-                                    if(convert.getChange().getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)){
+                                    if (convert.getChange().getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)) {
                                         List<MethodChange> changeList = entry.getValue();
                                         boolean isExistParameterChange = false;
-                                        for(Change change:changeList){
-                                            if(change.getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)){
-                                                isExistParameterChange=true;
+                                        for (Change change : changeList) {
+                                            if (change.getCategory().equals(Category.METHOD_CHANGE_PARAMETER_LIST)) {
+                                                isExistParameterChange = true;
                                                 break;
                                             }
                                         }
-                                        if(!isExistParameterChange){
+                                        if (!isExistParameterChange) {
                                             entry.getValue().add((MethodChange) convert.getChange());
                                         }
-                                    }else{
+                                    } else {
                                         entry.getValue().add((MethodChange) convert.getChange());
                                     }
                                     isExist = true;
@@ -270,7 +269,7 @@ public class APIModelDiff {
                             break;
                     }
                 }
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
 
             }
         }
@@ -293,11 +292,11 @@ public class APIModelDiff {
                     classModel.setRefactored(true);
                 }
             }
-            TypeDiff typeDiff = new TypeDiff(refIdentifier.getOriginalClass(), refIdentifier.getNextClass(), entry.getValue(), parentUMLModel.getClassList(), currentUMLModel.getClassList(), revCommit);
+            TypeDiff typeDiff = new TypeDiff(refIdentifier.getOriginalClass(), refIdentifier.getNextClass(), entry.getValue(), revCommit);
             changeTypeList.addAll(typeDiff.getChangeList());
         }
         for (CommonType commonType : diff.getCommonClassMap().values()) {
-            TypeDiff typeDiff = new TypeDiff(commonType.getOriginalClass(), commonType.getNextClass(), new ArrayList<>(), parentUMLModel.getClassList(), currentUMLModel.getClassList(), revCommit);
+            TypeDiff typeDiff = new TypeDiff(commonType.getOriginalClass(), commonType.getNextClass(), new ArrayList<>(), revCommit);
             changeTypeList.addAll(typeDiff.getChangeList());
         }
         for (ClassModel removedClassModel : diff.getRemovedClassMap().values()) {

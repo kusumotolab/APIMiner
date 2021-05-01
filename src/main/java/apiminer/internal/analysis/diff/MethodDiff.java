@@ -1,10 +1,10 @@
 package apiminer.internal.analysis.diff;
 
+import apiminer.Change;
 import apiminer.enums.Category;
 import apiminer.internal.analysis.category.MethodChange;
 import apiminer.internal.analysis.category.method.*;
 import apiminer.internal.util.UtilTools;
-import apiminer.Change;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.UMLOperation;
 import gr.uom.java.xmi.UMLType;
@@ -65,8 +65,8 @@ public class MethodDiff {
             detectStaticModifierChange();
             detectDeprecatedChange();
             detectExceptionListChange();
-            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass)&&UtilTools.isAPIMethod(originalOperation);
-            boolean isAPINext = UtilTools.isAPIClass(nextClass)&&UtilTools.isAPIMethod(nextOperation);
+            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass) && UtilTools.isAPIMethod(originalOperation);
+            boolean isAPINext = UtilTools.isAPIClass(nextClass) && UtilTools.isAPIMethod(nextOperation);
             if(isAPIOriginal&&isAPINext){
                 for (Change change : changeList) {
                     if (change.getBreakingChange()) {
@@ -74,11 +74,7 @@ public class MethodDiff {
                         break;
                     }
                 }
-            }else if(!isAPIOriginal){
-                isBreakingChange = false;
-            }else if(!isAPINext){
-                isBreakingChange = true;
-            }
+            }else isBreakingChange = isAPIOriginal;
             for (Change change : changeList) {
                 change.setBreakingChange(isBreakingChange);
             }
