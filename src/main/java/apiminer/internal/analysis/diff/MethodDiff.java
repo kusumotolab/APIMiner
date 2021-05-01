@@ -65,20 +65,22 @@ public class MethodDiff {
             detectStaticModifierChange();
             detectDeprecatedChange();
             detectExceptionListChange();
-            if(UtilTools.isAPIClass(originalClass)&&UtilTools.isAPIMethod(originalOperation)){
+            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass)&&UtilTools.isAPIMethod(originalOperation);
+            boolean isAPINext = UtilTools.isAPIClass(nextClass)&&UtilTools.isAPIMethod(nextOperation);
+            if(isAPIOriginal&&isAPINext){
                 for (Change change : changeList) {
                     if (change.getBreakingChange()) {
                         isBreakingChange = true;
                         break;
                     }
                 }
-                for (Change change : changeList) {
-                    change.setBreakingChange(isBreakingChange);
-                }
-            }else{
-                for (Change change : changeList) {
-                    change.setBreakingChange(false);
-                }
+            }else if(!isAPIOriginal){
+                isBreakingChange = false;
+            }else if(!isAPINext){
+                isBreakingChange = true;
+            }
+            for (Change change : changeList) {
+                change.setBreakingChange(isBreakingChange);
             }
         }
     }

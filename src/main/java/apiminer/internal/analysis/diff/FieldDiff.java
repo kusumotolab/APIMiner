@@ -65,20 +65,22 @@ public class FieldDiff {
             detectStaticModifierChange();
             detectDefaultValueChange();
             detectDeprecatedChange();
-            if(UtilTools.isAPIClass(originalClass)&& UtilTools.isAPIField(originalAttribute)){
+            boolean isAPIOriginal = UtilTools.isAPIClass(originalClass)&&UtilTools.isAPIField(originalAttribute);
+            boolean isAPINext = UtilTools.isAPIClass(nextClass)&&UtilTools.isAPIField(nextAttribute);
+            if(isAPIOriginal&&isAPINext){
                 for (Change change : changeList) {
                     if (change.getBreakingChange()) {
                         isBreakingChange = true;
                         break;
                     }
                 }
-                for (Change change : changeList) {
-                    change.setBreakingChange(isBreakingChange);
-                }
-            }else{
-                for (Change change : changeList) {
-                    change.setBreakingChange(false);
-                }
+            }else if(!isAPIOriginal){
+                isBreakingChange = false;
+            }else if(!isAPINext){
+                isBreakingChange = true;
+            }
+            for (Change change : changeList) {
+                change.setBreakingChange(isBreakingChange);
             }
         }
     }
