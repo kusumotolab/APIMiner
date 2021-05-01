@@ -7,19 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommonType {
+    private final Map<String, MethodModel> removedOperationMap = new HashMap<>();
+    private final Map<String, CommonMethod> commonOperationMap = new HashMap<>();
+    private final Map<String, MethodModel> addedOperationMap = new HashMap<>();
+    private final Map<String, FieldModel> removedAttributeMap = new HashMap<>();
+    private final Map<String, CommonField> commonAttributeMap = new HashMap<>();
+    private final Map<String, FieldModel> addedAttributeMap = new HashMap<>();
     private UMLClass originalClass;
     private UMLClass nextClass;
     private TypeDiff typeDiff;
 
-    private final Map<String, MethodModel> removedOperationMap = new HashMap<>();
-    private final Map<String, CommonMethod> commonOperationMap = new HashMap<>();
-    private final Map<String, MethodModel> addedOperationMap = new HashMap<>();
-
-    private final Map<String, FieldModel> removedAttributeMap = new HashMap<>();
-    private final Map<String, CommonField> commonAttributeMap = new HashMap<>();
-    private final Map<String, FieldModel> addedAttributeMap = new HashMap<>();
-
-    public CommonType(UMLClass originalClass, UMLClass nextClass){
+    public CommonType(UMLClass originalClass, UMLClass nextClass) {
         this.originalClass = originalClass;
         this.nextClass = nextClass;
     }
