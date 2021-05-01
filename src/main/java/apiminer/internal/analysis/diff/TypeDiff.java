@@ -70,7 +70,7 @@ public class TypeDiff {
             detectDeprecatedChange();
             detectSuperTypeChange();
             detectInterfaceChange();
-            if (entry == null) {
+            if (entry == null || commonType == null) {
                 boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
                 boolean isAPINext = UtilTools.isAPIClass(nextClass);
                 if (isAPIOriginal && isAPINext) {
@@ -85,25 +85,9 @@ public class TypeDiff {
                     change.setBreakingChange(isBreakingChange);
                 }
             } else {
-                if (commonType == null) {
-                    boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
-                    boolean isAPINext = UtilTools.isAPIClass(nextClass);
-                    if (isAPIOriginal && isAPINext) {
-                        for (Change change : changeList) {
-                            if (change.getBreakingChange()) {
-                                isBreakingChange = true;
-                                break;
-                            }
-                        }
-                    } else isBreakingChange = isAPIOriginal;
-                    for (Change change : changeList) {
-                        change.setBreakingChange(isBreakingChange);
-                    }
-                } else {
-                    isBreakingChange = commonType.getTypeDiff().isBreakingChange();
-                    for (Change change : changeList) {
-                        change.setBreakingChange(isBreakingChange);
-                    }
+                isBreakingChange = commonType.getTypeDiff().isBreakingChange();
+                for (Change change : changeList) {
+                    change.setBreakingChange(isBreakingChange);
                 }
             }
         } else if (entry != null && entry.getKey().getRefClassifier().equals(RefClassifier.ADD)) {

@@ -115,7 +115,6 @@ public class APIModelDiff {
         }
     }
 
-
     private void initDiff() {
         Map<String, ModelType> mapClassParent = new HashMap<>();
         for (UMLClass parentClass : parentUMLModel.getClassList()) {
@@ -300,34 +299,35 @@ public class APIModelDiff {
                 nextCommonType = diff.getCommonClassMap().get(UtilTools.getClassName(nextClass));
                 addedClassModel = diff.getAddedClassMap().get(UtilTools.getClassName(nextClass));
             }
-            if(removedClassModel!=null){
+            if (removedClassModel != null) {
                 removedClassModel.setRefactored(true);
             }
-            if(addedClassModel!=null){
+            if (addedClassModel != null) {
                 addedClassModel.setRefactored(true);
             }
-            switch (refIdentifier.getRefClassifier()){
+            switch (refIdentifier.getRefClassifier()) {
                 case ADD:
-                    if(nextCommonType!=null){
-                        typeDiff = new TypeDiff(entry,nextCommonType,revCommit);
-                    }else{
-                        typeDiff = new TypeDiff(entry,null,revCommit);
+                    if (nextCommonType != null) {
+                        typeDiff = new TypeDiff(entry, nextCommonType, revCommit);
+                    } else {
+                        typeDiff = new TypeDiff(entry, null, revCommit);
                     }
                     break;
                 case CHANGE:
-                    if(originalCommonType==null&&nextCommonType==null){
-                        typeDiff = new TypeDiff(entry,null,revCommit);
-                    }else if(originalCommonType == null){
-                        if(UtilTools.isAPIClass(nextClass)){
-                            typeDiff = new TypeDiff(entry,nextCommonType,revCommit);
+                    if (originalCommonType == null && nextCommonType == null) {
+                        typeDiff = new TypeDiff(entry, null, revCommit);
+                    } else if (originalCommonType == null) {
+                        if (UtilTools.isAPIClass(nextClass)) {
+                            typeDiff = new TypeDiff(entry, nextCommonType, revCommit);
                         }
-                    }else if(nextCommonType == null){
-                        if(UtilTools.isAPIClass(originalClass)){
-                            typeDiff = new TypeDiff(entry,null,revCommit);
+                    } else if (nextCommonType == null) {
+                        if (UtilTools.isAPIClass(originalClass)) {
+                            typeDiff = new TypeDiff(entry, null, revCommit);
                         }
                     }
+                    break;
             }
-            if(typeDiff!=null){
+            if (typeDiff != null) {
                 changeTypeList.addAll(typeDiff.getChangeList());
             }
         }
@@ -347,34 +347,78 @@ public class APIModelDiff {
 
     private void detectMethodChange() {
         this.logger.info("Processing Methods...");
-        for (Map.Entry<RefIdentifier, List<MethodChange>> entry : apiOperationRefactoredMap.entrySet()) {
-            RefIdentifier refIdentifier = entry.getKey();
-            if (refIdentifier.getOriginalClass() != null && refIdentifier.getOriginalOperation() != null) {
-                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getOriginalClass()));
-                if (commonType != null) {
-                    MethodModel methodModel = commonType.getRemovedOperationMap().get(UtilTools.getSignatureMethod(refIdentifier.getOriginalOperation()));
-                    if (methodModel != null) {
-                        methodModel.setRefactored(true);
-                    }
-                }
-            }
-            if (refIdentifier.getNextClass() != null && refIdentifier.getNextOperation() != null) {
-                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getNextClass()));
-                if (commonType != null) {
-                    MethodModel methodModel = commonType.getAddedOperationMap().get(UtilTools.getSignatureMethod(refIdentifier.getNextOperation()));
-                    if (methodModel != null) {
-                        methodModel.setRefactored(true);
-                    }
-                }
-            }
-            MethodDiff methodDiff = new MethodDiff(refIdentifier.getOriginalClass(), refIdentifier.getOriginalOperation(), refIdentifier.getNextClass(), refIdentifier.getNextOperation(), entry.getValue(), revCommit);
-            changeMethodList.addAll(methodDiff.getChangeList());
-        }
         for (CommonType commonType : diff.getCommonClassMap().values()) {
             for (CommonMethod commonMethod : commonType.getCommonOperationMap().values()) {
-                MethodDiff methodDiff = new MethodDiff(commonType.getOriginalClass(), commonMethod.getOriginalOperation(), commonType.getNextClass(), commonMethod.getNextOperation(), new ArrayList<>(), revCommit);
+                MethodDiff methodDiff = new MethodDiff(commonType.getOriginalClass(), commonMethod.getOriginalOperation(), commonType.getNextClass(), commonMethod.getNextOperation(), revCommit);
+                commonMethod.setMethodDiff(methodDiff);
                 changeMethodList.addAll(methodDiff.getChangeList());
             }
+        }
+        for (Map.Entry<RefIdentifier, List<MethodChange>> entry : apiOperationRefactoredMap.entrySet()) {
+            RefIdentifier refIdentifier = entry.getKey();
+            UMLClass originalClass = refIdentifier.getOriginalClass();
+            UMLOperation originalOperation = refIdentifier.getOriginalOperation();
+            UMLClass nextClass = refIdentifier.getNextClass();
+            UMLOperation nextOperation = refIdentifier.getNextOperation();
+            MethodModel removedMethodModel = null;
+            MethodModel addedMethodModel = null;
+            CommonMethod originalCommonMethod = null;
+            CommonMethod nextCommonMethod = null;
+            MethodDiff methodDiff = null;
+            if (originalClass != null && originalOperation != null) {
+                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(originalClass));
+                if (commonType != null) {
+                    originalCommonMethod = commonType.getCommonOperationMap().get(UtilTools.getSignatureMethod(originalOperation));
+                    removedMethodModel = commonType.getRemovedOperationMap().get(UtilTools.getSignatureMethod(originalOperation));
+                }
+            }
+            if (nextClass != null && nextOperation != null) {
+                CommonType commonType = diff.getCommonClassMap().get(UtilTools.getClassName(refIdentifier.getNextClass()));
+                if (commonType != null) {
+                    nextCommonMethod = commonType.getCommonOperationMap().get(UtilTools.getSignatureMethod(nextOperation));
+                    addedMethodModel = commonType.getAddedOperationMap().get(UtilTools.getSignatureMethod(nextOperation));
+                }
+            }
+            if (removedMethodModel != null) {
+                removedMethodModel.setRefactored(true);
+            }
+            if (addedMethodModel != null) {
+                addedMethodModel.setRefactored(true);
+            }
+            switch (refIdentifier.getRefClassifier()) {
+                case ADD:
+                    if (nextCommonMethod != null) {
+                        methodDiff = new MethodDiff(entry, nextCommonMethod, revCommit);
+                    } else {
+                        methodDiff = new MethodDiff(entry, null, revCommit);
+                    }
+                    break;
+                case REMOVE:
+                    if (originalCommonMethod != null) {
+                        methodDiff = new MethodDiff(entry, originalCommonMethod, revCommit);
+                    } else {
+                        methodDiff = new MethodDiff(entry, null, revCommit);
+                    }
+                    break;
+                case CHANGE:
+                    if (originalCommonMethod == null && nextCommonMethod == null) {
+                        methodDiff = new MethodDiff(entry, null, revCommit);
+                    } else if (originalCommonMethod == null) {
+                        if (UtilTools.isAPIClass(nextClass) && UtilTools.isAPIMethod(nextOperation)) {
+                            methodDiff = new MethodDiff(entry, nextCommonMethod, revCommit);
+                        }
+                    } else if (nextCommonMethod == null) {
+                        if (UtilTools.isAPIClass(originalClass) && UtilTools.isAPIMethod(originalOperation)) {
+                            methodDiff = new MethodDiff(entry, null, revCommit);
+                        }
+                    }
+                    break;
+            }
+            if (methodDiff != null) {
+                changeMethodList.addAll(methodDiff.getChangeList());
+            }
+        }
+        for (CommonType commonType : diff.getCommonClassMap().values()) {
             for (MethodModel removedMethodModel : commonType.getRemovedOperationMap().values()) {
                 if (!removedMethodModel.getIsRefactored()) {
                     MethodChange change = new RemoveMethodChange(commonType.getOriginalClass(), removedMethodModel.getUmlOperation(), revCommit);
@@ -389,6 +433,7 @@ public class APIModelDiff {
             }
         }
     }
+
 
     private void detectFieldChange() {
         this.logger.info("Processing Fields...");
