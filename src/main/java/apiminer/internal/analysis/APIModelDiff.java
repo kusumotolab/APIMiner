@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,11 +39,11 @@ public class APIModelDiff {
     private final Classifier classifierAPI;
     private final RevCommit revCommit;
 
-    private final Map<RefIdentifier, List<TypeChange>> apiClassRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<TypeChange>> apiClassRefactoredMap = new LinkedHashMap<>();
 
-    private final Map<RefIdentifier, List<MethodChange>> apiOperationRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<MethodChange>> apiOperationRefactoredMap = new LinkedHashMap<>();
 
-    private final Map<RefIdentifier, List<FieldChange>> apiAttributeRefactoredMap = new HashMap<>();
+    private final Map<RefIdentifier, List<FieldChange>> apiAttributeRefactoredMap = new LinkedHashMap<>();
 
     private final Diff diff = new Diff();
 
@@ -116,7 +116,7 @@ public class APIModelDiff {
     }
 
     private void initDiff() {
-        Map<String, ModelType> mapClassParent = new HashMap<>();
+        Map<String, ModelType> mapClassParent = new LinkedHashMap<>();
         for (UMLClass parentClass : parentUMLModel.getClassList()) {
             mapClassParent.put(UtilTools.getClassName(parentClass), new ModelType(parentClass));
         }
@@ -195,11 +195,11 @@ public class APIModelDiff {
         } catch (RefactoringMinerTimedOutException e) {
             e.printStackTrace();
         }
-        Map<String, UMLClass> parentClassMap = new HashMap<>();
+        Map<String, UMLClass> parentClassMap = new LinkedHashMap<>();
         for (UMLClass parentClass : parentUMLModel.getClassList()) {
             parentClassMap.put(UtilTools.getClassName(parentClass), parentClass);
         }
-        Map<String, UMLClass> currentClassMap = new HashMap<>();
+        Map<String, UMLClass> currentClassMap = new LinkedHashMap<>();
         for (UMLClass currentClass : currentUMLModel.getClassList()) {
             currentClassMap.put(UtilTools.getClassName(currentClass), currentClass);
         }
