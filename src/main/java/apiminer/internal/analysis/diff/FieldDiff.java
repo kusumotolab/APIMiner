@@ -11,6 +11,7 @@ import apiminer.internal.util.UtilTools;
 import gr.uom.java.xmi.UMLAttribute;
 import gr.uom.java.xmi.UMLClass;
 import gr.uom.java.xmi.decomposition.AbstractExpression;
+import gr.uom.java.xmi.decomposition.ObjectCreation;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.ArrayList;
@@ -172,8 +173,24 @@ public class FieldDiff {
         } else {
             if (nextDefault == null) {
                 changeList.add(new ChangeInDefaultValue(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
-            } else if (!originalDefault.getExpression().equals(nextDefault.getExpression())) {
-                changeList.add(new ChangeInDefaultValue(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
+            } else {
+                Map<String, List<ObjectCreation>> originalCreationMap = originalDefault.getCreationMap();
+                Map<String, List<ObjectCreation>> nextCreationMap = nextDefault.getCreationMap();
+                if (originalCreationMap.size() != 0 && nextCreationMap.size() != 0) {
+                    List<String> originalStringList = new ArrayList<>();
+                    for (List<ObjectCreation> originalCreations : originalCreationMap.values()) {
+                        originalStringList.add(originalCreations.get(0).toString());
+                    }
+                    List<String> nextStringList = new ArrayList<>();
+                    for (List<ObjectCreation> nextCreations : nextCreationMap.values()) {
+                        nextStringList.add(nextCreations.get(0).toString());
+                    }
+                    if (!originalStringList.containsAll(nextStringList) || !nextStringList.containsAll(originalStringList)) {
+                        changeList.add(new ChangeInDefaultValue(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
+                    }
+                } else if (!originalDefault.getExpression().equals(nextDefault.getExpression())) {
+                    changeList.add(new ChangeInDefaultValue(originalClass, originalAttribute, nextClass, nextAttribute, revCommit));
+                }
             }
         }
     }
