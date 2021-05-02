@@ -69,7 +69,6 @@ public class TypeDiff {
             detectVisibilityChange();
             detectDeprecatedChange();
             detectSuperTypeChange();
-            detectInterfaceChange();
             if (entry == null || commonType == null) {
                 boolean isAPIOriginal = UtilTools.isAPIClass(originalClass);
                 boolean isAPINext = UtilTools.isAPIClass(nextClass);
@@ -147,30 +146,6 @@ public class TypeDiff {
             changeList.add(new AddSuperTypeChange(originalClass, nextClass, nextUMLType, revCommit));
         } else if (originalUMLType != null && !originalUMLType.toString().equals(nextUMLType.toString())) {
             changeList.add(new ChangeSuperTypeChange(originalClass, nextClass, originalUMLType, nextUMLType, revCommit));
-        }
-    }
-
-    private void detectInterfaceChange() {
-        List<UMLType> originalInterfaceList = new ArrayList<>();
-        Map<String, UMLType> removedInterfaceMap = new HashMap<>();
-        for (UMLType originalInterface : originalClass.getImplementedInterfaces()) {
-            removedInterfaceMap.put(originalInterface.toString(), originalInterface);
-            originalInterfaceList.add(originalInterface);
-        }
-        List<UMLType> nextInterfaceList = new ArrayList<>(nextClass.getImplementedInterfaces());
-        List<UMLType> addedInterfaceList = new ArrayList<>();
-        for (UMLType nextInterface : nextInterfaceList) {
-            if (removedInterfaceMap.remove(nextInterface.toString()) == null) {
-                addedInterfaceList.add(nextInterface);
-            }
-        }
-        if (removedInterfaceMap.size() > 0 && addedInterfaceList.size() > 0) {
-            changeList.add(new ChangeInterfaceChange(originalClass, nextClass, originalInterfaceList, nextInterfaceList, revCommit));
-        } else if (removedInterfaceMap.size() == 0 && addedInterfaceList.size() > 0) {
-            changeList.add(new AddInterfaceChange(originalClass, nextClass, addedInterfaceList, revCommit));
-        } else if (removedInterfaceMap.size() > 0) {
-            List<UMLType> removedSuperTypeList = new ArrayList<>(removedInterfaceMap.values());
-            changeList.add(new RemoveInterfaceChange(originalClass, nextClass, removedSuperTypeList, revCommit));
         }
     }
 }
