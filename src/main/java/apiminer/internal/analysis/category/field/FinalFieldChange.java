@@ -24,7 +24,7 @@ public class FinalFieldChange extends FieldChange {
         this.setJavadoc(isJavaDoc(nextAttribute));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
         boolean isBreakingChange = category.equals(Category.FIELD_ADD_MODIFIER_FINAL);
-        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
+        this.setBreakingChange(isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

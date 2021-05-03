@@ -23,7 +23,7 @@ public class ChangeInDefaultValue extends FieldChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
         this.setDeprecated(this.checkDeprecated(this.getNextClass(),this.getNextAttribute()));
-        this.setBreakingChange(this.isDeprecated()?false:true);
+        this.setBreakingChange(true);
         this.setRevCommit(revCommit);
     }
 

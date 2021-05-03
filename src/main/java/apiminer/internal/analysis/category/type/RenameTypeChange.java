@@ -23,7 +23,7 @@ public class RenameTypeChange extends TypeChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
         this.setDeprecated(checkDeprecated(this.getNextClass()));
-        this.setBreakingChange(this.isDeprecated()?false:true);
+        this.setBreakingChange(true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);

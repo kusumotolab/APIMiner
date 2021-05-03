@@ -21,7 +21,7 @@ public class RemoveFieldChange extends FieldChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(removedAttribute));
         this.setDeprecated(checkDeprecated(this.getOriginalClass(),this.getOriginalAttribute()));
-        this.setBreakingChange(this.isDeprecated()?false:true);
+        this.setBreakingChange(true);
         this.setRevCommit(revCommit);
     }
 

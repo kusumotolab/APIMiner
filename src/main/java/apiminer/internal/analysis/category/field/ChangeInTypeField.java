@@ -30,7 +30,7 @@ public class ChangeInTypeField extends FieldChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
         this.setDeprecated(this.checkDeprecated(this.getNextClass(),this.getNextAttribute()));
-        this.setBreakingChange(this.isDeprecated()?false:true);
+        this.setBreakingChange(true);
         this.setRevCommit(revCommit);
     }
 

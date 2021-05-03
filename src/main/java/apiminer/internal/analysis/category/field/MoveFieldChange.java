@@ -27,7 +27,7 @@ public class MoveFieldChange extends FieldChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextAttribute()));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
-        this.setBreakingChange(this.isDeprecated()?false:true);
+        this.setBreakingChange(true);
         this.setRevCommit(revCommit);
     }
     private String isDescription() {

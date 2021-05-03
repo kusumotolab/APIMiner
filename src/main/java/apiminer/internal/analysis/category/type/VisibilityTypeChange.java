@@ -22,7 +22,7 @@ public class VisibilityTypeChange extends TypeChange {
         this.setJavadoc(isJavaDoc(nextClass));
         this.setDeprecated(checkDeprecated(this.getNextClass()));
         boolean isBreakingChange = this.getCategory().equals(Category.TYPE_LOST_VISIBILITY);
-        this.setBreakingChange(this.isDeprecated()?false:isBreakingChange);
+        this.setBreakingChange(isBreakingChange);
         this.setRevCommit(revCommit);
         if (nextClass.isInterface()) {
             this.setElementType(ElementType.INTERFACE);
