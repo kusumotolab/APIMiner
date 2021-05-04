@@ -27,7 +27,7 @@ public class ChangeInReturnType extends MethodChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
-        this.setBreakingChange(true);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalOperation()) ? false : true);
         this.setRevCommit(revCommit);
         if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

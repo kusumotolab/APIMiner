@@ -24,7 +24,7 @@ public class VisibilityFieldChange extends FieldChange {
         this.setJavadoc(isJavaDoc(nextAttribute));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextAttribute()));
         boolean isBreakingChange = category.equals(Category.FIELD_LOST_VISIBILITY);
-        this.setBreakingChange(isBreakingChange);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalAttribute()) ? false : isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

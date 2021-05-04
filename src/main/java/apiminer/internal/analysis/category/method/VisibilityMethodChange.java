@@ -23,7 +23,7 @@ public class VisibilityMethodChange extends MethodChange {
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
         boolean isBreakingChange = category.equals(Category.METHOD_LOST_VISIBILITY);
-        this.setBreakingChange(isBreakingChange);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalOperation()) ? false : isBreakingChange);
         this.setRevCommit(revCommit);
     }
 

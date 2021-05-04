@@ -22,7 +22,7 @@ public class RemoveMethodChange extends MethodChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getOriginalOperation()));
         this.setDeprecated(checkDeprecated(this.getOriginalClass(),this.getOriginalOperation()));
-        this.setBreakingChange(true);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalOperation()) ? false : true);
         this.setRevCommit(revCommit);
         if(this.getOriginalOperation().isConstructor()){
             this.setElementType(ElementType.CONSTRUCTOR);

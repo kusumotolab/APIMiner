@@ -9,7 +9,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 public class ChangeInDefaultValue extends FieldChange {
 
-    public ChangeInDefaultValue(UMLClass originalClass,UMLAttribute originalAttribute, UMLClass nextClass,UMLAttribute nextAttribute, RevCommit revCommit) {
+    public ChangeInDefaultValue(UMLClass originalClass, UMLAttribute originalAttribute, UMLClass nextClass, UMLAttribute nextAttribute, RevCommit revCommit) {
         super(revCommit);
         this.setOriginalClass(originalClass);
         this.setOriginalAttribute(originalAttribute);
@@ -22,8 +22,8 @@ public class ChangeInDefaultValue extends FieldChange {
         this.setCategory(Category.FIELD_CHANGE_DEFAULT_VALUE);
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(nextAttribute));
-        this.setDeprecated(this.checkDeprecated(this.getNextClass(),this.getNextAttribute()));
-        this.setBreakingChange(true);
+        this.setDeprecated(this.checkDeprecated(this.getNextClass(), this.getNextAttribute()));
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalAttribute()) ? false : true);
         this.setRevCommit(revCommit);
     }
 

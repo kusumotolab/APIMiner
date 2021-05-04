@@ -24,7 +24,7 @@ public class StaticMethodChange extends MethodChange {
         this.setJavadoc(isJavaDoc(this.getNextOperation()));
         this.setDeprecated(checkDeprecated(this.getNextClass(),this.getNextOperation()));
         boolean isBreakingChange = category.equals(Category.METHOD_REMOVE_MODIFIER_STATIC);
-        this.setBreakingChange(isBreakingChange);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass(), this.getOriginalOperation()) ? false : isBreakingChange);
         this.setRevCommit(revCommit);
         if (this.getNextOperation().isConstructor()) {
             this.setElementType(ElementType.CONSTRUCTOR);

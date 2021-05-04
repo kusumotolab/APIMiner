@@ -20,7 +20,7 @@ public class RemoveTypeChange extends TypeChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(removedClass));
         this.setDeprecated(checkDeprecated(this.getOriginalClass()));
-        this.setBreakingChange(true);
+        this.setBreakingChange(this.checkDeprecated(this.getOriginalClass()) ? false : true);
         this.setRevCommit(revCommit);
         if (removedClass.isInterface()) {
             this.setElementType(ElementType.INTERFACE);

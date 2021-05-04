@@ -22,7 +22,7 @@ public class ExtractTypeChange extends TypeChange {
         this.setDescription(isDescription());
         this.setJavadoc(isJavaDoc(this.getNextClass()));
         this.setDeprecated(checkDeprecated(this.getNextClass()));
-        this.setBreakingChange(true);
+        this.setBreakingChange(this.checkDeprecated(extractClass.getOriginalClass()) ? false : true);
         this.setRevCommit(revCommit);
         if (this.getNextClass().isInterface()) {
             this.setElementType(ElementType.INTERFACE);
