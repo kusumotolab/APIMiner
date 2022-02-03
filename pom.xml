@@ -73,7 +73,7 @@
 						<include>**/*</include>
 					</includes>
 					<repositoryName>APIMiner</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>m-iriyam</repositoryOwner>    <!-- github username -->
+					<repositoryOwner>kusumotolab</repositoryOwner>    <!-- github username -->
 				</configuration>
 				<executions>
 					<execution>

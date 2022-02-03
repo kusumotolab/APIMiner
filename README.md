@@ -14,7 +14,7 @@ _Breaking Changes_ are modifications performed in API elements such as types, me
 
 _Maintainig-breaking Changes_ are modifications that do not break clients:
 
-| Element  | Non-breaking Changes (NBC) |
+| Element  | Maintaing Changes (MC) |
 | ------------- | ------------- |
 | Type  | add, extract supertype, gain visibility, remove final modifier, add static modifier, add supertype, deprecated type|
 | Method  | pull up, gain visibility, remove final modifier, add static modifier, deprecated method, add, extract| 
@@ -99,7 +99,7 @@ In order to use APIMiner as a maven dependency in your project, add the followin
 <repositories>
    <repository>
         <id>apiminer</id>
-        <url>https://github.com/m-iriyam/apiminer/mvn-repo/</url>
+        <url>https://github.com/kusumotolab/APIMiner/mvn-repo/</url>
         <snapshots>
             <enabled>true</enabled>
             <updatePolicy>always</updatePolicy>
