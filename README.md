@@ -1,6 +1,6 @@
 # APIMiner
 
-APIMiner is a fork for [APIDiff](https://github.com/aserg-ufmg/apidiff). APIMiner is a tool to identify API breaking and non-breaking changes between two versions of a Java library. APIMiner analyses libraries hosted on the distributed version control system _git_. While APIDiff uses [RefDiff](https://github.com/aserg-ufmg/RefDiff) to detect refactorings between two versions of a Java library,  APIMiner uses [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
+APIMiner is a fork for [APIDiff](https://github.com/aserg-ufmg/apidiff). APIMiner is a tool to identify API breaking and maintainig changes between two versions of a Java library. APIMiner analyses libraries hosted on the distributed version control system _git_. While APIDiff uses [RefDiff](https://github.com/aserg-ufmg/RefDiff) to detect refactorings between two versions of a Java library,  APIMiner uses [RefactoringMiner](https://github.com/tsantalis/RefactoringMiner).
 
 ## Catalog
 
@@ -12,7 +12,7 @@ _Breaking Changes_ are modifications performed in API elements such as types, me
 | Method  | move, rename, remove, push down, inline, change in parameter list, change in exception list, change in return type, lost visibility, add final modifier, remove static modifier, move and rename  | 
 | Field  |  remove, move, push down field, change in default value, change in type field,  lost visibility, add final modifier, rename, move and rename | 
 
-_Non-breaking Changes_ are modifications that do not break clients:
+_Maintainig-breaking Changes_ are modifications that do not break clients:
 
 | Element  | Non-breaking Changes (NBC) |
 | ------------- | ------------- |
