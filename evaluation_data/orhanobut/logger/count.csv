@@ -1,0 +1,55 @@
+category;common;onlyAPIMiner;onlyAPIDiff
+Add Type;13;1;3
+Remove Type;4;0;1
+Add Method;32;18;31
+Remove Method;28;9;12
+Add Field;6;1;7
+Remove Field;1;0;2
+Gain Visibility in Type;2;0;1
+Lost Visibility in Type;2;1;0
+Gain Visibility in Method;0;1;0
+Lost Visibility in Method;8;0;0
+Gain Visibility in Field;0;0;0
+Lost Visibility in Field;0;0;0
+Add Final Modifier in Type;0;0;0
+Remove Final Modifier in Type;0;0;0
+Add Final Modifier in Method;0;0;0
+Remove Final Modifier in Method;0;0;0
+Add Final Modifier in Field;0;0;0
+Remove Final Modifier in Field;0;0;0
+Add Static Modifier in Type;0;0;0
+Remove Static Modifier in Type;0;0;0
+Add Static Modifier in Method;0;0;0
+Remove Static Modifier in Method;0;12;0
+Add Static Modifier in Field;0;0;0
+Remove Static Modifier in Field;0;0;0
+Deprecated Type;0;0;0
+Deprecated Method;0;3;0
+Deprecated Field;0;0;0
+Change in Supertype;0;0;0
+Remove Supertype;0;0;0
+Add Supertype;0;0;0
+Change in Exception List;0;1;0
+Change in Field Default Value;0;0;0
+Rename Type;3;0;0
+Move Type;0;2;0
+Move and Rename Type;0;0;0
+Extract Supertype;0;0;0
+Extract Type;0;2;0
+Extract Subtype;0;0;0
+Move Method;7;5;2
+Extract Method;0;17;0
+Rename Method;1;5;0
+Pull Up Method;0;0;0
+Push Down Method;0;0;0
+Inline Method;1;1;0
+Move and Rename Method;0;2;0
+Change in Parameter List;0;9;0
+Change in Return Type Method;1;1;0
+Rename Field;0;0;0
+Move Field;4;15;0
+Pull Up Field;0;0;0
+Push Down Field;0;0;0
+Move and Rename Field;0;0;0
+Extract Field;0;0;0
+Change in Field Type;0;0;0
