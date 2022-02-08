@@ -24,9 +24,11 @@
   - The number of detected changes by change type
 - visualVM_APIDiff.nps/_APIMiner.nps
   - execution time
-- validation_only_APIDiff.xlsx/_APIMiner.xlsx
-  - visibly checking
-- validation_count.xlsx
+- validation_only_APIDiff.xlsx/_APIMiner.xlsx (only MPAndroidChart)
+  - visibly checking API changes except for Add/Remove Type, Method, and Field
+    - The other change types are likely to be mistakenly classified into Add/Remove Type, Method, and Field.
+    - The numbers of detected API changes of Add/Remove Type, Method, and Field may be not useful to evaluate our tool and APIDiff.
+- validation_count.xlsx (only MPAndroidChart)
   - infomation about visibly checking (i.e., sample size or precision, etc.)
-- validateClassification_APIMiner.xlsx
-  - visibly checking whether the change is breaking change
+- validateClassification_APIMiner.xlsx (only MPAndroidChart)
+  - visibly checking whether each change is a breaking change or not
